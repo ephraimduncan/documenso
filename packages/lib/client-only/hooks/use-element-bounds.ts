@@ -4,13 +4,10 @@ import { getBoundingClientRect } from '@documenso/lib/client-only/get-bounding-c
 
 import { useSharedResize } from './use-shared-resize';
 
+const DEFAULT_BOUNDS = { top: 0, left: 0, height: 0, width: 0 };
+
 export const useElementBounds = (elementOrSelector: HTMLElement | string, withScroll = false) => {
-  const [bounds, setBounds] = useState({
-    top: 0,
-    left: 0,
-    height: 0,
-    width: 0,
-  });
+  const [bounds, setBounds] = useState(DEFAULT_BOUNDS);
 
   const calculateBounds = useCallback(() => {
     const $el =

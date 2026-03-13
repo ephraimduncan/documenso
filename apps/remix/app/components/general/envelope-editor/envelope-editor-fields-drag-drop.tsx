@@ -92,6 +92,8 @@ type EnvelopeEditorFieldDragDropProps = {
   selectedEnvelopeItemId: string | null;
 };
 
+const DEFAULT_COORDS = { x: 0, y: 0 };
+
 export const EnvelopeEditorFieldDragDrop = ({
   selectedRecipientId,
   selectedEnvelopeItemId,
@@ -123,10 +125,7 @@ export const EnvelopeEditorFieldDragDrop = ({
   }, [selectedRecipientId, envelope.recipients, envelope.fields]);
 
   const [isFieldWithinBounds, setIsFieldWithinBounds] = useState(false);
-  const [coords, setCoords] = useState({
-    x: 0,
-    y: 0,
-  });
+  const [coords, setCoords] = useState(DEFAULT_COORDS);
 
   const fieldBounds = useRef({
     height: 0,

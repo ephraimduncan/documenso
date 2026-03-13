@@ -10,15 +10,12 @@ import {
 
 import { useSharedResize } from './use-shared-resize';
 
+const DEFAULT_COORDS = { x: 0, y: 0, height: 0, width: 0 };
+
 export const useFieldPageCoords = (
   field: Pick<Field, 'positionX' | 'positionY' | 'width' | 'height' | 'page'>,
 ) => {
-  const [coords, setCoords] = useState({
-    x: 0,
-    y: 0,
-    height: 0,
-    width: 0,
-  });
+  const [coords, setCoords] = useState(DEFAULT_COORDS);
 
   const calculateCoords = useCallback(() => {
     const $page = document.querySelector<HTMLElement>(

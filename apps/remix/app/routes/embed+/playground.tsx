@@ -15,6 +15,56 @@ export const loader = () => {
   }
 };
 
+const DEFAULT_GENERAL_FEATURES = {
+  allowConfigureEnvelopeTitle: true,
+  allowUploadAndRecipientStep: true,
+  allowAddFieldsStep: true,
+  allowPreviewStep: true,
+  minimizeLeftSidebar: true,
+};
+
+const DEFAULT_SETTINGS_FEATURES = {
+  allowConfigureSignatureTypes: true,
+  allowConfigureLanguage: true,
+  allowConfigureDateFormat: true,
+  allowConfigureTimezone: true,
+  allowConfigureRedirectUrl: true,
+  allowConfigureDistribution: true,
+  allowConfigureExpirationPeriod: true,
+  allowConfigureEmailSender: true,
+  allowConfigureEmailReplyTo: true,
+};
+
+const DEFAULT_ACTIONS_FEATURES = {
+  allowAttachments: true,
+  allowDistributing: false,
+  allowDirectLink: false,
+  allowDuplication: false,
+  allowDownloadPDF: false,
+  allowDeletion: false,
+};
+
+const DEFAULT_ENVELOPE_ITEMS_FEATURES = {
+  allowConfigureTitle: true,
+  allowConfigureOrder: true,
+  allowUpload: true,
+  allowDelete: true,
+};
+
+const DEFAULT_RECIPIENTS_FEATURES = {
+  allowAIDetection: true,
+  allowConfigureSigningOrder: true,
+  allowConfigureDictateNextSigner: true,
+  allowApproverRole: true,
+  allowViewerRole: true,
+  allowCCerRole: true,
+  allowAssistantRole: true,
+};
+
+const DEFAULT_FIELDS_FEATURES = {
+  allowAIDetection: true,
+};
+
 /**
  * Playground embed test page.
  *
@@ -43,55 +93,19 @@ export default function EmbedPlaygroundPage() {
   const [messages, setMessages] = useState<string[]>([]);
 
   // Feature flags state -- grouped by section
-  const [generalFeatures, setGeneralFeatures] = useState({
-    allowConfigureEnvelopeTitle: true,
-    allowUploadAndRecipientStep: true,
-    allowAddFieldsStep: true,
-    allowPreviewStep: true,
-    minimizeLeftSidebar: true,
-  });
+  const [generalFeatures, setGeneralFeatures] = useState(DEFAULT_GENERAL_FEATURES);
 
-  const [settingsFeatures, setSettingsFeatures] = useState({
-    allowConfigureSignatureTypes: true,
-    allowConfigureLanguage: true,
-    allowConfigureDateFormat: true,
-    allowConfigureTimezone: true,
-    allowConfigureRedirectUrl: true,
-    allowConfigureDistribution: true,
-    allowConfigureExpirationPeriod: true,
-    allowConfigureEmailSender: true,
-    allowConfigureEmailReplyTo: true,
-  });
+  const [settingsFeatures, setSettingsFeatures] = useState(DEFAULT_SETTINGS_FEATURES);
 
-  const [actionsFeatures, setActionsFeatures] = useState({
-    allowAttachments: true,
-    allowDistributing: false,
-    allowDirectLink: false,
-    allowDuplication: false,
-    allowDownloadPDF: false,
-    allowDeletion: false,
-  });
+  const [actionsFeatures, setActionsFeatures] = useState(DEFAULT_ACTIONS_FEATURES);
 
-  const [envelopeItemsFeatures, setEnvelopeItemsFeatures] = useState({
-    allowConfigureTitle: true,
-    allowConfigureOrder: true,
-    allowUpload: true,
-    allowDelete: true,
-  });
+  const [envelopeItemsFeatures, setEnvelopeItemsFeatures] = useState(
+    DEFAULT_ENVELOPE_ITEMS_FEATURES,
+  );
 
-  const [recipientsFeatures, setRecipientsFeatures] = useState({
-    allowAIDetection: true,
-    allowConfigureSigningOrder: true,
-    allowConfigureDictateNextSigner: true,
-    allowApproverRole: true,
-    allowViewerRole: true,
-    allowCCerRole: true,
-    allowAssistantRole: true,
-  });
+  const [recipientsFeatures, setRecipientsFeatures] = useState(DEFAULT_RECIPIENTS_FEATURES);
 
-  const [fieldsFeatures, setFieldsFeatures] = useState({
-    allowAIDetection: true,
-  });
+  const [fieldsFeatures, setFieldsFeatures] = useState(DEFAULT_FIELDS_FEATURES);
 
   // CSS theming state
   const [darkModeDisabled, setDarkModeDisabled] = useState(false);

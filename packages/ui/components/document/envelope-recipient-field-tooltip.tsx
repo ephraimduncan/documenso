@@ -50,6 +50,8 @@ const getRecipientDisplayText = (recipient: { name: string; email: string }) => 
   return recipient.email;
 };
 
+const DEFAULT_COORDS = { x: 0, y: 0, height: 0, width: 0 };
+
 /**
  * Renders a tooltip for a given field.
  */
@@ -63,12 +65,7 @@ export function EnvelopeRecipientFieldTooltip({
 
   const [hideField, setHideField] = useState<boolean>(!showRecipientTooltip);
 
-  const [coords, setCoords] = useState({
-    x: 0,
-    y: 0,
-    height: 0,
-    width: 0,
-  });
+  const [coords, setCoords] = useState(DEFAULT_COORDS);
 
   const calculateCoords = useCallback(() => {
     const $page = document.querySelector<HTMLElement>(

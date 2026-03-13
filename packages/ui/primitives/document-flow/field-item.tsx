@@ -88,12 +88,12 @@ const FieldItemInner = ({
   const { _ } = useLingui();
   const [searchParams] = useSearchParams();
 
-  const [coords, setCoords] = useState({
+  const [coords, setCoords] = useState(() => ({
     pageX: 0,
     pageY: 0,
     pageHeight: defaultHeight || 0,
     pageWidth: defaultWidth || 0,
-  });
+  }));
   const [settingsActive, setSettingsActive] = useState(false);
   const $el = useRef<HTMLDivElement>(null);
 

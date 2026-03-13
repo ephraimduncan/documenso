@@ -82,6 +82,8 @@ export type AddTemplateFieldsFormProps = {
   teamId: number;
 };
 
+const DEFAULT_COORDS = { x: 0, y: 0 };
+
 export const AddTemplateFieldsFormPartial = ({
   documentFlow,
   recipients,
@@ -309,10 +311,7 @@ export const AddTemplateFieldsFormPartial = ({
     emptyCheckboxFields.length > 0 || emptyRadioFields.length > 0 || emptySelectFields.length > 0;
 
   const [isFieldWithinBounds, setIsFieldWithinBounds] = useState(false);
-  const [coords, setCoords] = useState({
-    x: 0,
-    y: 0,
-  });
+  const [coords, setCoords] = useState(DEFAULT_COORDS);
 
   const fieldBounds = useRef({
     height: 0,

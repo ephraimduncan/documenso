@@ -49,6 +49,8 @@ export type ConfigureFieldsViewProps = {
   onSubmit: (data: TConfigureFieldsFormSchema) => void;
 };
 
+const DEFAULT_COORDS = { x: 0, y: 0 };
+
 export const ConfigureFieldsView = ({
   configData,
   presignToken,
@@ -133,10 +135,7 @@ export const ConfigureFieldsView = ({
   );
   const [selectedField, setSelectedField] = useState<FieldType | null>(null);
   const [isFieldWithinBounds, setIsFieldWithinBounds] = useState(false);
-  const [coords, setCoords] = useState({
-    x: 0,
-    y: 0,
-  });
+  const [coords, setCoords] = useState(DEFAULT_COORDS);
   const [activeFieldId, setActiveFieldId] = useState<string | null>(null);
   const [lastActiveField, setLastActiveField] = useState<
     TConfigureFieldsFormSchema['fields'][0] | null

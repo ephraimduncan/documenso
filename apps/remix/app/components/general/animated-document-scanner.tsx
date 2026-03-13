@@ -9,11 +9,13 @@ export type AnimatedDocumentScannerProps = {
   interval?: number;
 };
 
+const DEFAULT_MAG_POSITION = { x: 0, y: 0, page: 0 };
+
 export const AnimatedDocumentScanner = ({
   className,
   interval = 2500,
 }: AnimatedDocumentScannerProps) => {
-  const [magPosition, setMagPosition] = useState({ x: 0, y: 0, page: 0 });
+  const [magPosition, setMagPosition] = useState(DEFAULT_MAG_POSITION);
 
   useEffect(() => {
     const moveInterval = setInterval(() => {

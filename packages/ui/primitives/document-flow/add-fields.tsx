@@ -92,6 +92,8 @@ export type AddFieldsFormProps = {
   teamId: number;
 };
 
+const DEFAULT_COORDS = { x: 0, y: 0 };
+
 export const AddFieldsFormPartial = ({
   documentFlow,
   hideRecipients = false,
@@ -259,10 +261,7 @@ export const AddFieldsFormPartial = ({
   }, [selectedSigner, fields]);
 
   const [isFieldWithinBounds, setIsFieldWithinBounds] = useState(false);
-  const [coords, setCoords] = useState({
-    x: 0,
-    y: 0,
-  });
+  const [coords, setCoords] = useState(DEFAULT_COORDS);
 
   const fieldBounds = useRef({
     height: 0,
