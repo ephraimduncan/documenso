@@ -260,7 +260,7 @@ export const ManagePublicTemplateDialog = ({
                   </DialogDescription>
                 </DialogHeader>
 
-                <div className="custom-scrollbar max-h-[60vh] overflow-y-auto rounded-md border">
+                <div className="custom-scrollbar max-h-[60vh] overflow-y-auto rounded-md border [contain-intrinsic-size:auto_400px] [content-visibility:auto]">
                   <Table overflowHidden>
                     <TableHeader>
                       <TableRow>
@@ -290,11 +290,11 @@ export const ManagePublicTemplateDialog = ({
                           key={row.id}
                           onClick={() => setSelectedTemplateId(row.id)}
                         >
-                          <TableCell className="text-muted-foreground max-w-[30ch] text-sm">
+                          <TableCell className="max-w-[30ch] text-sm text-muted-foreground">
                             {row.title}
                           </TableCell>
 
-                          <TableCell className="text-muted-foreground text-sm">
+                          <TableCell className="text-sm text-muted-foreground">
                             {i18n.date(row.createdAt)}
                           </TableCell>
 
@@ -381,7 +381,7 @@ export const ManagePublicTemplateDialog = ({
                             </FormControl>
 
                             {!form.formState.errors.publicDescription && (
-                              <p className="text-muted-foreground text-sm">
+                              <p className="text-sm text-muted-foreground">
                                 {remaningLength >= 0 ? (
                                   <Plural
                                     value={remaningLength}

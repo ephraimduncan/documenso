@@ -81,7 +81,7 @@ export const OrganisationInvitations = ({ className }: { className?: string }) =
                     </DialogDescription>
                   </DialogHeader>
 
-                  <ul className="-mx-6 -mb-6 max-h-[80vh] divide-y overflow-auto px-6 pb-6 xl:max-h-[70vh]">
+                  <ul className="-mx-6 -mb-6 max-h-[80vh] divide-y overflow-auto px-6 pb-6 [contain-intrinsic-size:auto_400px] [content-visibility:auto] xl:max-h-[70vh]">
                     {data.map((invitation) => (
                       <li key={invitation.id}>
                         <Alert variant="neutral" className="p-0 px-4">
@@ -90,7 +90,7 @@ export const OrganisationInvitations = ({ className }: { className?: string }) =
                             className="w-full max-w-none py-4"
                             avatarFallback={invitation.organisation.name.slice(0, 1)}
                             primaryText={
-                              <span className="text-foreground/80 font-semibold">
+                              <span className="font-semibold text-foreground/80">
                                 {invitation.organisation.name}
                               </span>
                             }

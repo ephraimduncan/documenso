@@ -127,7 +127,7 @@ export const DocumentSigningForm = ({
         </FieldToolTip>
       )}
 
-      <div className="custom-scrollbar -mx-2 flex flex-1 flex-col overflow-y-auto overflow-x-hidden px-2">
+      <div className="custom-scrollbar -mx-2 flex flex-1 flex-col overflow-y-auto overflow-x-hidden px-2 [contain-intrinsic-size:auto_500px] [content-visibility:auto]">
         <div className="flex flex-1 flex-col">
           {recipient.role === RecipientRole.VIEWER ? (
             <>

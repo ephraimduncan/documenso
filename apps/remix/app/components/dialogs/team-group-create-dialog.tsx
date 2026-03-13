@@ -198,7 +198,7 @@ export const TeamGroupCreateDialog = ({ ...props }: TeamGroupCreateDialogProps) 
                                 })),
                               );
                             }}
-                            className="bg-background w-full"
+                            className="w-full bg-background"
                             emptySelectionPlaceholder={t`Select groups`}
                           />
                         </FormControl>
@@ -230,7 +230,7 @@ export const TeamGroupCreateDialog = ({ ...props }: TeamGroupCreateDialogProps) 
 
               {step === 'ROLES' && (
                 <>
-                  <div className="custom-scrollbar -m-1 max-h-[60vh] space-y-4 overflow-y-auto p-1">
+                  <div className="custom-scrollbar -m-1 max-h-[60vh] space-y-4 overflow-y-auto p-1 [contain-intrinsic-size:auto_500px] [content-visibility:auto]">
                     {form.getValues('groups').map((group, index) => (
                       <div className="flex w-full flex-row space-x-4" key={index}>
                         <div className="w-full space-y-2">

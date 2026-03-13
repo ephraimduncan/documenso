@@ -295,7 +295,7 @@ export const TemplateDirectLinkDialog = ({
                     </DialogDescription>
                   </DialogHeader>
 
-                  <div className="custom-scrollbar max-h-[60vh] overflow-y-auto rounded-md border">
+                  <div className="custom-scrollbar max-h-[60vh] overflow-y-auto rounded-md border [contain-intrinsic-size:auto_400px] [content-visibility:auto]">
                     <Table>
                       <TableHeader>
                         <TableRow>

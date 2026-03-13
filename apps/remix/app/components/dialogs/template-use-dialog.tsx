@@ -268,7 +268,7 @@ export function TemplateUseDialog({
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <fieldset className="flex h-full flex-col" disabled={form.formState.isSubmitting}>
-              <div className="custom-scrollbar -m-1 max-h-[60vh] space-y-4 overflow-y-auto p-1">
+              <div className="custom-scrollbar -m-1 max-h-[60vh] space-y-4 overflow-y-auto p-1 [contain-intrinsic-size:auto_500px] [content-visibility:auto]">
                 {formRecipients.map((recipient, index) => (
                   <div className="flex w-full flex-row space-x-4" key={recipient.id}>
                     {templateSigningOrder === DocumentSigningOrder.SEQUENTIAL && (

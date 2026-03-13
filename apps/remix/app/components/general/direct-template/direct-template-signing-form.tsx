@@ -391,7 +391,7 @@ export const DirectTemplateSigningForm = ({
           )}
         </ElementVisible>
 
-        <div className="-mx-2 flex flex-1 flex-col gap-4 overflow-y-auto px-2">
+        <div className="-mx-2 flex flex-1 flex-col gap-4 overflow-y-auto px-2 [contain-intrinsic-size:auto_500px] [content-visibility:auto]">
           <div className="flex flex-1 flex-col gap-y-4">
             <div>
               <Label htmlFor="full-name">

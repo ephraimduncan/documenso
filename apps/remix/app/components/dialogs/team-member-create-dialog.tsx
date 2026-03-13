@@ -360,7 +360,7 @@ export const TeamMemberCreateDialog = ({ trigger, ...props }: TeamMemberCreateDi
 
               {step === 'MEMBERS' && (
                 <>
-                  <div className="custom-scrollbar -m-1 max-h-[60vh] space-y-4 overflow-y-auto p-1">
+                  <div className="custom-scrollbar -m-1 max-h-[60vh] space-y-4 overflow-y-auto p-1 [contain-intrinsic-size:auto_500px] [content-visibility:auto]">
                     {form.getValues('members').map((member, index) => (
                       <div className="flex w-full flex-row space-x-4" key={index}>
                         <div className="w-full space-y-2">

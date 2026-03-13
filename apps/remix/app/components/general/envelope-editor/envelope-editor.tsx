@@ -191,7 +191,7 @@ export const EnvelopeEditor = () => {
         {/* Left Section - Step Navigation */}
         <div
           className={cn(
-            'flex w-80 flex-shrink-0 flex-col overflow-y-auto border-r border-border bg-background py-4',
+            'flex w-80 flex-shrink-0 flex-col overflow-y-auto border-r border-border bg-background py-4 [contain-intrinsic-size:auto_500px] [content-visibility:auto]',
             {
               'w-14': minimizeLeftSidebar,
             },
@@ -563,7 +563,7 @@ export const EnvelopeEditor = () => {
         </div>
 
         {/* Main Content - Changes based on current step */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto [contain-intrinsic-size:auto_800px] [content-visibility:auto]">
           {match({
             pageToRender,
             allowUploadAndRecipientStep,
