@@ -1,0 +1,21 @@
+{
+  "featureId": "fix-cache-invalidation",
+  "reviewedAt": "2026-03-13T03:32:03Z",
+  "commitId": "703cbc2a8f147f7043c57aa3ef2bbd0acda350e9",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The implementation fully covers the feature description and expected behavior. `clearTeamSettingsCache(teamId)` is now called after the successful team settings write in `packages/trpc/server/team-router/update-team-settings.ts`, which correctly clears all cached `teamId:userId` variants for that team. `clearWebhookCache()` is now called after every production webhook mutation path in `create-webhook.ts`, `edit-webhook.ts`, `delete-webhook-by-id.ts`, `zapier/subscribe.ts`, and `zapier/unsubscribe.ts`. The return values of the webhook helpers are preserved by storing the mutation result before invalidating and returning it afterward. This directly resolves the earlier non-blocking cache staleness observations from the `server-cache-team-settings` and `server-cache-webhooks` reviews.",
+    "issues": []
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "The mission guidance still documents the generic TTL cache shape but not the rule that exported invalidation helpers should also be wired into the corresponding write paths when those mutations live in the same codebase. This fix now makes site settings, team settings, and webhook caches all follow that same invalidation pattern, so documenting it would help future cache features avoid repeating the earlier bounded-staleness gap.",
+      "evidence": "Mission AGENTS.md 'Caching Pattern Guidance' shows only the Map+TTL pattern. The write-path invalidation convention is now visible in packages/lib/server-only/site-settings/upsert-site-setting.ts:3 and :35, packages/trpc/server/team-router/update-team-settings.ts:7 and :183, and packages/lib/server-only/webhooks/create-webhook.ts:8 and :52 (with the same pattern also present in edit-webhook.ts:7 and :31, delete-webhook-by-id.ts:5 and :25, zapier/subscribe.ts:3 and :29, and zapier/unsubscribe.ts:3 and :26)."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "PASS. The fix correctly wires `clearTeamSettingsCache(teamId)` and `clearWebhookCache()` into all relevant production mutation paths without changing behavior, preserves webhook helper return values, and closes the non-blocking staleness gaps noted in the earlier team-settings and webhook cache reviews."
+}

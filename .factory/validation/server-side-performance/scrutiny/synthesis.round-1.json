@@ -1,30 +1,30 @@
 {
   "milestone": "server-side-performance",
-  "round": 2,
+  "round": 1,
   "status": "pass",
   "validatorsRun": {
     "test": {
       "passed": true,
       "command": "not-configured",
       "exitCode": 0,
-      "notes": "No test command is defined in .factory/services.yaml or the root package.json, and the mission guidance for this refactoring milestone says no E2E tests are needed."
+      "notes": "No test command is defined in .factory/services.yaml, and the mission guidance for this refactoring milestone says no E2E tests are needed."
     },
     "typecheck": {
       "passed": true,
       "command": "npm run build",
       "exitCode": 0,
-      "notes": "Per mission AGENTS.md, root type checking is validated through the build pipeline rather than a separate tsc command; this validation run completed successfully and the build log includes @documenso/remix running react-router typegen && tsc."
+      "notes": "Per mission AGENTS.md, root type checking is validated through the build pipeline rather than a separate tsc command; the build log includes @documenso/remix running react-router typegen && tsc."
     },
     "lint": {
       "passed": true,
       "command": "npm run lint",
       "exitCode": 0,
-      "notes": "Lint exited 0 with warnings only across @documenso/trpc, @documenso/ui, and @documenso/lib; no errors blocked the milestone validators in this rerun."
+      "notes": "Lint exited 0 with warnings only across @documenso/trpc, @documenso/ui, and @documenso/lib; no errors blocked the milestone validators."
     }
   },
   "reviewsSummary": {
-    "total": 7,
-    "passed": 7,
+    "total": 6,
+    "passed": 6,
     "failed": 0,
     "failedFeatures": []
   },
@@ -34,7 +34,7 @@
     {
       "target": "Mission AGENTS.md",
       "suggestion": "Document that exported TTL cache invalidation helpers should also be wired into the obvious mutation paths when those writes live in the same codebase, not merely exported for future callers.",
-      "evidence": "Round 1 reviews for server-cache-team-settings and server-cache-webhooks found bounded staleness because packages/trpc/server/team-router/update-team-settings.ts did not call clearTeamSettingsCache(teamId), and webhook mutations did not call clearWebhookCache(). Round 2's fix-cache-invalidation review confirmed the intended convention by wiring invalidation into packages/trpc/server/team-router/update-team-settings.ts plus packages/lib/server-only/webhooks/create-webhook.ts, edit-webhook.ts, delete-webhook-by-id.ts, zapier/subscribe.ts, and zapier/unsubscribe.ts.",
+      "evidence": "Reviews for server-cache-team-settings and server-cache-webhooks both found bounded staleness because packages/trpc/server/team-router/update-team-settings.ts does not call clearTeamSettingsCache(teamId), and packages/lib/server-only/webhooks/create-webhook.ts, edit-webhook.ts, and delete-webhook-by-id.ts do not call clearWebhookCache(). By contrast, packages/lib/server-only/site-settings/upsert-site-setting.ts already calls clearSiteSettingsCache().",
       "isSystemic": true
     },
     {
@@ -60,5 +60,5 @@
       "reason": "already-documented-by-code"
     }
   ],
-  "previousRound": ".factory/validation/server-side-performance/scrutiny/synthesis.round-1.json"
+  "previousRound": null
 }
