@@ -66,21 +66,32 @@ export const VerifyEmailBanner = ({ email }: VerifyEmailBannerProps) => {
     // Check localStorage to see if we've recently automatically displayed the dialog
     // if it was within the past 24 hours, don't show it again
     // otherwise, show it again and update the localStorage timestamp
-    const emailVerificationDialogLastShown = localStorage.getItem(
-      'emailVerificationDialogLastShown',
-    );
+    const STORAGE_KEY = 'v1:emailVerificationDialogLastShown';
 
-    if (emailVerificationDialogLastShown) {
-      const lastShownTimestamp = parseInt(emailVerificationDialogLastShown);
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
 
-      if (Date.now() - lastShownTimestamp < ONE_DAY) {
-        return;
+      if (raw !== null) {
+        const lastShownTimestamp = parseInt(raw, 10);
+
+        if (!isNaN(lastShownTimestamp) && Date.now() - lastShownTimestamp < ONE_DAY) {
+          return;
+        }
       }
+
+      // Migrate: remove legacy key if present
+      localStorage.removeItem('emailVerificationDialogLastShown');
+    } catch {
+      // localStorage may be unavailable (e.g. private browsing quota exceeded)
     }
 
     setIsOpen(true);
 
-    localStorage.setItem('emailVerificationDialogLastShown', Date.now().toString());
+    try {
+      localStorage.setItem(STORAGE_KEY, Date.now().toString());
+    } catch {
+      // Silently ignore write failures
+    }
   }, []);
 
   return (

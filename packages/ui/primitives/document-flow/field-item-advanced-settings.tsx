@@ -19,6 +19,7 @@ import {
   type TNumberFieldMeta as NumberFieldMeta,
   type TRadioFieldMeta as RadioFieldMeta,
   type TTextFieldMeta as TextFieldMeta,
+  ZFieldMetaNotOptionalSchema,
   ZFieldMetaSchema,
 } from '@documenso/lib/types/field-meta';
 import { useToast } from '@documenso/ui/primitives/use-toast';
@@ -168,13 +169,35 @@ export const FieldAdvancedSettings = forwardRef<HTMLDivElement, FieldAdvancedSet
 
     const fieldMeta = field?.fieldMeta;
 
-    const localStorageKey = `field_${field.formId}_${field.type}`;
+    const FIELD_STORAGE_VERSION = 'v1';
+    const localStorageKey = `${FIELD_STORAGE_VERSION}:field_${field.formId}_${field.type}`;
 
     const defaultState: FieldMeta = getDefaultState(field.type);
 
     const [fieldState, setFieldState] = useState(() => {
-      const savedState = localStorage.getItem(localStorageKey);
-      return savedState ? { ...defaultState, ...JSON.parse(savedState) } : defaultState;
+      try {
+        const savedState = localStorage.getItem(localStorageKey);
+
+        if (savedState) {
+          const parsed = JSON.parse(savedState);
+
+          // Validate shape with Zod before merging
+          if (ZFieldMetaNotOptionalSchema.safeParse(parsed).success) {
+            return { ...defaultState, ...parsed };
+          }
+        }
+
+        // Migrate: remove any legacy unversioned key
+        const legacyKey = `field_${field.formId}_${field.type}`;
+
+        if (localStorage.getItem(legacyKey) !== null) {
+          localStorage.removeItem(legacyKey);
+        }
+      } catch {
+        // localStorage unavailable or corrupted data — fall back to default
+      }
+
+      return defaultState;
     });
 
     useEffect(() => {

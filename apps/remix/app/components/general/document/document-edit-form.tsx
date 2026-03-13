@@ -307,10 +307,10 @@ export const DocumentEditForm = ({
     try {
       await saveFieldsData(data);
 
-      // Clear all field data from localStorage
-      for (let i = 0; i < localStorage.length; i++) {
+      // Clear all field data from localStorage (versioned and legacy keys)
+      for (let i = localStorage.length - 1; i >= 0; i--) {
         const key = localStorage.key(i);
-        if (key && key.startsWith('field_')) {
+        if (key && (key.startsWith('v1:field_') || key.startsWith('field_'))) {
           localStorage.removeItem(key);
         }
       }
