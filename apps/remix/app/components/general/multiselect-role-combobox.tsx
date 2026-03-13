@@ -22,12 +22,14 @@ type ComboboxProps = {
 
 const MultiSelectRoleCombobox = ({ listValues, onChange }: ComboboxProps) => {
   const [open, setOpen] = React.useState(false);
-  const [selectedValues, setSelectedValues] = React.useState<string[]>([]);
+  const [selectedValues, setSelectedValues] = React.useState<string[]>(listValues);
   const dbRoles = Object.values(Role);
 
-  React.useEffect(() => {
+  const [prevListValues, setPrevListValues] = React.useState(listValues);
+  if (listValues !== prevListValues) {
+    setPrevListValues(listValues);
     setSelectedValues(listValues);
-  }, [listValues]);
+  }
 
   const allRoles = [...new Set([...dbRoles, ...selectedValues])];
 

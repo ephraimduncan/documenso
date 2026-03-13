@@ -41,6 +41,20 @@ export const DropdownFieldAdvancedSettings = ({
   const [required, setRequired] = useState(fieldState.required ?? false);
   const [defaultValue, setDefaultValue] = useState(fieldState.defaultValue ?? _(msg`Option 1`));
 
+  const [prevFieldStateValues, setPrevFieldStateValues] = useState(fieldState.values);
+  if (fieldState.values !== prevFieldStateValues) {
+    setPrevFieldStateValues(fieldState.values);
+    setValues(fieldState.values ?? [{ value: _(msg`Option 1`) }]);
+  }
+
+  const [prevFieldStateDefaultValue, setPrevFieldStateDefaultValue] = useState(
+    fieldState.defaultValue,
+  );
+  if (fieldState.defaultValue !== prevFieldStateDefaultValue) {
+    setPrevFieldStateDefaultValue(fieldState.defaultValue);
+    setDefaultValue(fieldState.defaultValue ?? _(msg`Option 1`));
+  }
+
   const addValue = () => {
     setValues([...values, { value: _(msg`New option`) }]);
     handleFieldChange('values', [...values, { value: _(msg`New option`) }]);
@@ -89,14 +103,6 @@ export const DropdownFieldAdvancedSettings = ({
     handleErrors(errors);
   }, [values]);
 
-  useEffect(() => {
-    setValues(fieldState.values ?? [{ value: _(msg`Option 1`) }]);
-  }, [fieldState.values]);
-
-  useEffect(() => {
-    setDefaultValue(fieldState.defaultValue ?? _(msg`Option 1`));
-  }, [fieldState.defaultValue]);
-
   return (
     <div className="text-dark flex flex-col gap-4">
       <div>
@@ -114,7 +120,7 @@ export const DropdownFieldAdvancedSettings = ({
             handleFieldChange('defaultValue', val);
           }}
         >
-          <SelectTrigger className="text-muted-foreground bg-background mt-2 w-full">
+          <SelectTrigger className="mt-2 w-full bg-background text-muted-foreground">
             <SelectValue defaultValue={defaultValue} placeholder={`-- ${_(msg`Select`)} --`} />
           </SelectTrigger>
           <SelectContent position="popper">
@@ -152,7 +158,7 @@ export const DropdownFieldAdvancedSettings = ({
         </div>
       </div>
       <Button
-        className="bg-foreground/10 hover:bg-foreground/5 border-foreground/10 mt-2 border"
+        className="mt-2 border border-foreground/10 bg-foreground/10 hover:bg-foreground/5"
         variant="outline"
         onClick={() => setShowValidation((prev) => !prev)}
       >
@@ -183,7 +189,7 @@ export const DropdownFieldAdvancedSettings = ({
             </div>
           ))}
           <Button
-            className="bg-foreground/10 hover:bg-foreground/5 border-foreground/10 ml-9 mt-4 border"
+            className="ml-9 mt-4 border border-foreground/10 bg-foreground/10 hover:bg-foreground/5"
             variant="outline"
             onClick={addValue}
           >

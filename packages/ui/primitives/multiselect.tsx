@@ -179,6 +179,14 @@ const MultiSelect = ({
   const dropdownRef = React.useRef<HTMLDivElement>(null); // Added this
 
   const [selected, setSelected] = React.useState<Option[]>(value || []);
+  const [prevValue, setPrevValue] = React.useState(value);
+  if (value !== prevValue) {
+    setPrevValue(value);
+    if (value) {
+      setSelected(value);
+    }
+  }
+
   const [options, setOptions] = React.useState<GroupOption>(
     transToGroupOption(arrayDefaultOptions, groupBy),
   );
@@ -242,12 +250,6 @@ const MultiSelect = ({
       document.removeEventListener('touchend', handleClickOutside);
     };
   }, [open]);
-
-  useEffect(() => {
-    if (value) {
-      setSelected(value);
-    }
-  }, [value]);
 
   useEffect(() => {
     /** If `onSearch` is provided, do not trigger options updated. */

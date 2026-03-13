@@ -154,8 +154,14 @@ export const AddTemplateFieldsFormPartial = ({
   });
 
   const [selectedField, setSelectedField] = useState<FieldType | null>(null);
-  const [selectedSigner, setSelectedSigner] = useState<Recipient | null>(null);
+  const [selectedSigner, setSelectedSigner] = useState<Recipient | null>(recipients[0] ?? null);
   const [showRecipientsSelector, setShowRecipientsSelector] = useState(false);
+
+  const [prevRecipients, setPrevRecipients] = useState(recipients);
+  if (recipients !== prevRecipients) {
+    setPrevRecipients(recipients);
+    setSelectedSigner(recipients[0] ?? null);
+  }
 
   const selectedSignerIndex = recipients.findIndex((r) => r.id === selectedSigner?.id);
   const selectedSignerStyles = useRecipientColors(
@@ -487,10 +493,6 @@ export const AddTemplateFieldsFormPartial = ({
       observer.disconnect();
     };
   }, []);
-
-  useEffect(() => {
-    setSelectedSigner(recipients[0]);
-  }, [recipients]);
 
   const recipientsByRole = useMemo(() => {
     const recipientsByRole: Record<RecipientRole, Recipient[]> = {

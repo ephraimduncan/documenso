@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 
 import { Trans } from '@lingui/react/macro';
 import { EnvelopeType } from '@prisma/client';
@@ -72,15 +72,6 @@ export default function DocumentsPage() {
     return Object.keys(rowSelection).filter((id) => rowSelection[id]);
   }, [rowSelection]);
 
-  const [stats, setStats] = useState<TFindDocumentsInternalResponse['stats']>({
-    [ExtendedDocumentStatus.DRAFT]: 0,
-    [ExtendedDocumentStatus.PENDING]: 0,
-    [ExtendedDocumentStatus.COMPLETED]: 0,
-    [ExtendedDocumentStatus.REJECTED]: 0,
-    [ExtendedDocumentStatus.INBOX]: 0,
-    [ExtendedDocumentStatus.ALL]: 0,
-  });
-
   const findDocumentSearchParams = useMemo(
     () => ZSearchParamsSchema.safeParse(Object.fromEntries(searchParams.entries())).data || {},
     [searchParams],
@@ -95,6 +86,21 @@ export default function DocumentsPage() {
       ...SKIP_QUERY_BATCH_META,
     },
   );
+
+  const DEFAULT_STATS: TFindDocumentsInternalResponse['stats'] = {
+    [ExtendedDocumentStatus.DRAFT]: 0,
+    [ExtendedDocumentStatus.PENDING]: 0,
+    [ExtendedDocumentStatus.COMPLETED]: 0,
+    [ExtendedDocumentStatus.REJECTED]: 0,
+    [ExtendedDocumentStatus.INBOX]: 0,
+    [ExtendedDocumentStatus.ALL]: 0,
+  };
+
+  const lastStatsRef = useRef(DEFAULT_STATS);
+  if (data?.stats) {
+    lastStatsRef.current = data.stats;
+  }
+  const stats = data?.stats ?? lastStatsRef.current;
 
   const getTabHref = (value: keyof typeof ExtendedDocumentStatus) => {
     const params = new URLSearchParams(searchParams);
@@ -125,12 +131,6 @@ export default function DocumentsPage() {
 
     return path;
   };
-
-  useEffect(() => {
-    if (data?.stats) {
-      setStats(data.stats);
-    }
-  }, [data?.stats]);
 
   return (
     <EnvelopeDropZoneWrapper type={EnvelopeType.DOCUMENT}>

@@ -215,7 +215,9 @@ export const FieldAdvancedSettings = forwardRef<HTMLDivElement, FieldAdvancedSet
       return defaultState;
     });
 
-    useEffect(() => {
+    const [prevFieldMeta, setPrevFieldMeta] = useState(fieldMeta);
+    if (fieldMeta !== prevFieldMeta) {
+      setPrevFieldMeta(fieldMeta);
       if (fieldMeta && typeof fieldMeta === 'object') {
         const parsedFieldMeta = ZFieldMetaSchema.parse(fieldMeta);
 
@@ -224,8 +226,7 @@ export const FieldAdvancedSettings = forwardRef<HTMLDivElement, FieldAdvancedSet
           ...parsedFieldMeta,
         });
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fieldMeta]);
+    }
 
     const { scheduleSave } = useAutoSave(onAutoSave || (async () => {}));
 
