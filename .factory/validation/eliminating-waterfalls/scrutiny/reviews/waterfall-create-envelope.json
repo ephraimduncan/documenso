@@ -1,0 +1,21 @@
+{
+  "featureId": "waterfall-create-envelope",
+  "reviewedAt": "2026-03-13T01:36:38Z",
+  "commitId": "b32035f34",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The implementation satisfies VAL-WATERFALL-002. In createEnvelope, prisma.team.findFirst(...) and getTeamSettings({ userId, teamId }) now run concurrently via Promise.all at packages/lib/server-only/envelope/create-envelope.ts:139, and documentMeta creation, secondary ID allocation, and delegated owner validation run concurrently via Promise.all at packages/lib/server-only/envelope/create-envelope.ts:303. The dependency chain remains intact because the team null check, folder validation, action-auth guard, emailId validation, and timezone/settings-derived inputs still happen before the second Promise.all. I found no correctness or ordering regressions in the reviewed diff.",
+    "issues": []
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The perf-refactor-worker skill's example handoff incorrectly says getTeamSettings depends on team.id and should stay serial. The reviewed feature correctly parallelized it because getTeamSettings actually takes teamId from input. The example could mislead future workers reviewing similar waterfalls.",
+      "evidence": ".factory/skills/perf-refactor-worker/SKILL.md:75 says 'team.id is needed by getTeamSettings'; packages/lib/server-only/team/get-team-settings.ts:14-16 shows getTeamSettings({ userId, teamId }) only depends on the input teamId."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Pass. The feature correctly parallelizes only the independent awaits required by VAL-WATERFALL-002, preserves the existing dependency chain and guards, and introduces no code review issues in the reviewed diff. One minor shared-state gap was noted: the perf-refactor-worker skill example describes the team/settings dependency incorrectly."
+}

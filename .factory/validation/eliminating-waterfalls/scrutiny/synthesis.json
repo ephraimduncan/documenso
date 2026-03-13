@@ -1,0 +1,55 @@
+{
+  "milestone": "eliminating-waterfalls",
+  "round": 1,
+  "status": "pass",
+  "validatorsRun": {
+    "test": {
+      "passed": true,
+      "command": "not-configured",
+      "exitCode": 0,
+      "notes": "No test command is defined in .factory/services.yaml or the root package.json, and the mission AGENTS.md specifies no E2E tests are needed for this refactoring milestone."
+    },
+    "typecheck": {
+      "passed": true,
+      "command": "npm run build",
+      "exitCode": 0,
+      "notes": "Per mission AGENTS.md, root type checking is validated through the build pipeline rather than a separate npx tsc --noEmit command."
+    },
+    "lint": {
+      "passed": true,
+      "command": "npm run lint",
+      "exitCode": 0,
+      "notes": "Lint completed with warnings only and no errors."
+    }
+  },
+  "reviewsSummary": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0,
+    "failedFeatures": []
+  },
+  "blockingIssues": [],
+  "appliedUpdates": [],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": ".factory/skills/perf-refactor-worker/SKILL.md",
+      "suggestion": "Fix the example handoff text that says getTeamSettings depends on team.id and therefore must stay serial. The actual helper takes teamId directly, so the example currently teaches the wrong dependency analysis for waterfall-elimination work.",
+      "evidence": "The waterfall-create-envelope review compared .factory/skills/perf-refactor-worker/SKILL.md:75 with packages/lib/server-only/team/get-team-settings.ts:14-16 and found the skill example still claims team.id is needed by getTeamSettings even though the function only depends on the input teamId.",
+      "isSystemic": true
+    },
+    {
+      "target": ".factory/skills/perf-refactor-worker/SKILL.md",
+      "suggestion": "Add a short gotcha note for Promise.all(array.map(...)) refactors that reminds workers to use an async callback when the callback returns a promise, otherwise the @typescript-eslint/promise-function-async rule will fail lint.",
+      "evidence": "The waterfall-duplicate-envelope review found the worker hit @typescript-eslint/promise-function-async while converting a sequential recipient loop to Promise.all(envelope.recipients.map(...)) and had to correct the callback shape before lint passed.",
+      "isSystemic": false
+    },
+    {
+      "target": "validation-contract.md",
+      "suggestion": "Adjust VAL-WATERFALL-004 to say the envelope edit loader parallelizes the 2 independent post-verification calls, not 3 independent calls, because the organisationEmail lookup depends on envelope.team.organisationId.",
+      "evidence": "The waterfall-envelope-edit-loader review confirmed getTeamSettings and getEditorEnvelopeById are the only independent post-verification calls in apps/remix/app/routes/embed+/v2+/authoring+/envelope.edit.$id.tsx, while prisma.organisationEmail.findMany depends on the loaded envelope.",
+      "isSystemic": false
+    }
+  ],
+  "rejectedObservations": [],
+  "previousRound": null
+}

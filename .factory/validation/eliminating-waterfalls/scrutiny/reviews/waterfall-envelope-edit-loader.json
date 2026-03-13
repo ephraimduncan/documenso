@@ -1,0 +1,21 @@
+{
+  "featureId": "waterfall-envelope-edit-loader",
+  "reviewedAt": "2026-03-13T01:36:18Z",
+  "commitId": "371776961f6d1b78f785e74d541a191d50d0d3b5",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The implementation correctly parallelizes only the independent post-verification work in the embed V2 envelope edit loader. After verifyEmbeddingPresignToken resolves, getTeamSettings and getEditorEnvelopeById now run concurrently via Promise.all, while organisationEmail.findMany correctly remains sequential because it depends on envelope.team.organisationId. The existing envelope null handling, redirect behavior, catch-to-null behavior, and loader response shape are preserved.",
+    "issues": []
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "VAL-WATERFALL-004 says the envelope edit loader should parallelize the '3 independent calls' after token verification, but the reviewed loader only has 2 independent post-verification calls. The organisationEmail lookup depends on envelope.team.organisationId and is not independent.",
+      "evidence": "In apps/remix/app/routes/embed+/v2+/authoring+/envelope.edit.$id.tsx, getTeamSettings(...) and getEditorEnvelopeById(...) both depend only on verifyEmbeddingPresignToken output, while prisma.organisationEmail.findMany(...) depends on envelope.team.organisationId. validation-contract.md currently describes all 3 as independent."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Pass. The loader parallelizes exactly the independent calls after token verification, preserves ordering and data shape, and introduces no correctness regressions in the reviewed diff. One shared-state observation: VAL-WATERFALL-004 overstates the number of independent calls in this loader."
+}

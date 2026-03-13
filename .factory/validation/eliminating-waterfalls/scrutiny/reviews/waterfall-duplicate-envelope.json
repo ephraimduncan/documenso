@@ -1,0 +1,21 @@
+{
+  "featureId": "waterfall-duplicate-envelope",
+  "reviewedAt": "2026-03-13T01:36:15Z",
+  "commitId": "e9913a29c",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The implementation satisfies VAL-WATERFALL-003. In duplicateEnvelope, the ID increment step (incrementDocumentId or incrementTemplateId) and prisma.documentMeta.create now run concurrently via Promise.all, and these operations are independent because both only depend on the fetched envelope data. The sequential recipient creation loop was also converted to Promise.all(envelope.recipients.map(...)); this is safe because each recipient insert only depends on duplicatedEnvelope.id and the already-populated oldEnvelopeItemToNewEnvelopeItemIdMap from the prior awaited envelope item duplication step. Error propagation and transactional behavior are unchanged from the original non-transactional implementation.",
+    "issues": []
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "When converting a sequential loop to Promise.all(array.map(...)), the worker initially omitted async on the map callback and hit the @typescript-eslint/promise-function-async rule before fixing it. The mission AGENTS.md and perf-refactor-worker skill do not call out this lint rule as a common gotcha for Promise.all refactors.",
+      "evidence": "worker-transcripts.jsonl for session 96dc8545-d069-44ca-887a-76c116ee9344 shows a lint failure on the recipient map callback followed by a targeted edit adding async; the handoff verification notes the same fix."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Pass. The feature correctly parallelizes both independent DB operations and recipient creation work in duplicateEnvelope, preserves existing behavior, and introduces no correctness or transactional regressions. One shared-state note: the Promise.all map-callback async lint gotcha may be worth documenting for future workers."
+}
