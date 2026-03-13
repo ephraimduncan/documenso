@@ -187,10 +187,25 @@ export const FieldAdvancedSettings = forwardRef<HTMLDivElement, FieldAdvancedSet
           }
         }
 
-        // Migrate: remove any legacy unversioned key
+        // Migrate legacy unversioned key to versioned key
         const legacyKey = `field_${field.formId}_${field.type}`;
+        const legacyValue = localStorage.getItem(legacyKey);
 
-        if (localStorage.getItem(legacyKey) !== null) {
+        if (legacyValue !== null) {
+          try {
+            const parsed = JSON.parse(legacyValue);
+            const result = ZFieldMetaNotOptionalSchema.safeParse(parsed);
+
+            if (result.success) {
+              localStorage.setItem(localStorageKey, legacyValue);
+              localStorage.removeItem(legacyKey);
+
+              return { ...defaultState, ...parsed };
+            }
+          } catch {
+            // Legacy data corrupted — discard it
+          }
+
           localStorage.removeItem(legacyKey);
         }
       } catch {

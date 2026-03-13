@@ -79,8 +79,26 @@ export const VerifyEmailBanner = ({ email }: VerifyEmailBannerProps) => {
         }
       }
 
-      // Migrate: remove legacy key if present
-      localStorage.removeItem('emailVerificationDialogLastShown');
+      // Migrate legacy key to versioned key if present
+      const legacyKey = 'emailVerificationDialogLastShown';
+      const legacyRaw = localStorage.getItem(legacyKey);
+
+      if (legacyRaw !== null) {
+        const legacyTimestamp = parseInt(legacyRaw, 10);
+
+        if (!isNaN(legacyTimestamp) && legacyTimestamp > 0 && legacyTimestamp <= Date.now()) {
+          localStorage.setItem(STORAGE_KEY, legacyRaw);
+
+          // If the migrated timestamp is still within 24 hours, suppress the dialog
+          if (Date.now() - legacyTimestamp < ONE_DAY) {
+            localStorage.removeItem(legacyKey);
+
+            return;
+          }
+        }
+
+        localStorage.removeItem(legacyKey);
+      }
     } catch {
       // localStorage may be unavailable (e.g. private browsing quota exceeded)
     }
