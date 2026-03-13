@@ -1,0 +1,53 @@
+{
+  "milestone": "bundle-size",
+  "round": 1,
+  "status": "pass",
+  "assertionsSummary": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0,
+    "blocked": 0
+  },
+  "passedAssertions": [
+    "VAL-BUNDLE-001",
+    "VAL-BUNDLE-002",
+    "VAL-BUNDLE-003",
+    "VAL-BUNDLE-004"
+  ],
+  "failedAssertions": [],
+  "blockedAssertions": [],
+  "appliedUpdates": [],
+  "previousRound": null,
+  "flowReports": [
+    ".factory/validation/bundle-size/user-testing/flows/posthog-charts.json",
+    ".factory/validation/bundle-size/user-testing/flows/motion-links.json"
+  ],
+  "sharedChecks": {
+    "serviceHealth": [
+      {
+        "service": "postgres",
+        "command": "pg_isready -h localhost -p 5432",
+        "exitCode": 0,
+        "observation": "localhost:5432 accepted connections during validation setup."
+      }
+    ],
+    "commands": [
+      {
+        "command": "npm run build",
+        "exitCode": 0,
+        "observation": "turbo run build completed successfully; the build finished with 5 successful tasks and emitted the Remix stats route client asset without errors."
+      },
+      {
+        "command": "npm run lint",
+        "exitCode": 0,
+        "observation": "turbo run lint completed successfully with 0 errors; existing warnings remained in @documenso/ui, @documenso/trpc, and @documenso/lib but did not fail lint."
+      }
+    ]
+  },
+  "nonBlockingFindings": [
+    {
+      "source": "posthog-charts",
+      "description": "The flow validator noted that the fire-and-forget posthog-js dynamic import chains still lack .catch() handlers, which could surface an unhandled promise rejection if the chunk fails to load."
+    }
+  ]
+}

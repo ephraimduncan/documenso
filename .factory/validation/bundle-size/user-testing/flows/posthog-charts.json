@@ -1,0 +1,76 @@
+{
+  "milestone": "bundle-size",
+  "groupId": "posthog-charts",
+  "surface": "terminal-validation",
+  "testedAt": "2026-03-13T02:41:20Z",
+  "isolation": {
+    "mode": "read-only inspection",
+    "repoRoot": "/Users/duncan/dev/documenso-wt-main-wt",
+    "missionDir": "/Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807",
+    "assignedAssertions": ["VAL-BUNDLE-001", "VAL-BUNDLE-002"]
+  },
+  "toolsUsed": ["Read", "Grep"],
+  "assertions": [
+    {
+      "id": "VAL-BUNDLE-001",
+      "title": "PostHog is dynamically imported",
+      "status": "pass",
+      "reason": "The inspected client entrypoint and analytics hook both load posthog-js with dynamic import() instead of a static top-level client import.",
+      "evidence": [
+        {
+          "file": "/Users/duncan/dev/documenso-wt-main-wt/apps/remix/app/entry.client.tsx",
+          "lines": "19-23",
+          "details": "PosthogInit calls void import('posthog-js').then(({ default: posthog }) => { ... }) inside useEffect, so the browser loads posthog-js after hydration and only when PostHog config exists."
+        },
+        {
+          "file": "/Users/duncan/dev/documenso-wt-main-wt/packages/lib/client-only/hooks/use-analytics.ts",
+          "lines": "3-7",
+          "details": "The hook memoizes a Promise<typeof import('posthog-js')> and assigns posthogPromise = import('posthog-js') on first use, preserving on-demand loading for capture paths."
+        },
+        {
+          "file": "/Users/duncan/dev/documenso-wt-main-wt",
+          "lines": "repo-wide grep (*.ts,*.tsx)",
+          "details": "A fixed-string search for static from 'posthog-js' imports returned no matches, so the inspected TypeScript client files do not statically import posthog-js."
+        }
+      ],
+      "issues": "Non-blocking gap: the fire-and-forget dynamic import chains shown in entry.client.tsx and use-analytics.ts do not attach .catch(), so a failed chunk request could leave analytics unavailable and surface an unhandled promise rejection."
+    },
+    {
+      "id": "VAL-BUNDLE-002",
+      "title": "recharts is lazily loaded on admin stats",
+      "status": "pass",
+      "reason": "The admin stats route lazy-loads each recharts-based chart module with React.lazy() and renders the chart grid behind a Suspense fallback, keeping recharts imports inside the split modules.",
+      "evidence": [
+        {
+          "file": "/Users/duncan/dev/documenso-wt-main-wt/apps/remix/app/routes/_authenticated+/admin+/stats.tsx",
+          "lines": "37-51",
+          "details": "The route defines MonthlyActiveUsersChart, AdminStatsSignerConversionChart, and AdminStatsUsersWithDocumentsChart with lazy(async () => import(...).then((mod) => ({ default: mod.ComponentName })))."
+        },
+        {
+          "file": "/Users/duncan/dev/documenso-wt-main-wt/apps/remix/app/routes/_authenticated+/admin+/stats.tsx",
+          "lines": "179-216",
+          "details": "The chart section is wrapped in <Suspense> with animated placeholder cards, so the route can render while the chart chunks load asynchronously."
+        },
+        {
+          "file": "/Users/duncan/dev/documenso-wt-main-wt/apps/remix/app/components/general/admin-monthly-active-user-charts.tsx",
+          "lines": "2-3",
+          "details": "This lazy-loaded chart module imports TooltipProps plus Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, and YAxis from recharts."
+        },
+        {
+          "file": "/Users/duncan/dev/documenso-wt-main-wt/apps/remix/app/components/general/admin-stats-signer-conversion-chart.tsx",
+          "lines": "2",
+          "details": "This lazy-loaded chart module imports its chart primitives directly from recharts."
+        },
+        {
+          "file": "/Users/duncan/dev/documenso-wt-main-wt/apps/remix/app/components/general/admin-stats-users-with-documents.tsx",
+          "lines": "2-3",
+          "details": "This lazy-loaded chart module imports Bar/BarChart/ResponsiveContainer/Tooltip/XAxis/YAxis and tooltip types from recharts."
+        }
+      ],
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Both assigned bundle-size assertions pass on read-only terminal inspection. posthog-js is dynamically imported in the client entry and analytics hook, and the admin stats route lazy-loads the recharts chart modules behind a Suspense boundary."
+}

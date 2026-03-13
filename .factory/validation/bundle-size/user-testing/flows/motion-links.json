@@ -1,0 +1,122 @@
+{
+  "groupId": "motion-links",
+  "surface": "terminal-validation",
+  "testedAt": "2026-03-13T02:42:13Z",
+  "isolation": {
+    "mode": "read-only inspection",
+    "repoRoot": "/Users/duncan/dev/documenso-wt-main-wt",
+    "missionDir": "/Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807",
+    "milestone": "bundle-size"
+  },
+  "toolsUsed": ["Read", "Grep", "Execute"],
+  "assertions": [
+    {
+      "id": "VAL-BUNDLE-003",
+      "title": "framer-motion tree-shaking verified",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Inspect .factory/library/framer-motion-imports.md",
+          "expected": "The investigation should document whether subpath imports are viable and whether barrel imports tree-shake.",
+          "observed": "The document says the codebase uses React APIs not exposed from the explored subpaths, notes tree-shaking already works, and concludes the barrel import is the only viable path."
+        },
+        {
+          "action": "Inspect installed framer-motion package metadata",
+          "expected": "The installed package should be marked tree-shakeable.",
+          "observed": "node_modules/framer-motion/package.json:60 contains \"sideEffects\": false."
+        },
+        {
+          "action": "Inspect a representative code-use site",
+          "expected": "The codebase should be using React motion APIs that match the documented constraint.",
+          "observed": "packages/ui/components/signing-card.tsx:4 imports animate, motion, useMotionTemplate, useMotionValue, and useTransform from framer-motion."
+        }
+      ],
+      "evidence": {
+        "fileLines": [
+          ".factory/library/framer-motion-imports.md:15",
+          ".factory/library/framer-motion-imports.md:18",
+          ".factory/library/framer-motion-imports.md:20",
+          ".factory/library/framer-motion-imports.md:24",
+          "node_modules/framer-motion/package.json:60",
+          "packages/ui/components/signing-card.tsx:4"
+        ],
+        "notesFile": "bundle-size/motion-links/evidence-notes.md",
+        "sharedChecks": "Per .factory/library/user-testing.md, build and lint checks are centralized in the parent validator and were not rerun in this read-only flow validation."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-BUNDLE-004",
+      "title": "Link components use prefetch=\"intent\"",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Search apps/remix/app/**/*.tsx for prefetch=\"intent\"",
+          "expected": "The navigation-link pattern should be broadly present across the app.",
+          "observed": "Read-only inspection found 114 prefetch=\"intent\" matches across 55 TSX files in apps/remix/app."
+        },
+        {
+          "action": "Inspect representative shared navigation components",
+          "expected": "Core shared navigation surfaces should include intent prefetching.",
+          "observed": "app-header.tsx and settings-nav-desktop.tsx both show repeated navigation Links with prefetch=\"intent\"."
+        },
+        {
+          "action": "Inspect representative route layouts",
+          "expected": "Route-level navigation layouts should also use intent prefetching.",
+          "observed": "The authenticated admin layout, authenticated root layout, profile layout, and recipient layout each contain Link entries with prefetch=\"intent\"."
+        },
+        {
+          "action": "Spot-check representative Links without prefetch",
+          "expected": "Any remaining omissions should be explainable by context rather than indicating the pattern was not broadly applied to navigation links.",
+          "observed": "Remaining examples sampled were table row/action links, an external target=\"_blank\" docs link, and dynamic org/team card links rather than shared navigation/layout links."
+        }
+      ],
+      "evidence": {
+        "fileLines": [
+          "apps/remix/app/components/general/app-header.tsx:64",
+          "apps/remix/app/components/general/app-header.tsx:73",
+          "apps/remix/app/components/general/settings-nav-desktop.tsx:38",
+          "apps/remix/app/components/general/settings-nav-desktop.tsx:53",
+          "apps/remix/app/components/general/settings-nav-desktop.tsx:60",
+          "apps/remix/app/components/general/settings-nav-desktop.tsx:72",
+          "apps/remix/app/components/general/settings-nav-desktop.tsx:84",
+          "apps/remix/app/components/general/settings-nav-desktop.tsx:96",
+          "apps/remix/app/components/general/settings-nav-desktop.tsx:109",
+          "apps/remix/app/components/general/settings-nav-desktop.tsx:122",
+          "apps/remix/app/components/general/settings-nav-desktop.tsx:137",
+          "apps/remix/app/components/general/settings-nav-desktop.tsx:168",
+          "apps/remix/app/routes/_authenticated+/admin+/_layout.tsx:65",
+          "apps/remix/app/routes/_authenticated+/admin+/_layout.tsx:79",
+          "apps/remix/app/routes/_authenticated+/admin+/_layout.tsx:93",
+          "apps/remix/app/routes/_authenticated+/admin+/_layout.tsx:107",
+          "apps/remix/app/routes/_authenticated+/admin+/_layout.tsx:121",
+          "apps/remix/app/routes/_authenticated+/admin+/_layout.tsx:135",
+          "apps/remix/app/routes/_authenticated+/admin+/_layout.tsx:149",
+          "apps/remix/app/routes/_authenticated+/admin+/_layout.tsx:163",
+          "apps/remix/app/routes/_authenticated+/admin+/_layout.tsx:177",
+          "apps/remix/app/routes/_authenticated+/_layout.tsx:101",
+          "apps/remix/app/routes/_profile+/_layout.tsx:79",
+          "apps/remix/app/routes/_profile+/_layout.tsx:120",
+          "apps/remix/app/routes/_recipient+/_layout.tsx:54",
+          "apps/remix/app/components/tables/user-billing-organisations-table.tsx:54",
+          "apps/remix/app/components/tables/user-billing-organisations-table.tsx:83",
+          "apps/remix/app/components/general/admin-license-status-banner.tsx:70",
+          "apps/remix/app/routes/_authenticated+/dashboard.tsx:106",
+          "apps/remix/app/routes/_authenticated+/dashboard.tsx:152",
+          "apps/remix/app/routes/_authenticated+/dashboard.tsx:185",
+          "apps/remix/app/routes/_authenticated+/dashboard.tsx:226"
+        ],
+        "searchFindings": [
+          "apps/remix/app/**/*.tsx contains 114 prefetch=\"intent\" occurrences across 55 files.",
+          "Representative coverage spans shared header/settings navigation plus authenticated, admin, profile, and recipient route layouts."
+        ],
+        "notesFile": "bundle-size/motion-links/evidence-notes.md",
+        "sharedChecks": "Per .factory/library/user-testing.md, build and lint checks are centralized in the parent validator and were not rerun in this read-only flow validation."
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Validated 2 bundle-size assertions by read-only inspection. VAL-BUNDLE-003 passed based on documented framer-motion tree-shaking evidence plus installed package metadata, and VAL-BUNDLE-004 passed based on widespread prefetch=\"intent\" usage across 55 app files with representative navigation coverage."
+}
