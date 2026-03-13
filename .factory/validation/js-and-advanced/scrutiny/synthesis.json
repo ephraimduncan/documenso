@@ -1,0 +1,72 @@
+{
+  "milestone": "js-and-advanced",
+  "round": 1,
+  "status": "pass",
+  "validatorsRun": {
+    "test": {
+      "passed": true,
+      "command": "not-configured",
+      "exitCode": 0,
+      "notes": "No test command is defined in .factory/services.yaml or the root package.json, and this mission's AGENTS.md defines validation as build plus lint rather than a separate test suite."
+    },
+    "typecheck": {
+      "passed": true,
+      "command": "npm run build",
+      "exitCode": 0,
+      "notes": "Per mission AGENTS.md, root type checking is validated through the build pipeline instead of a standalone tsc command. `turbo run build` completed successfully during this validation run."
+    },
+    "lint": {
+      "passed": true,
+      "command": "npm run lint",
+      "exitCode": 0,
+      "notes": "Lint exited 0 with warnings only: 37 in @documenso/lib, 17 in @documenso/ui, and 7 in @documenso/trpc. No lint errors blocked this milestone."
+    }
+  },
+  "reviewsSummary": {
+    "total": 3,
+    "passed": 3,
+    "failed": 0,
+    "failedFeatures": []
+  },
+  "blockingIssues": [],
+  "appliedUpdates": [],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": ".factory/skills/perf-refactor-worker/SKILL.md",
+      "suggestion": "Add an explicit note that Map-based replacements for `.find()` inside loops can change duplicate-key behavior from first-match to last-wins. Workers should either prove duplicates cannot occur or preserve first-match semantics intentionally.",
+      "evidence": "The js-map-lookups review found packages/lib/server-only/pdf/generate-certificate-pdf.ts:61 replaced `fields.find(...)` with a `Map`, which now returns the last duplicate `recipientId` entry rather than the first match the original code would have used.",
+      "isSystemic": true
+    },
+    {
+      "target": "Mission feature generation",
+      "suggestion": "When requesting `.filter().map()` consolidation, distinguish eligible data-transformation chains from JSX-rendering chains that should usually stay unchanged for readability.",
+      "evidence": "The js-combine-iterations review found the worker had to separate data-transformation chains from JSX-rendering cases, ultimately converting 14 eligible files while intentionally leaving JSX chains such as apps/remix/app/components/dialogs/envelope-redistribute-dialog.tsx untouched.",
+      "isSystemic": false
+    },
+    {
+      "target": "Mission AGENTS.md",
+      "suggestion": "Reinforce that narrowly scoped refactors should avoid incidental formatter-only or Tailwind class-order churn, or revert that noise before commit so scrutiny diffs stay focused.",
+      "evidence": "The js-combine-iterations review found unrelated Tailwind class-order changes in apps/remix/app/components/general/document/document-recipient-link-copy-dialog.tsx, packages/ui/components/document/document-global-auth-action-select.tsx, and packages/ui/components/recipient/recipient-action-auth-select.tsx. A similar review-noise issue was already reported in the rerender-and-rendering scrutiny synthesis, making this a recurring pattern.",
+      "isSystemic": true
+    },
+    {
+      "target": "Mission AGENTS.md / validation-contract.md",
+      "suggestion": "Align the lint-baseline wording with the actual expectation for the final gate: lint currently exits 0 with warnings only, not with '4 pre-existing errors'.",
+      "evidence": "The cross-area-build-lint-check review compared mission AGENTS.md and validation-contract.md against the worker handoff and found the current final-gate lint result is 0 errors with warnings only (@documenso/lib 37, @documenso/ui 17, @documenso/trpc 7).",
+      "isSystemic": false
+    },
+    {
+      "target": "Mission feature generation",
+      "suggestion": "Assign verification-only milestone gate features to a validation-oriented skill, or explicitly document in perf-refactor-worker that some features are evidence-only and require no code edits.",
+      "evidence": "The cross-area-build-lint-check review found features.json assigns the verification-only final gate to `perf-refactor-worker`, while the worker appropriately only ran build/lint/status verification without editing code.",
+      "isSystemic": false
+    }
+  ],
+  "rejectedObservations": [
+    {
+      "observation": "Document the nullable-key sentinel pattern (`Map.get(id ?? -1)`) as the preferred way to translate nullable IDs into Map lookups during refactors.",
+      "reason": "ambiguous"
+    }
+  ],
+  "previousRound": null
+}

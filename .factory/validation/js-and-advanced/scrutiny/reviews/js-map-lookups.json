@@ -1,0 +1,39 @@
+{
+  "featureId": "js-map-lookups",
+  "reviewedAt": "2026-03-13T06:30:26Z",
+  "commitId": "0b635a9ad7805f983532b2b306ab21bbf579bf93",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Pass. I reviewed the feature metadata, handoff, transcript skeleton, worker skill, and full diff for commit 0b635a9ad7805f983532b2b306ab21bbf579bf93. The implementation satisfies the requested VAL-JS-001 refactor by replacing Array.find() calls inside map/filter-style loops with pre-built Map/Set lookups across the touched files, while preserving the surrounding validation and data-flow logic. I found no blocking regression in the reviewed scope. Two non-blocking observations remain: generate-certificate-pdf.ts now uses Map construction for signature lookups, which has last-wins semantics for duplicate keys whereas the original .find() returned the first match, and create-envelope-fields.ts uses a recipientId-to-field map with a misleading local variable name even though behavior is preserved because only recipientEmail is consumed.",
+    "issues": [
+      {
+        "file": "packages/lib/server-only/pdf/generate-certificate-pdf.ts",
+        "line": 61,
+        "severity": "non_blocking",
+        "description": "signatureFieldByRecipientId is built with new Map(...), which keeps the last entry for duplicate recipientId keys, while the previous fields.find(...) returned the first matching signature field. This is likely harmless because recipients normally have a single signature field, but it is a subtle semantics shift."
+      },
+      {
+        "file": "packages/lib/server-only/field/create-envelope-fields.ts",
+        "line": 266,
+        "severity": "non_blocking",
+        "description": "validatedFieldsByRecipientId maps recipientId to a validated field object rather than to a recipient, and the looked-up value is stored in a variable named recipient. Multiple validated fields can share a recipientId so the map keeps only the last one; behavior is still preserved here because the code only reads recipientEmail, which is the same for all fields owned by that recipient."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The perf-refactor-worker skill would benefit from explicitly warning that replacing .find() with Map construction changes duplicate-key semantics from first-match to last-wins unless the worker preserves first-match behavior deliberately.",
+      "evidence": "packages/lib/server-only/pdf/generate-certificate-pdf.ts:61 replaced fields.find(...) with signatureFieldByRecipientId built via new Map(...), which returns the last duplicate entry instead of the first one .find() would have returned."
+    },
+    {
+      "area": "conventions",
+      "observation": "The mission guidance does not document the nullable-key sentinel pattern used with Map.get(), which makes these refactors less obvious to reviewers than the original .find() calls. Either document the pattern or prefer an explicit null check before lookup.",
+      "evidence": "packages/lib/server-only/field/set-fields-for-document.ts uses existingFieldsById.get(field.id ?? -1); packages/lib/server-only/field/set-fields-for-template.ts uses existingFieldsById.get(field.id ?? -1); packages/lib/server-only/field/update-envelope-fields.ts uses recipientsById.get(originalField.recipientId ?? -1)."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Pass. The reviewed commit correctly converts the targeted .find()-inside-loop patterns to pre-built Map/Set lookups and meets the feature's expected behavior without any blocking regression. I noted two non-blocking issues: one subtle first-match vs last-wins semantics change in generate-certificate-pdf.ts and one misleading variable/mapping name in create-envelope-fields.ts."
+}
