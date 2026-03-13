@@ -112,12 +112,12 @@ export const deleteDocument = async ({
       });
   }
 
-  await triggerWebhook({
+  void triggerWebhook({
     event: WebhookTriggerEvents.DOCUMENT_CANCELLED,
     data: ZWebhookDocumentSchema.parse(mapEnvelopeToWebhookDocumentPayload(envelope)),
     userId,
     teamId,
-  });
+  }).catch((err) => console.error('Webhook trigger failed:', err));
 
   return envelope;
 };

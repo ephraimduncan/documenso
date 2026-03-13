@@ -413,10 +413,10 @@ export const completeDocumentWithToken = async ({
     },
   });
 
-  await triggerWebhook({
+  void triggerWebhook({
     event: WebhookTriggerEvents.DOCUMENT_SIGNED,
     data: ZWebhookDocumentSchema.parse(mapEnvelopeToWebhookDocumentPayload(updatedDocument)),
     userId: updatedDocument.userId,
     teamId: updatedDocument.teamId ?? undefined,
-  });
+  }).catch((err) => console.error('Webhook trigger failed:', err));
 };

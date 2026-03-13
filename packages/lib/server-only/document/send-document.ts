@@ -323,12 +323,12 @@ export const sendDocument = async ({
     );
   }
 
-  await triggerWebhook({
+  void triggerWebhook({
     event: WebhookTriggerEvents.DOCUMENT_SENT,
     data: ZWebhookDocumentSchema.parse(mapEnvelopeToWebhookDocumentPayload(updatedEnvelope)),
     userId,
     teamId,
-  });
+  }).catch((err) => console.error('Webhook trigger failed:', err));
 
   return updatedEnvelope;
 };

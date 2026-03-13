@@ -816,12 +816,12 @@ export const createDocumentFromDirectTemplate = async ({
       },
     });
 
-    await triggerWebhook({
+    void triggerWebhook({
       event: WebhookTriggerEvents.DOCUMENT_SIGNED,
       data: ZWebhookDocumentSchema.parse(mapEnvelopeToWebhookDocumentPayload(refetchedEnvelope)),
       userId: refetchedEnvelope.userId,
       teamId: refetchedEnvelope.teamId ?? undefined,
-    });
+    }).catch((err) => console.error('Webhook trigger failed:', err));
   } catch (err) {
     console.error('[CREATE_DOCUMENT_FROM_DIRECT_TEMPLATE]:', err);
 

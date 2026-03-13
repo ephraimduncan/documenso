@@ -179,12 +179,12 @@ export const duplicateEnvelope = async ({ id, userId, teamId }: DuplicateEnvelop
       },
     });
 
-    await triggerWebhook({
+    void triggerWebhook({
       event: WebhookTriggerEvents.DOCUMENT_CREATED,
       data: ZWebhookDocumentSchema.parse(mapEnvelopeToWebhookDocumentPayload(refetchedEnvelope)),
       userId: userId,
       teamId: teamId,
-    });
+    }).catch((err) => console.error('Webhook trigger failed:', err));
   }
 
   return {

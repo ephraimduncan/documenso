@@ -761,12 +761,12 @@ export const createDocumentFromTemplate = async ({
       throw new Error('Document not found');
     }
 
-    await triggerWebhook({
+    void triggerWebhook({
       event: WebhookTriggerEvents.DOCUMENT_CREATED,
       data: ZWebhookDocumentSchema.parse(mapEnvelopeToWebhookDocumentPayload(createdEnvelope)),
       userId,
       teamId,
-    });
+    }).catch((err) => console.error('Webhook trigger failed:', err));
 
     return envelope;
   });
