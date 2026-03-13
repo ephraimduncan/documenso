@@ -35,7 +35,7 @@ export const EnvelopeSignerHeader = () => {
       {/* Left side - Logo and title */}
       <div className="flex min-w-0 flex-1 items-center space-x-2 md:w-auto md:flex-none">
         {!isEmbedSigning && (
-          <Link to="/" className="flex-shrink-0">
+          <Link to="/" prefetch="intent" className="flex-shrink-0">
             {envelopeData.settings.brandingEnabled && envelopeData.settings.brandingLogo ? (
               <img
                 src={`/api/branding/logo/team/${envelope.teamId}`}

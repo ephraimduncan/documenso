@@ -72,7 +72,7 @@ export const FolderGrid = ({ type, parentId }: FolderGridProps) => {
           className="flex flex-1 items-center text-sm font-medium text-muted-foreground hover:text-muted-foreground/80"
           data-testid="folder-grid-breadcrumbs"
         >
-          <Link to={formatRootPath()} className="flex items-center">
+          <Link to={formatRootPath()} prefetch="intent" className="flex items-center">
             <HomeIcon className="mr-2 h-4 w-4" />
             <Trans>Home</Trans>
           </Link>
@@ -87,7 +87,11 @@ export const FolderGrid = ({ type, parentId }: FolderGridProps) => {
             foldersData?.breadcrumbs.map((folder) => (
               <div key={folder.id} className="flex items-center">
                 <span className="px-3">/</span>
-                <Link to={formatBreadCrumbPath(folder.id)} className="flex items-center">
+                <Link
+                  to={formatBreadCrumbPath(folder.id)}
+                  prefetch="intent"
+                  className="flex items-center"
+                >
                   <FolderIcon className="mr-2 h-4 w-4" />
                   <span>{folder.name}</span>
                 </Link>

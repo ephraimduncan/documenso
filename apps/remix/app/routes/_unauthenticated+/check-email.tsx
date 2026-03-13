@@ -17,7 +17,7 @@ export default function ForgotPasswordPage() {
           <Trans>Email sent!</Trans>
         </h1>
 
-        <p className="text-muted-foreground mb-4 mt-2 text-sm">
+        <p className="mb-4 mt-2 text-sm text-muted-foreground">
           <Trans>
             A password reset email has been sent, if you have an account you should see it in your
             inbox shortly.
@@ -25,7 +25,7 @@ export default function ForgotPasswordPage() {
         </p>
 
         <Button asChild>
-          <Link to="/signin">
+          <Link to="/signin" prefetch="intent">
             <Trans>Return to sign in</Trans>
           </Link>
         </Button>

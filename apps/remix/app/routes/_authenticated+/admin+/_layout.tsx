@@ -62,7 +62,7 @@ export default function AdminLayout({ loaderData }: Route.ComponentProps) {
             )}
             asChild
           >
-            <Link to="/admin/stats">
+            <Link to="/admin/stats" prefetch="intent">
               <BarChart3 className="mr-2 h-5 w-5" />
               <Trans>Stats</Trans>
             </Link>
@@ -76,7 +76,7 @@ export default function AdminLayout({ loaderData }: Route.ComponentProps) {
             )}
             asChild
           >
-            <Link to="/admin/organisations">
+            <Link to="/admin/organisations" prefetch="intent">
               <Building2Icon className="mr-2 h-5 w-5" />
               <Trans>Organisations</Trans>
             </Link>
@@ -90,7 +90,7 @@ export default function AdminLayout({ loaderData }: Route.ComponentProps) {
             )}
             asChild
           >
-            <Link to="/admin/claims">
+            <Link to="/admin/claims" prefetch="intent">
               <Wallet2 className="mr-2 h-5 w-5" />
               <Trans>Claims</Trans>
             </Link>
@@ -104,7 +104,7 @@ export default function AdminLayout({ loaderData }: Route.ComponentProps) {
             )}
             asChild
           >
-            <Link to="/admin/users">
+            <Link to="/admin/users" prefetch="intent">
               <Users className="mr-2 h-5 w-5" />
               <Trans>Users</Trans>
             </Link>
@@ -118,7 +118,7 @@ export default function AdminLayout({ loaderData }: Route.ComponentProps) {
             )}
             asChild
           >
-            <Link to="/admin/documents">
+            <Link to="/admin/documents" prefetch="intent">
               <FileStack className="mr-2 h-5 w-5" />
               <Trans>Documents</Trans>
             </Link>
@@ -132,7 +132,7 @@ export default function AdminLayout({ loaderData }: Route.ComponentProps) {
             )}
             asChild
           >
-            <Link to="/admin/unsealed-documents">
+            <Link to="/admin/unsealed-documents" prefetch="intent">
               <AlertTriangleIcon className="mr-2 h-5 w-5" />
               <Trans>Unsealed Documents</Trans>
             </Link>
@@ -146,7 +146,7 @@ export default function AdminLayout({ loaderData }: Route.ComponentProps) {
             )}
             asChild
           >
-            <Link to="/admin/email-domains">
+            <Link to="/admin/email-domains" prefetch="intent">
               <MailIcon className="mr-2 h-5 w-5" />
               <Trans>Email Domains</Trans>
             </Link>
@@ -160,7 +160,7 @@ export default function AdminLayout({ loaderData }: Route.ComponentProps) {
             )}
             asChild
           >
-            <Link to="/admin/organisation-insights">
+            <Link to="/admin/organisation-insights" prefetch="intent">
               <Trophy className="mr-2 h-5 w-5" />
               <Trans>Organisation Insights</Trans>
             </Link>
@@ -174,7 +174,7 @@ export default function AdminLayout({ loaderData }: Route.ComponentProps) {
             )}
             asChild
           >
-            <Link to="/admin/site-settings">
+            <Link to="/admin/site-settings" prefetch="intent">
               <Settings className="mr-2 h-5 w-5" />
               <Trans>Site Settings</Trans>
             </Link>

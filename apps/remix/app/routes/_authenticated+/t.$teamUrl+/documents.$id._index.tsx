@@ -84,7 +84,7 @@ export default function DocumentPage({ params }: Route.ComponentProps) {
         }}
         primaryButton={
           <Button asChild>
-            <Link to={`/t/${team.url}/documents`}>
+            <Link to={`/t/${team.url}/documents`} prefetch="intent">
               <Trans>Go back</Trans>
             </Link>
           </Button>
@@ -103,7 +103,11 @@ export default function DocumentPage({ params }: Route.ComponentProps) {
         <DocumentRecipientLinkCopyDialog recipients={envelope.recipients} />
       )}
 
-      <Link to={documentRootPath} className="flex items-center text-documenso-700 hover:opacity-80">
+      <Link
+        to={documentRootPath}
+        prefetch="intent"
+        className="flex items-center text-documenso-700 hover:opacity-80"
+      >
         <ChevronLeft className="mr-2 inline-block h-5 w-5" />
         <Trans>Documents</Trans>
       </Link>

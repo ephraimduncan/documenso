@@ -123,7 +123,7 @@ export default function SettingsLayout() {
         }}
         primaryButton={
           <Button asChild>
-            <Link to={`/o/${organisation.url}`}>
+            <Link to={`/o/${organisation.url}`} prefetch="intent">
               <Trans>Go Back</Trans>
             </Link>
           </Button>

@@ -66,13 +66,13 @@ export default function TeamsSettingsMembersPage() {
           <Tabs value={currentTab} className="flex-shrink-0 overflow-x-auto">
             <TabsList>
               <TabsTrigger className="min-w-[60px]" value="members" asChild>
-                <Link to={pathname ?? '/'}>
+                <Link to={pathname ?? '/'} prefetch="intent">
                   <Trans>Active</Trans>
                 </Link>
               </TabsTrigger>
 
               <TabsTrigger className="min-w-[60px]" value="invites" asChild>
-                <Link to={`${pathname}?tab=invites`}>
+                <Link to={`${pathname}?tab=invites`} prefetch="intent">
                   <Trans>Pending</Trans>
                 </Link>
               </TabsTrigger>

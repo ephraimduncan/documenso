@@ -235,7 +235,7 @@ export const DocumentSigningPageViewV2 = () => {
               {!isEmbed && (
                 <div className="px-4">
                   <Button asChild variant="ghost" className="w-full justify-start">
-                    <Link to="/">
+                    <Link to="/" prefetch="intent">
                       <ArrowLeftIcon className="mr-2 h-4 w-4" />
                       <Trans>Return</Trans>
                     </Link>

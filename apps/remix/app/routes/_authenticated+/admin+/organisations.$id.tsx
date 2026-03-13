@@ -166,7 +166,7 @@ export default function OrganisationGroupSettingsPage({
         }}
         primaryButton={
           <Button asChild>
-            <Link to={`/admin/organisations`}>
+            <Link to={`/admin/organisations`} prefetch="intent">
               <Trans>Go back</Trans>
             </Link>
           </Button>
@@ -183,7 +183,7 @@ export default function OrganisationGroupSettingsPage({
         subtitle={t`Manage the ${organisation.name} organisation`}
       >
         <Button variant="outline" asChild>
-          <Link to={`/admin/organisation-insights/${organisationId}`}>
+          <Link to={`/admin/organisation-insights/${organisationId}`} prefetch="intent">
             <Trans>View insights</Trans>
           </Link>
         </Button>

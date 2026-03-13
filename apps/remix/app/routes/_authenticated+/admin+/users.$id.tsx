@@ -71,7 +71,7 @@ export default function UserPage({ params }: { params: { id: number } }) {
         }}
         primaryButton={
           <Button asChild>
-            <Link to={`/admin/users`}>
+            <Link to={`/admin/users`} prefetch="intent">
               <Trans>Go back</Trans>
             </Link>
           </Button>

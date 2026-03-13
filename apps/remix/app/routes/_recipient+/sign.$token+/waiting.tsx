@@ -92,13 +92,13 @@ export default function WaitingForTurnToSignPage({ loaderData }: Route.Component
         <div className="mt-4">
           {documentPathForEditing ? (
             <Button variant="link" asChild>
-              <Link to={documentPathForEditing}>
+              <Link to={documentPathForEditing} prefetch="intent">
                 <Trans>Were you trying to edit this document instead?</Trans>
               </Link>
             </Button>
           ) : (
             <Button variant="link" asChild>
-              <Link to="/">
+              <Link to="/" prefetch="intent">
                 <Trans>Return Home</Trans>
               </Link>
             </Button>

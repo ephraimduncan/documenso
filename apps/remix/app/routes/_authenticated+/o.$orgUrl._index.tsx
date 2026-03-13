@@ -120,7 +120,7 @@ export default function OrganisationSettingsTeamsPage() {
         </div>
 
         <Button asChild>
-          <Link to={`/o/${organisation.url}/settings`}>
+          <Link to={`/o/${organisation.url}/settings`} prefetch="intent">
             <Trans>Manage Organisation</Trans>
           </Link>
         </Button>

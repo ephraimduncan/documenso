@@ -155,7 +155,7 @@ export default function SignatureDisclosure() {
 
       <div className="mt-8">
         <Button asChild>
-          <Link to="/">
+          <Link to="/" prefetch="intent">
             <Trans>Back home</Trans>
           </Link>
         </Button>

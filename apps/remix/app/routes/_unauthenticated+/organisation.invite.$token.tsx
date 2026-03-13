@@ -84,14 +84,14 @@ export default function AcceptInvitationPage({ loaderData }: Route.ComponentProp
             <Trans>Invalid token</Trans>
           </h1>
 
-          <p className="text-muted-foreground mb-4 mt-2 text-sm">
+          <p className="mb-4 mt-2 text-sm text-muted-foreground">
             <Trans>
               This token is invalid or has expired. Please contact your team for a new invitation.
             </Trans>
           </p>
 
           <Button asChild>
-            <Link to="/">
+            <Link to="/" prefetch="intent">
               <Trans>Return</Trans>
             </Link>
           </Button>
@@ -107,19 +107,19 @@ export default function AcceptInvitationPage({ loaderData }: Route.ComponentProp
           <Trans>Organisation invitation</Trans>
         </h1>
 
-        <p className="text-muted-foreground mt-2 text-sm">
+        <p className="mt-2 text-sm text-muted-foreground">
           <Trans>
             You have been invited by <strong>{data.organisationName}</strong> to join their
             organisation.
           </Trans>
         </p>
 
-        <p className="text-muted-foreground mb-4 mt-1 text-sm">
+        <p className="mb-4 mt-1 text-sm text-muted-foreground">
           <Trans>To accept this invitation you must create an account.</Trans>
         </p>
 
         <Button asChild>
-          <Link to={`/signup#email=${encodeURIComponent(data.email)}`}>
+          <Link to={`/signup#email=${encodeURIComponent(data.email)}`} prefetch="intent">
             <Trans>Create account</Trans>
           </Link>
         </Button>
@@ -133,7 +133,7 @@ export default function AcceptInvitationPage({ loaderData }: Route.ComponentProp
         <Trans>Invitation accepted!</Trans>
       </h1>
 
-      <p className="text-muted-foreground mb-4 mt-2 text-sm">
+      <p className="mb-4 mt-2 text-sm text-muted-foreground">
         <Trans>
           You have accepted an invitation from <strong>{data.organisationName}</strong> to join
           their organisation.
@@ -142,13 +142,13 @@ export default function AcceptInvitationPage({ loaderData }: Route.ComponentProp
 
       {data.isSessionUserTheInvitedUser ? (
         <Button asChild>
-          <Link to="/">
+          <Link to="/" prefetch="intent">
             <Trans>Continue</Trans>
           </Link>
         </Button>
       ) : (
         <Button asChild>
-          <Link to={`/signin#email=${encodeURIComponent(data.email)}`}>
+          <Link to={`/signin#email=${encodeURIComponent(data.email)}`} prefetch="intent">
             <Trans>Continue to login</Trans>
           </Link>
         </Button>

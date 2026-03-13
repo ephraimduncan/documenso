@@ -544,7 +544,7 @@ export const EnvelopeEditor = () => {
                 })}
                 asChild
               >
-                <Link to={relativePath.basePath}>
+                <Link to={relativePath.basePath} prefetch="intent">
                   <ArrowLeftIcon className="h-4 w-4 flex-shrink-0" />
 
                   {!minimizeLeftSidebar && (

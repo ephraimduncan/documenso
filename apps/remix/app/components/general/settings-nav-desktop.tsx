@@ -35,7 +35,7 @@ export const SettingsDesktopNav = ({ className, ...props }: SettingsDesktopNavPr
 
   return (
     <div className={cn('flex flex-col gap-y-2', className)} {...props}>
-      <Link to="/settings/profile">
+      <Link to="/settings/profile" prefetch="intent">
         <Button
           variant="ghost"
           className={cn(
@@ -50,14 +50,14 @@ export const SettingsDesktopNav = ({ className, ...props }: SettingsDesktopNavPr
 
       {isPersonalLayoutMode && (
         <>
-          <Link to="/settings/document">
+          <Link to="/settings/document" prefetch="intent">
             <Button variant="ghost" className={cn('w-full justify-start')}>
               <Settings2Icon className="mr-2 h-5 w-5" />
               <Trans>Preferences</Trans>
             </Button>
           </Link>
 
-          <Link className="w-full pl-8" to="/settings/document">
+          <Link className="w-full pl-8" to="/settings/document" prefetch="intent">
             <Button
               variant="ghost"
               className={cn(
@@ -69,7 +69,7 @@ export const SettingsDesktopNav = ({ className, ...props }: SettingsDesktopNavPr
             </Button>
           </Link>
 
-          <Link className="w-full pl-8" to="/settings/branding">
+          <Link className="w-full pl-8" to="/settings/branding" prefetch="intent">
             <Button
               variant="ghost"
               className={cn(
@@ -81,7 +81,7 @@ export const SettingsDesktopNav = ({ className, ...props }: SettingsDesktopNavPr
             </Button>
           </Link>
 
-          <Link className="w-full pl-8" to="/settings/email">
+          <Link className="w-full pl-8" to="/settings/email" prefetch="intent">
             <Button
               variant="ghost"
               className={cn(
@@ -93,7 +93,7 @@ export const SettingsDesktopNav = ({ className, ...props }: SettingsDesktopNavPr
             </Button>
           </Link>
 
-          <Link to="/settings/public-profile">
+          <Link to="/settings/public-profile" prefetch="intent">
             <Button
               variant="ghost"
               className={cn(
@@ -106,7 +106,7 @@ export const SettingsDesktopNav = ({ className, ...props }: SettingsDesktopNavPr
             </Button>
           </Link>
 
-          <Link to="/settings/tokens">
+          <Link to="/settings/tokens" prefetch="intent">
             <Button
               variant="ghost"
               className={cn(
@@ -119,7 +119,7 @@ export const SettingsDesktopNav = ({ className, ...props }: SettingsDesktopNavPr
             </Button>
           </Link>
 
-          <Link to="/settings/webhooks">
+          <Link to="/settings/webhooks" prefetch="intent">
             <Button
               variant="ghost"
               className={cn(
@@ -134,7 +134,7 @@ export const SettingsDesktopNav = ({ className, ...props }: SettingsDesktopNavPr
         </>
       )}
 
-      <Link to="/settings/organisations">
+      <Link to="/settings/organisations" prefetch="intent">
         <Button
           variant="ghost"
           className={cn(
@@ -148,7 +148,10 @@ export const SettingsDesktopNav = ({ className, ...props }: SettingsDesktopNavPr
       </Link>
 
       {IS_BILLING_ENABLED() && hasManageableBillingOrgs && (
-        <Link to={isPersonalLayoutMode ? '/settings/billing-personal' : `/settings/billing`}>
+        <Link
+          to={isPersonalLayoutMode ? '/settings/billing-personal' : `/settings/billing`}
+          prefetch="intent"
+        >
           <Button
             variant="ghost"
             className={cn(
@@ -162,7 +165,7 @@ export const SettingsDesktopNav = ({ className, ...props }: SettingsDesktopNavPr
         </Link>
       )}
 
-      <Link to="/settings/security">
+      <Link to="/settings/security" prefetch="intent">
         <Button
           variant="ghost"
           className={cn(

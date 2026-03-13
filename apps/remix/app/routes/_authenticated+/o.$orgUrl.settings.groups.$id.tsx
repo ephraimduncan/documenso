@@ -75,7 +75,7 @@ export default function OrganisationGroupSettingsPage({ params }: Route.Componen
   if (isLoadingGroup || isLoadingMembers) {
     return (
       <div className="flex items-center justify-center rounded-lg py-32">
-        <Loader className="text-muted-foreground h-6 w-6 animate-spin" />
+        <Loader className="h-6 w-6 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -94,7 +94,7 @@ export default function OrganisationGroupSettingsPage({ params }: Route.Componen
         }}
         primaryButton={
           <Button asChild>
-            <Link to={`/o/${organisation.url}/settings/groups`}>
+            <Link to={`/o/${organisation.url}/settings/groups`} prefetch="intent">
               <Trans>Go back</Trans>
             </Link>
           </Button>

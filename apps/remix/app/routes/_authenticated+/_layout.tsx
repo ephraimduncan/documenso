@@ -98,7 +98,7 @@ export default function Layout({ loaderData, params, matches }: Route.ComponentP
         }}
         primaryButton={
           <Button asChild>
-            <Link to="/">
+            <Link to="/" prefetch="intent">
               <Trans>Go home</Trans>
             </Link>
           </Button>

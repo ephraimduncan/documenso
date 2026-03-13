@@ -98,7 +98,7 @@ export default function VerifyTeamEmailPage({ loaderData }: Route.ComponentProps
             <Trans>Invalid link</Trans>
           </h1>
 
-          <p className="text-muted-foreground mb-4 mt-2 text-sm">
+          <p className="mb-4 mt-2 text-sm text-muted-foreground">
             <Trans>
               This link is invalid or has expired. Please contact your team to resend a
               verification.
@@ -106,7 +106,7 @@ export default function VerifyTeamEmailPage({ loaderData }: Route.ComponentProps
           </p>
 
           <Button asChild>
-            <Link to="/">
+            <Link to="/" prefetch="intent">
               <Trans>Return</Trans>
             </Link>
           </Button>
@@ -122,14 +122,14 @@ export default function VerifyTeamEmailPage({ loaderData }: Route.ComponentProps
           <Trans>Team email already verified!</Trans>
         </h1>
 
-        <p className="text-muted-foreground mb-4 mt-2 text-sm">
+        <p className="mb-4 mt-2 text-sm text-muted-foreground">
           <Trans>
             You have already verified your email address for <strong>{data.teamName}</strong>.
           </Trans>
         </p>
 
         <Button asChild>
-          <Link to="/">
+          <Link to="/" prefetch="intent">
             <Trans>Continue</Trans>
           </Link>
         </Button>
@@ -144,7 +144,7 @@ export default function VerifyTeamEmailPage({ loaderData }: Route.ComponentProps
           <Trans>Team email verification</Trans>
         </h1>
 
-        <p className="text-muted-foreground mt-2 text-sm">
+        <p className="mt-2 text-sm text-muted-foreground">
           <Trans>
             Something went wrong while attempting to verify your email address for{' '}
             <strong>{data.teamName}</strong>. Please try again later.
@@ -160,7 +160,7 @@ export default function VerifyTeamEmailPage({ loaderData }: Route.ComponentProps
         <Trans>Team email verified!</Trans>
       </h1>
 
-      <p className="text-muted-foreground mb-4 mt-2 text-sm">
+      <p className="mb-4 mt-2 text-sm text-muted-foreground">
         <Trans>
           You have verified your email address for <strong>{data.teamName}</strong>.
         </Trans>

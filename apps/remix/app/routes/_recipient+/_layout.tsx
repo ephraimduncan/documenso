@@ -51,7 +51,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
       secondaryButton={null}
       primaryButton={
         <Button asChild className="w-32">
-          <Link to="/">
+          <Link to="/" prefetch="intent">
             <ChevronLeft className="mr-2 h-4 w-4" />
             <Trans>Go Back</Trans>
           </Link>

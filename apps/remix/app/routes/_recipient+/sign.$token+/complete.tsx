@@ -267,7 +267,7 @@ export default function CompletedSigningPage({ loaderData }: Route.ComponentProp
 
             {user && (
               <Button asChild>
-                <Link to={returnToHomePath}>
+                <Link to={returnToHomePath} prefetch="intent">
                   <Trans>Go Back Home</Trans>
                 </Link>
               </Button>

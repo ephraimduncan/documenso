@@ -65,7 +65,7 @@ export default function Layout() {
         }}
         primaryButton={
           <Button asChild>
-            <Link to="/settings/teams">
+            <Link to="/settings/teams" prefetch="intent">
               <Trans>View teams</Trans>
             </Link>
           </Button>
