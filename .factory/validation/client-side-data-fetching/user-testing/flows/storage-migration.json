@@ -1,0 +1,53 @@
+{
+  "milestone": "client-side-data-fetching",
+  "groupId": "storage-migration",
+  "surface": "terminal-validation",
+  "testedAt": "2026-03-13T04:42:33Z",
+  "isolation": {
+    "repoRoot": "/Users/duncan/dev/documenso-wt-main-wt",
+    "missionDir": "/Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807",
+    "assignedAssertions": [
+      "VAL-CLIENT-002"
+    ],
+    "mode": "read-only repository inspection",
+    "sharedChecks": "Parent validator handles shared build/lint/postgres checks; this report is based on read-only code inspection only."
+  },
+  "toolsUsed": [
+    "Read",
+    "Grep",
+    "Execute",
+    "ApplyPatch"
+  ],
+  "assertions": [
+    {
+      "id": "VAL-CLIENT-002",
+      "title": "localStorage has schema versioning",
+      "status": "pass",
+      "reason": "Both assigned localStorage implementations use v1-prefixed keys, validate stored data before use, migrate valid legacy keys forward, and remove the legacy keys after handling them.",
+      "evidence": {
+        "fileLines": [
+          "apps/remix/app/components/general/verify-email-banner.tsx:69-77",
+          "apps/remix/app/components/general/verify-email-banner.tsx:83-100",
+          "apps/remix/app/components/general/verify-email-banner.tsx:102-111",
+          "packages/ui/primitives/document-flow/field-item-advanced-settings.tsx:172-185",
+          "packages/ui/primitives/document-flow/field-item-advanced-settings.tsx:191-209",
+          "packages/ui/primitives/document-flow/field-item-advanced-settings.tsx:211-215",
+          "packages/ui/primitives/document-flow/field-item-advanced-settings.tsx:22",
+          "packages/ui/primitives/document-flow/field-item-advanced-settings.tsx:197-201"
+        ],
+        "artifacts": [
+          "client-side-data-fetching/storage-migration/VAL-CLIENT-002-verify-email-banner.txt",
+          "client-side-data-fetching/storage-migration/VAL-CLIENT-002-field-item-advanced-settings.txt"
+        ],
+        "notes": [
+          "verify-email-banner reads the versioned key first, validates timestamps with parseInt/isNaN, migrates from emailVerificationDialogLastShown only when the legacy timestamp is valid, and removes the legacy key after handling it.",
+          "field-item-advanced-settings reads the versioned key first, validates persisted JSON with ZFieldMetaNotOptionalSchema, migrates from the unversioned field key only when the legacy payload passes the same strict schema, and removes the legacy key after handling it."
+        ]
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 1 assertion via terminal-validation: VAL-CLIENT-002 passed based on concrete file:line evidence in both assigned localStorage call sites."
+}

@@ -1,0 +1,93 @@
+{
+  "milestone": "client-side-data-fetching",
+  "groupId": "listener-and-resize",
+  "surface": "terminal-validation",
+  "testedAt": "2026-03-13T04:43:14Z",
+  "isolation": {
+    "mode": "read-only repository inspection",
+    "repoRoot": "/Users/duncan/dev/documenso-wt-main-wt",
+    "missionDir": "/Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807",
+    "restrictions": [
+      "Inspected repository files only",
+      "Did not run build or lint because parent validator owns shared heavy checks",
+      "Created only assigned output artifacts"
+    ]
+  },
+  "toolsUsed": [
+    "Read",
+    "Grep",
+    "LS"
+  ],
+  "assertions": [
+    {
+      "id": "VAL-CLIENT-001",
+      "title": "Event listeners use passive flag",
+      "status": "pass",
+      "reason": "All identified scroll, resize, and touch listeners in the inspected code paths include `{ passive: true }`.",
+      "evidence": {
+        "fileLines": [
+          "apps/remix/app/components/general/app-header.tsx:47",
+          "apps/remix/app/routes/_profile+/_layout.tsx:35",
+          "apps/remix/app/components/general/virtual-list/use-virtual-list.ts:99",
+          "apps/remix/app/components/general/virtual-list/use-virtual-list.ts:153",
+          "apps/remix/app/components/general/virtual-list/use-virtual-list.ts:192",
+          "apps/remix/app/components/embed/authoring/configure-fields-view.tsx:80",
+          "packages/lib/client-only/hooks/use-shared-resize.ts:19",
+          "packages/ui/primitives/multiselect.tsx:234",
+          "packages/ui/primitives/signature-pad/canvas.ts:39"
+        ],
+        "details": [
+          "app-header.tsx and _profile+/_layout.tsx both register scroll listeners with `{ passive: true }`.",
+          "use-virtual-list.ts registers both resize and scroll listeners with `{ passive: true }`.",
+          "configure-fields-view.tsx and signature-pad/canvas.ts register resize listeners with `{ passive: true }`.",
+          "multiselect.tsx registers the touch listener with `{ passive: true }`."
+        ],
+        "evidenceFiles": [
+          "client-side-data-fetching/listener-and-resize/VAL-CLIENT-001-passive-listeners.txt"
+        ]
+      },
+      "issues": []
+    },
+    {
+      "id": "VAL-CLIENT-003",
+      "title": "Field components share a single resize listener",
+      "status": "pass",
+      "reason": "Field and tooltip coordinate logic subscribes through `useSharedResize`, which centralizes resize handling behind one module-level listener.",
+      "evidence": {
+        "fileLines": [
+          "packages/lib/client-only/hooks/use-shared-resize.ts:5",
+          "packages/lib/client-only/hooks/use-shared-resize.ts:7",
+          "packages/lib/client-only/hooks/use-shared-resize.ts:19",
+          "packages/lib/client-only/hooks/use-shared-resize.ts:26",
+          "packages/lib/client-only/hooks/use-shared-resize.ts:37",
+          "packages/ui/primitives/document-flow/field-item.tsx:14",
+          "packages/ui/primitives/document-flow/field-item.tsx:143",
+          "packages/ui/components/field/envelope-field-tooltip.tsx:9",
+          "packages/ui/components/field/envelope-field-tooltip.tsx:72",
+          "packages/ui/components/document/envelope-recipient-field-tooltip.tsx:9",
+          "packages/ui/components/document/envelope-recipient-field-tooltip.tsx:93",
+          "packages/lib/client-only/hooks/use-field-page-coords.ts:11",
+          "packages/lib/client-only/hooks/use-field-page-coords.ts:45",
+          "packages/lib/client-only/hooks/use-element-bounds.ts:5",
+          "packages/lib/client-only/hooks/use-element-bounds.ts:33",
+          "packages/lib/client-only/hooks/use-window-size.ts:3",
+          "packages/lib/client-only/hooks/use-window-size.ts:14"
+        ],
+        "details": [
+          "use-shared-resize.ts maintains a module-level `Set` of callbacks plus an `isListening` flag.",
+          "The shared hook registers a single `window.addEventListener('resize', handleResize, { passive: true })` listener when the first subscriber mounts.",
+          "field-item.tsx, envelope-field-tooltip.tsx, envelope-recipient-field-tooltip.tsx, use-field-page-coords.ts, use-element-bounds.ts, and use-window-size.ts all call `useSharedResize(...)`.",
+          "No direct per-instance `window.addEventListener('resize')` calls remain in those consumer files.",
+          "The remaining direct resize listeners elsewhere are documented as intentionally separate in `.factory/library/client-side-data-fetching.md`."
+        ],
+        "evidenceFiles": [
+          "client-side-data-fetching/listener-and-resize/VAL-CLIENT-003-shared-resize.txt"
+        ]
+      },
+      "issues": []
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Validated 2 assertions via terminal inspection: VAL-CLIENT-001 passed because all identified scroll/resize/touch listeners use `{ passive: true }`, and VAL-CLIENT-003 passed because field and tooltip consumers share the centralized `useSharedResize` listener."
+}

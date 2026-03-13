@@ -1,0 +1,59 @@
+{
+  "milestone": "client-side-data-fetching",
+  "round": 1,
+  "status": "pass",
+  "testingSurface": "terminal-validation",
+  "assertionsSummary": {
+    "total": 3,
+    "passed": 3,
+    "failed": 0,
+    "blocked": 0
+  },
+  "passedAssertions": [
+    "VAL-CLIENT-001",
+    "VAL-CLIENT-002",
+    "VAL-CLIENT-003"
+  ],
+  "failedAssertions": [],
+  "blockedAssertions": [],
+  "flowReports": [
+    {
+      "groupId": "listener-and-resize",
+      "path": ".factory/validation/client-side-data-fetching/user-testing/flows/listener-and-resize.json"
+    },
+    {
+      "groupId": "storage-migration",
+      "path": ".factory/validation/client-side-data-fetching/user-testing/flows/storage-migration.json"
+    }
+  ],
+  "sharedChecks": {
+    "serviceHealth": [
+      {
+        "service": "postgres",
+        "command": "pg_isready -h localhost -p 5432",
+        "exitCode": 0,
+        "observation": "localhost:5432 accepted connections during validation setup."
+      }
+    ],
+    "commands": [
+      {
+        "command": "npm --prefix /Users/duncan/dev/documenso-wt-main-wt run build",
+        "exitCode": 0,
+        "observation": "turbo run build completed successfully across the monorepo; Prisma generate ran and the build finished with 5 successful tasks and no build errors."
+      },
+      {
+        "command": "npm --prefix /Users/duncan/dev/documenso-wt-main-wt run lint",
+        "exitCode": 0,
+        "observation": "turbo run lint completed with 0 errors; warnings remained in @documenso/trpc (7), @documenso/ui (17), and @documenso/lib (37)."
+      }
+    ]
+  },
+  "appliedUpdates": [
+    {
+      "target": "user-testing.md",
+      "description": "Generalized terminal-validation guidance and added client-side-data-fetching notes for passive listener, localStorage migration, and shared resize-listener inspection.",
+      "source": "setup"
+    }
+  ],
+  "previousRound": null
+}
