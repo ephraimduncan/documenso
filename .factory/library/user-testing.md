@@ -22,6 +22,14 @@ This mission is a pure refactoring pass. For milestones that only change interna
 - `VAL-CLIENT-002`: inspect the versioned localStorage reads to confirm they validate stored data and migrate valid legacy keys before deleting the old key
 - `VAL-CLIENT-003`: inspect `useSharedResize` and its consumers to confirm the resize listener is centralized behind one module-level subscription set
 
+### Re-render & Rendering Milestone Notes
+
+- `VAL-RERENDER-001`: inspect the changed components for render-time previous-value or ref-based derivation replacing prop-sync `useEffect(() => setState(prop), [prop])` patterns, and confirm repo-wide TSX search no longer finds the targeted prop-sync effect shape
+- `VAL-RERENDER-002`: inspect representative changed files for module-level default constants or lazy initializers, and confirm `apps/` + `packages/` TSX files no longer use inline non-primitive `useState({` / `useState([` defaults
+- `VAL-RERENDER-003`: inspect `app-header.tsx` and `_profile+/_layout.tsx` for `requestAnimationFrame`-throttled scroll handlers that cancel pending frames during cleanup
+- `VAL-RENDERING-001`: inspect overflow containers for the paired Tailwind arbitrary values `[content-visibility:auto]` and `[contain-intrinsic-size:auto_*]`
+- `VAL-RENDERING-002`: under the current contract, treat remaining SVG coordinate/path/gradient/filter position values with `3+` decimal places in the targeted changed assets as failures; ignore non-coordinate precision such as `feColorMatrix` coefficients or motion config numbers
+
 ## Validation Concurrency
 
 ### terminal-validation

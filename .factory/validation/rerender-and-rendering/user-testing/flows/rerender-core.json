@@ -1,0 +1,86 @@
+{
+  "milestone": "rerender-and-rendering",
+  "groupId": "rerender-core",
+  "surface": "terminal-validation",
+  "testedAt": "2026-03-13T05:43:41Z",
+  "isolation": {
+    "mode": "read-only repository inspection",
+    "repoRoot": "/Users/duncan/dev/documenso-wt-main-wt",
+    "missionDir": "/Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807",
+    "assignedAssertions": [
+      "VAL-RERENDER-001",
+      "VAL-RERENDER-002",
+      "VAL-RERENDER-003"
+    ],
+    "sharedChecks": "Parent validator owns postgres/build/lint checks; none were run in this flow validator."
+  },
+  "toolsUsed": [
+    "Read",
+    "Grep",
+    "Execute"
+  ],
+  "assertions": [
+    {
+      "id": "VAL-RERENDER-001",
+      "title": "useEffect prop-sync replaced with derived state",
+      "status": "pass",
+      "reason": "Targeted prop-sync effects were replaced with render-time previous-value synchronization or inline derivation, and a repo-wide grep found no remaining useEffect(setState(prop)) pattern in TSX files.",
+      "evidence": {
+        "files": [
+          "packages/ui/primitives/multiselect.tsx:182-186",
+          "packages/ui/primitives/document-flow/field-item-advanced-settings.tsx:218-224",
+          "packages/ui/primitives/document-flow/field-items-advanced-settings/checkbox-field.tsx:44-47",
+          "packages/ui/primitives/document-flow/field-items-advanced-settings/dropdown-field.tsx:44-53",
+          "packages/ui/primitives/document-flow/field-items-advanced-settings/radio-field.tsx:37-40",
+          "apps/remix/app/routes/_authenticated+/t.$teamUrl+/settings.public-profile.tsx:67-70",
+          "apps/remix/app/components/general/multiselect-role-combobox.tsx:28-31",
+          "packages/ui/primitives/template-flow/add-template-fields.tsx:162-165",
+          "apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx:90-103"
+        ],
+        "notes": [
+          "rerender-and-rendering/rerender-core/VAL-RERENDER-001-evidence.md"
+        ],
+        "commit": "bb0e23f68"
+      }
+    },
+    {
+      "id": "VAL-RERENDER-002",
+      "title": "useState defaults hoisted outside components",
+      "status": "pass",
+      "reason": "Targeted non-primitive useState defaults are now module-level constants or lazy initializers, and repo-wide grep found no inline object/array defaults in apps or packages TSX files.",
+      "evidence": {
+        "files": [
+          "packages/ui/primitives/document-flow/add-fields.tsx:95",
+          "packages/lib/client-only/hooks/use-element-bounds.ts:7",
+          "packages/lib/client-only/hooks/use-window-size.ts:5",
+          "packages/lib/client-only/hooks/use-field-page-coords.ts:13",
+          "apps/remix/app/components/general/animated-document-scanner.tsx:12",
+          "packages/ui/primitives/document-flow/field-item.tsx:89-94"
+        ],
+        "notes": [
+          "rerender-and-rendering/rerender-core/VAL-RERENDER-002-evidence.md"
+        ],
+        "commit": "9c5ee6a58"
+      }
+    },
+    {
+      "id": "VAL-RERENDER-003",
+      "title": "Scroll handlers are throttled",
+      "status": "pass",
+      "reason": "Both targeted scroll listeners cancel any pending frame and schedule state updates inside requestAnimationFrame, preventing per-scroll synchronous state updates.",
+      "evidence": {
+        "files": [
+          "apps/remix/app/components/general/app-header.tsx:42-54",
+          "apps/remix/app/routes/_profile+/_layout.tsx:30-42"
+        ],
+        "notes": [
+          "rerender-and-rendering/rerender-core/VAL-RERENDER-003-evidence.md"
+        ],
+        "commit": "99d967850"
+      }
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 3 assertions by terminal code inspection: 3 passed, 0 failed, 0 blocked."
+}

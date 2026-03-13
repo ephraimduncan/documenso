@@ -1,0 +1,101 @@
+{
+  "milestone": "rerender-and-rendering",
+  "groupId": "rendering-assets",
+  "surface": "terminal-validation",
+  "testedAt": "2026-03-13T05:44:17Z",
+  "isolation": {
+    "mode": "read-only repository inspection",
+    "repoRoot": "/Users/duncan/dev/documenso-wt-main-wt",
+    "missionDir": "/Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807",
+    "restrictions": [
+      "Inspected repository files only",
+      "Did not run build or lint because the parent validator owns shared heavy checks",
+      "Created only the assigned flow report and evidence notes"
+    ]
+  },
+  "toolsUsed": [
+    "Read",
+    "Grep",
+    "LS",
+    "Execute"
+  ],
+  "assertions": [
+    {
+      "id": "VAL-RENDERING-001",
+      "title": "Scrollable containers use content-visibility",
+      "status": "pass",
+      "reason": "Found 15 in-scope scrollable containers that pair `[content-visibility:auto]` with `[contain-intrinsic-size:auto_*]` on overflowing containers, satisfying the rendering optimization pattern.",
+      "evidence": {
+        "fileLines": [
+          "apps/remix/app/components/dialogs/team-group-create-dialog.tsx:233",
+          "apps/remix/app/components/dialogs/template-direct-link-dialog.tsx:298",
+          "apps/remix/app/components/dialogs/organisation-member-invite-dialog.tsx:349",
+          "apps/remix/app/components/general/envelope-editor/envelope-editor.tsx:194",
+          "apps/remix/app/components/general/envelope-editor/envelope-editor.tsx:566",
+          "apps/remix/app/components/general/envelope-editor/envelope-editor-settings-dialog.tsx:401",
+          "apps/remix/app/components/general/envelope-editor/envelope-editor-fields-page.tsx:206",
+          "apps/remix/app/components/general/webhook-logs-sheet.tsx:78",
+          "apps/remix/app/components/general/organisations/organisation-invitations.tsx:84",
+          "apps/remix/app/components/dialogs/team-member-create-dialog.tsx:363",
+          "apps/remix/app/components/dialogs/template-use-dialog.tsx:271",
+          "apps/remix/app/components/dialogs/public-profile-template-manage-dialog.tsx:263",
+          "apps/remix/app/components/general/document-signing/document-signing-form.tsx:130",
+          "apps/remix/app/components/general/direct-template/direct-template-signing-form.tsx:394",
+          "packages/ui/primitives/document-flow/document-flow-root.tsx:27"
+        ],
+        "details": [
+          "The pattern appears on 14 app surfaces plus 1 shared UI primitive.",
+          "Every cited line applies both `[content-visibility:auto]` and `[contain-intrinsic-size:auto_*]` to an `overflow-auto` or `overflow-y-auto` container."
+        ],
+        "evidenceFiles": [
+          "rerender-and-rendering/rendering-assets/VAL-RENDERING-001-content-visibility.txt"
+        ],
+        "sharedChecks": "Per .factory/library/user-testing.md, build and lint validation for this milestone are centralized in the parent validator and were not rerun in this flow validation."
+      },
+      "issues": []
+    },
+    {
+      "id": "VAL-RENDERING-002",
+      "title": "SVGs have reduced coordinate precision",
+      "status": "fail",
+      "reason": "The targeted changed assets still contain multiple SVG path and attribute coordinates with 3+ decimal places, so the repository does not satisfy a strict `<= 2 decimal places maximum` validation.",
+      "evidence": {
+        "fileLines": [
+          "apps/remix/public/static/early-supporter-badge.svg:3",
+          "apps/remix/public/static/early-supporter-badge.svg:5",
+          "apps/remix/public/static/early-supporter-badge.svg:9",
+          "apps/remix/public/static/early-supporter-badge.svg:25",
+          "apps/remix/public/static/premium-user-badge.svg:2",
+          "apps/remix/public/static/premium-user-badge.svg:4",
+          "packages/ui/icons/signature.tsx:21",
+          "packages/ui/icons/verified.tsx:22",
+          "packages/ui/primitives/signature-pad/signature-pad-dialog.tsx:91"
+        ],
+        "details": [
+          "Remaining 3+ decimal coordinate values were found in all 5 targeted changed assets.",
+          "Examples include path coordinates (`9.5882`, `13.7062`, `4.875`, `15.7072`) and gradient/filter coordinates (`12.5596`, `20.0004`, `10.6591`).",
+          "Non-coordinate precision such as `feColorMatrix` coefficients and the Framer Motion `restDelta` config were treated as out of scope."
+        ],
+        "evidenceFiles": [
+          "rerender-and-rendering/rendering-assets/VAL-RENDERING-002-svg-precision.txt"
+        ],
+        "sharedChecks": "Per .factory/library/user-testing.md, build and lint validation for this milestone are centralized in the parent validator and were not rerun in this flow validation."
+      },
+      "issues": [
+        "Remaining 3+ decimal SVG coordinates are still present in each targeted changed asset."
+      ]
+    }
+  ],
+  "frictions": [
+    {
+      "description": "SVG precision acceptance criteria are ambiguous: the scrutiny review passed a change that trimmed only 5+ decimal coordinates, while the validation contract and parent assignment call for <=2 decimal places / no remaining 3+ decimal coordinates in the targeted assets.",
+      "resolved": true,
+      "resolution": "Reported VAL-RENDERING-002 as fail based on the current repository state and concrete remaining file:line evidence.",
+      "affectedAssertions": [
+        "VAL-RENDERING-002"
+      ]
+    }
+  ],
+  "blockers": [],
+  "summary": "Validated 2 rerender-and-rendering assertions via read-only inspection. VAL-RENDERING-001 passed because long scrollable containers consistently use `[content-visibility:auto]` with `contain-intrinsic-size`; VAL-RENDERING-002 failed because the targeted SVG assets still contain multiple 3+ decimal coordinate values."
+}
