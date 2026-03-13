@@ -103,7 +103,7 @@ export function EnvelopeRecipientFieldTooltip({
       calculateCoords();
     };
 
-    window.addEventListener('resize', onResize);
+    window.addEventListener('resize', onResize, { passive: true });
 
     return () => {
       window.removeEventListener('resize', onResize);
@@ -191,7 +191,7 @@ export function EnvelopeRecipientFieldTooltip({
           </span>
         </p>
 
-        <p className="text-muted-foreground mt-1 text-center text-xs">
+        <p className="mt-1 text-center text-xs text-muted-foreground">
           {getRecipientDisplayText(field.recipient)}
         </p>
 

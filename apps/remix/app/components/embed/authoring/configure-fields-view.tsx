@@ -77,7 +77,7 @@ export const ConfigureFieldsView = ({
     checkIfMobile();
 
     // Add resize listener
-    window.addEventListener('resize', checkIfMobile);
+    window.addEventListener('resize', checkIfMobile, { passive: true });
 
     // Cleanup
     return () => {

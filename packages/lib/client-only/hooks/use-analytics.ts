@@ -25,9 +25,11 @@ export function useAnalytics() {
       return;
     }
 
-    void getPosthog().then(({ posthog }) => {
-      posthog.capture(event, properties);
-    });
+    void getPosthog()
+      .then(({ posthog }) => {
+        posthog.capture(event, properties);
+      })
+      .catch((err) => console.error('PostHog load failed:', err));
   };
 
   /**
@@ -41,9 +43,11 @@ export function useAnalytics() {
       return;
     }
 
-    void getPosthog().then(({ posthog }) => {
-      posthog.captureException(error, properties);
-    });
+    void getPosthog()
+      .then(({ posthog }) => {
+        posthog.captureException(error, properties);
+      })
+      .catch((err) => console.error('PostHog load failed:', err));
   };
 
   /**

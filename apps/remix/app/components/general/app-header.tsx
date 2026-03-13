@@ -44,7 +44,7 @@ export const Header = ({ className, ...props }: HeaderProps) => {
       setScrollY(window.scrollY);
     };
 
-    window.addEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
 
     return () => window.removeEventListener('scroll', onScroll);
   }, []);

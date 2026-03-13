@@ -36,7 +36,7 @@ export class Canvas {
       userSelect: 'none',
     });
 
-    window.addEventListener('resize', this.onResize.bind(this));
+    window.addEventListener('resize', this.onResize.bind(this), { passive: true });
 
     this.$canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
     this.$canvas.addEventListener('mousemove', this.onMouseMove.bind(this));

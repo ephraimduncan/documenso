@@ -96,7 +96,7 @@ export const useVirtualList = (options: VirtualListOptions): VirtualListResult =
         setViewportHeight(window.innerHeight);
       };
 
-      window.addEventListener('resize', handleResize);
+      window.addEventListener('resize', handleResize, { passive: true });
 
       // Set initial height
       setViewportHeight(window.innerHeight);
