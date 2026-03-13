@@ -1,0 +1,45 @@
+{
+  "milestone": "eliminating-waterfalls",
+  "groupId": "waterfall-group-b",
+  "surface": "terminal-validation",
+  "toolsUsed": ["Read", "Grep"],
+  "assertions": [
+    {
+      "id": "VAL-WATERFALL-003",
+      "status": "pass",
+      "reason": "duplicateEnvelope parallelizes independent ID/meta work and creates recipients concurrently instead of in a sequential loop.",
+      "evidence": [
+        {
+          "file": "/Users/duncan/dev/documenso-wt-main-wt/packages/lib/server-only/envelope/duplicate-envelope.ts",
+          "lines": "71-86",
+          "details": "The function awaits Promise.all where incrementDocumentId()/incrementTemplateId() runs in parallel with prisma.documentMeta.create(...), removing a sequential DB waterfall."
+        },
+        {
+          "file": "/Users/duncan/dev/documenso-wt-main-wt/packages/lib/server-only/envelope/duplicate-envelope.ts",
+          "lines": "139-170",
+          "details": "Recipient duplication uses await Promise.all(envelope.recipients.map(async (recipient) => prisma.recipient.create(...))), so recipients are created concurrently rather than via a sequential loop."
+        }
+      ]
+    },
+    {
+      "id": "VAL-WATERFALL-004",
+      "status": "pass",
+      "reason": "The envelope edit loader uses Promise.all for the independent post-token fetches; the later organisation email query remains sequential because it depends on the envelope result.",
+      "evidence": [
+        {
+          "file": "/Users/duncan/dev/documenso-wt-main-wt/apps/remix/app/routes/embed+/v2+/authoring+/envelope.edit.$id.tsx",
+          "lines": "62-76",
+          "details": "After token verification, the loader awaits Promise.all([getTeamSettings(...), getEditorEnvelopeById(...)]), so the settings and envelope fetches run concurrently."
+        },
+        {
+          "file": "/Users/duncan/dev/documenso-wt-main-wt/apps/remix/app/routes/embed+/v2+/authoring+/envelope.edit.$id.tsx",
+          "lines": "82-84",
+          "details": "The subsequent prisma.organisationEmail.findMany query uses envelope.team.organisationId, showing why it is dependent on the envelope fetch and therefore not included in the Promise.all block."
+        }
+      ]
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Both assigned assertions pass based on read-only inspection of the assigned files. duplicateEnvelope uses Promise.all for independent metadata/ID work and recipient creation, and the envelope edit loader parallelizes the independent settings/envelope fetches while keeping the dependent organisation email lookup sequential."
+}

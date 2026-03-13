@@ -1,0 +1,40 @@
+{
+  "milestone": "eliminating-waterfalls",
+  "groupId": "waterfall-group-a",
+  "surface": "terminal-validation",
+  "toolsUsed": ["Read", "Grep"],
+  "assertions": [
+    {
+      "id": "VAL-WATERFALL-001",
+      "status": "pass",
+      "reason": "The sign V1 loader uses Promise.all to fetch recipient signatures and team settings concurrently instead of awaiting them one after the other.",
+      "evidence": [
+        {
+          "file": "/Users/duncan/dev/documenso-wt-main-wt/apps/remix/app/routes/_recipient+/sign.$token+/_index.tsx",
+          "lines": "155-158",
+          "details": "The loader awaits Promise.all([getRecipientSignatures({ recipientId: recipient.id }), getTeamSettings({ teamId: document.teamId })]), which parallelizes the two independent calls."
+        }
+      ]
+    },
+    {
+      "id": "VAL-WATERFALL-002",
+      "status": "pass",
+      "reason": "createEnvelope uses Promise.all for both the initial team/settings fetch and the later document meta/secondary ID/delegated owner work, removing the targeted waterfalls.",
+      "evidence": [
+        {
+          "file": "/Users/duncan/dev/documenso-wt-main-wt/packages/lib/server-only/envelope/create-envelope.ts",
+          "lines": "139-154",
+          "details": "The function awaits Promise.all where prisma.team.findFirst(...) runs in parallel with getTeamSettings({ userId, teamId }), so the team lookup and settings fetch are no longer sequential."
+        },
+        {
+          "file": "/Users/duncan/dev/documenso-wt-main-wt/packages/lib/server-only/envelope/create-envelope.ts",
+          "lines": "303-314",
+          "details": "The function awaits Promise.all([prisma.documentMeta.create(...), incrementDocumentId()/incrementTemplateId(), getValidatedDelegatedOwner()]), so the independent document meta creation, secondary ID generation, and delegated owner validation run concurrently."
+        }
+      ]
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Both assigned assertions pass based on read-only inspection of the assigned files. The sign V1 loader parallelizes recipient signature and team settings fetches, and createEnvelope uses Promise.all for both of the independent operation groups called out in the validation contract."
+}

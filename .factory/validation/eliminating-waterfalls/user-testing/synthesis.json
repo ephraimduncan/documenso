@@ -1,0 +1,50 @@
+{
+  "milestone": "eliminating-waterfalls",
+  "round": 1,
+  "status": "pass",
+  "testingSurface": "terminal-validation",
+  "assertionsSummary": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0,
+    "blocked": 0
+  },
+  "passedAssertions": [
+    "VAL-WATERFALL-001",
+    "VAL-WATERFALL-002",
+    "VAL-WATERFALL-003",
+    "VAL-WATERFALL-004"
+  ],
+  "failedAssertions": [],
+  "blockedAssertions": [],
+  "validatorsRun": {
+    "build": {
+      "command": "npm --prefix /Users/duncan/dev/documenso-wt-main-wt run build",
+      "exitCode": 0,
+      "observation": "Turbo build completed successfully across the monorepo with no build errors."
+    },
+    "lint": {
+      "command": "npm --prefix /Users/duncan/dev/documenso-wt-main-wt run lint",
+      "exitCode": 0,
+      "observation": "Turbo lint completed with warnings only and zero errors."
+    }
+  },
+  "flowReports": [
+    {
+      "groupId": "waterfall-group-a",
+      "path": ".factory/validation/eliminating-waterfalls/user-testing/flows/waterfall-group-a.json"
+    },
+    {
+      "groupId": "waterfall-group-b",
+      "path": ".factory/validation/eliminating-waterfalls/user-testing/flows/waterfall-group-b.json"
+    }
+  ],
+  "appliedUpdates": [
+    {
+      "target": "user-testing.md",
+      "description": "Documented terminal-validation concurrency limits and read-only flow validator guidance for non-interactive refactoring milestones.",
+      "source": "setup"
+    }
+  ],
+  "previousRound": null
+}
