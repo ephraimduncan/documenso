@@ -1,0 +1,80 @@
+{
+  "milestone": "server-side-performance",
+  "groupId": "cache-layer",
+  "surface": "terminal-validation",
+  "testedAt": "2026-03-13T03:41:59.067578Z",
+  "isolation": {
+    "mode": "read-only inspection only",
+    "repoRoot": "/Users/duncan/dev/documenso-wt-main-wt",
+    "missionDir": "/Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807"
+  },
+  "toolsUsed": [
+    "Read",
+    "Grep"
+  ],
+  "assertions": [
+    {
+      "id": "VAL-SERVER-001",
+      "title": "getSiteSettings has TTL cache",
+      "status": "pass",
+      "reason": "getSiteSettings() uses a module-level Map with a 60-second TTL, returns cached data on unexpired hits, repopulates from prisma.siteSettings.findMany() on misses, and exposes invalidation used by the site-settings write path.",
+      "evidence": {
+        "code": [
+          "packages/lib/server-only/site-settings/get-site-settings.ts:5-8",
+          "packages/lib/server-only/site-settings/get-site-settings.ts:10-24",
+          "packages/lib/server-only/site-settings/upsert-site-setting.ts:3",
+          "packages/lib/server-only/site-settings/upsert-site-setting.ts:35"
+        ],
+        "artifact": "server-side-performance/cache-and-webhooks/VAL-SERVER-001-cache-evidence.txt"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-SERVER-002",
+      "title": "getTeamSettings has TTL cache",
+      "status": "pass",
+      "reason": "getTeamSettings() uses a module-level Map with a 30-second TTL keyed by teamId:userId, returns cached derived settings on unexpired hits, repopulates from prisma.team.findFirst() on misses, and exposes invalidation used after team settings updates.",
+      "evidence": {
+        "code": [
+          "packages/lib/server-only/team/get-team-settings.ts:13-15",
+          "packages/lib/server-only/team/get-team-settings.ts:20-29",
+          "packages/lib/server-only/team/get-team-settings.ts:36-45",
+          "packages/lib/server-only/team/get-team-settings.ts:75",
+          "packages/trpc/server/team-router/update-team-settings.ts:7",
+          "packages/trpc/server/team-router/update-team-settings.ts:183"
+        ],
+        "artifact": "server-side-performance/cache-and-webhooks/VAL-SERVER-002-cache-evidence.txt"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-SERVER-003",
+      "title": "getAllWebhooksByEventTrigger has TTL cache",
+      "status": "pass",
+      "reason": "getAllWebhooksByEventTrigger() uses a module-level Map with a 30-second TTL keyed by event:userId:teamId, returns cached results on unexpired hits, repopulates from prisma.webhook.findMany() on misses, and exposes invalidation used across webhook mutation paths.",
+      "evidence": {
+        "code": [
+          "packages/lib/server-only/webhooks/get-all-webhooks-by-event-trigger.ts:13-15",
+          "packages/lib/server-only/webhooks/get-all-webhooks-by-event-trigger.ts:21-29",
+          "packages/lib/server-only/webhooks/get-all-webhooks-by-event-trigger.ts:33-46",
+          "packages/lib/server-only/webhooks/get-all-webhooks-by-event-trigger.ts:58",
+          "packages/lib/server-only/webhooks/create-webhook.ts:8",
+          "packages/lib/server-only/webhooks/create-webhook.ts:52",
+          "packages/lib/server-only/webhooks/edit-webhook.ts:7",
+          "packages/lib/server-only/webhooks/edit-webhook.ts:31",
+          "packages/lib/server-only/webhooks/delete-webhook-by-id.ts:5",
+          "packages/lib/server-only/webhooks/delete-webhook-by-id.ts:25",
+          "packages/lib/server-only/webhooks/zapier/subscribe.ts:3",
+          "packages/lib/server-only/webhooks/zapier/subscribe.ts:29",
+          "packages/lib/server-only/webhooks/zapier/unsubscribe.ts:3",
+          "packages/lib/server-only/webhooks/zapier/unsubscribe.ts:26"
+        ],
+        "artifact": "server-side-performance/cache-and-webhooks/VAL-SERVER-003-cache-evidence.txt"
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Read-only terminal inspection confirmed VAL-SERVER-001, VAL-SERVER-002, and VAL-SERVER-003 all pass. Each cache uses the expected in-memory TTL Map pattern with the required keying, and the parent validator already recorded successful shared build and lint checks."
+}

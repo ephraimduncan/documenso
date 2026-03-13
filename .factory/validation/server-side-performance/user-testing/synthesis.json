@@ -1,0 +1,56 @@
+{
+  "milestone": "server-side-performance",
+  "round": 1,
+  "status": "pass",
+  "testingSurface": "terminal-validation",
+  "assertionsSummary": {
+    "total": 6,
+    "passed": 6,
+    "failed": 0,
+    "blocked": 0
+  },
+  "passedAssertions": [
+    "VAL-SERVER-001",
+    "VAL-SERVER-002",
+    "VAL-SERVER-003",
+    "VAL-SERVER-004",
+    "VAL-SERVER-005",
+    "VAL-SERVER-006"
+  ],
+  "failedAssertions": [],
+  "blockedAssertions": [],
+  "flowReports": [
+    {
+      "groupId": "cache-layer",
+      "path": ".factory/validation/server-side-performance/user-testing/flows/cache-layer.json"
+    },
+    {
+      "groupId": "request-dedup",
+      "path": ".factory/validation/server-side-performance/user-testing/flows/request-dedup.json"
+    }
+  ],
+  "sharedChecks": {
+    "serviceHealth": [
+      {
+        "service": "postgres",
+        "command": "pg_isready -h localhost -p 5432",
+        "exitCode": 0,
+        "observation": "localhost:5432 accepted connections during validation setup."
+      }
+    ],
+    "commands": [
+      {
+        "command": "npm --prefix /Users/duncan/dev/documenso-wt-main-wt run build",
+        "exitCode": 0,
+        "observation": "turbo run build completed successfully across the monorepo with no build errors."
+      },
+      {
+        "command": "npm --prefix /Users/duncan/dev/documenso-wt-main-wt run lint",
+        "exitCode": 0,
+        "observation": "turbo run lint completed with warnings only and zero errors; @documenso/ui reported 17 warnings, @documenso/trpc 7 warnings, and @documenso/lib 37 warnings."
+      }
+    ]
+  },
+  "appliedUpdates": [],
+  "previousRound": null
+}

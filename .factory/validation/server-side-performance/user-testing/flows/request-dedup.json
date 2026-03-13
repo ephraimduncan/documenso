@@ -1,0 +1,111 @@
+{
+  "milestone": "server-side-performance",
+  "groupId": "request-dedup",
+  "surface": "terminal-validation",
+  "testedAt": "2026-03-13T03:41:40Z",
+  "isolation": {
+    "mode": "read-only inspection",
+    "repoRoot": "/Users/duncan/dev/documenso-wt-main-wt",
+    "missionDir": "/Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807",
+    "milestone": "server-side-performance"
+  },
+  "toolsUsed": ["Read", "Grep", "LS", "Execute"],
+  "assertions": [
+    {
+      "id": "VAL-SERVER-004",
+      "title": "triggerWebhook is fire-and-forget",
+      "status": "pass",
+      "reason": "All five assigned webhook call sites use `void triggerWebhook(...).catch(...)` and therefore do not block the surrounding response on webhook delivery.",
+      "steps": [
+        {
+          "action": "Inspect the assigned document and envelope webhook call sites",
+          "expected": "The code should no longer `await triggerWebhook(...)` in the five specified flows.",
+          "observed": "Each inspected flow uses `void triggerWebhook(...).catch(...)` in place of an awaited webhook call."
+        },
+        {
+          "action": "Confirm the fire-and-forget pattern still handles rejected promises",
+          "expected": "Non-blocking webhook calls should include explicit rejection handling.",
+          "observed": "All five call sites append `.catch((err) => console.error('Webhook trigger failed:', err))`."
+        }
+      ],
+      "evidence": {
+        "fileLines": [
+          "packages/lib/server-only/document/viewed-document.ts:106",
+          "packages/lib/server-only/document/send-document.ts:326",
+          "packages/lib/server-only/document/complete-document-with-token.ts:416",
+          "packages/lib/server-only/document/delete-document.ts:115",
+          "packages/lib/server-only/envelope/duplicate-envelope.ts:182"
+        ],
+        "notesFile": "server-side-performance/request-dedup/evidence-notes.md",
+        "sharedChecks": "Parent validator already confirmed build exit 0 and lint exit 0 with warnings only, so those heavy checks were reused rather than rerun in this read-only flow validation."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-SERVER-005",
+      "title": "getSession has request-level memoization",
+      "status": "pass",
+      "reason": "`getOptionalSession` caches the in-flight session lookup in a `WeakMap<Request, Promise<SessionValidationResult>>`, so repeated calls for the same request reuse the same promise instead of repeating cookie/session validation work.",
+      "steps": [
+        {
+          "action": "Inspect packages/auth/server/lib/utils/get-session.ts",
+          "expected": "Session lookup should be memoized per raw `Request` object.",
+          "observed": "The file declares `sessionCache` as a `WeakMap<Request, Promise<SessionValidationResult>>`, checks the cache before lookup, and stores the in-flight promise back into the cache."
+        },
+        {
+          "action": "Inspect representative Remix loaders that call getOptionalSession(request)",
+          "expected": "Shared request consumers such as root/layout loaders should pass the same request object into the memoized helper.",
+          "observed": "`apps/remix/app/root.tsx:44` and `apps/remix/app/routes/_authenticated+/_layout.tsx:31` both call `getOptionalSession(request)`, matching the request-level reuse described in the cache comment."
+        }
+      ],
+      "evidence": {
+        "fileLines": [
+          "packages/auth/server/lib/utils/get-session.ts:13",
+          "packages/auth/server/lib/utils/get-session.ts:21",
+          "packages/auth/server/lib/utils/get-session.ts:53",
+          "packages/auth/server/lib/utils/get-session.ts:59",
+          "packages/auth/server/lib/utils/get-session.ts:61",
+          "apps/remix/app/root.tsx:44",
+          "apps/remix/app/routes/_authenticated+/_layout.tsx:31"
+        ],
+        "notesFile": "server-side-performance/request-dedup/evidence-notes.md",
+        "sharedChecks": "Parent validator already confirmed build exit 0 and lint exit 0 with warnings only, so those heavy checks were reused rather than rerun in this read-only flow validation."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-SERVER-006",
+      "title": "tRPC API token validation is deduplicated",
+      "status": "pass",
+      "reason": "tRPC middleware now caches API-token validation per raw `Request` and token string, so procedures in the same batch await the same in-flight validation promise instead of validating the token repeatedly.",
+      "steps": [
+        {
+          "action": "Inspect packages/trpc/server/trpc.ts cache helper",
+          "expected": "The authenticated middleware path should use request-scoped deduplication for `getApiTokenByToken`.",
+          "observed": "`apiTokenCache` is a `WeakMap<Request, Map<string, ReturnType<typeof getApiTokenByToken>>>`, and `getCachedApiToken` stores the created promise per request+token."
+        },
+        {
+          "action": "Inspect both tRPC auth middlewares",
+          "expected": "Both middleware entry points that accept API tokens should route through the shared cache helper.",
+          "observed": "Both `authenticatedMiddleware` and `maybeAuthenticatedMiddleware` await `getCachedApiToken(ctx.req, token)`."
+        }
+      ],
+      "evidence": {
+        "fileLines": [
+          "packages/trpc/server/trpc.ts:22",
+          "packages/trpc/server/trpc.ts:25",
+          "packages/trpc/server/trpc.ts:29",
+          "packages/trpc/server/trpc.ts:38",
+          "packages/trpc/server/trpc.ts:127",
+          "packages/trpc/server/trpc.ts:223"
+        ],
+        "notesFile": "server-side-performance/request-dedup/evidence-notes.md",
+        "sharedChecks": "Parent validator already confirmed build exit 0 and lint exit 0 with warnings only, so those heavy checks were reused rather than rerun in this read-only flow validation."
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Validated 3 server-side-performance assertions by read-only terminal inspection. VAL-SERVER-004 passed because all five assigned webhook call sites are fire-and-forget with rejection handling, VAL-SERVER-005 passed because getOptionalSession memoizes session resolution per Request, and VAL-SERVER-006 passed because both tRPC API-token middleware paths reuse a request-scoped token-validation promise cache."
+}
