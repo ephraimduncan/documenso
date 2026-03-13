@@ -1,5 +1,6 @@
 import { prisma } from '@documenso/prisma';
 
+import { clearSiteSettingsCache } from './get-site-settings';
 import { type TSiteSettingSchema } from './schema';
 
 export type UpsertSiteSettingOptions = TSiteSettingSchema & {
@@ -12,7 +13,7 @@ export const upsertSiteSetting = async ({
   data,
   userId,
 }: UpsertSiteSettingOptions) => {
-  return await prisma.siteSettings.upsert({
+  const result = await prisma.siteSettings.upsert({
     where: {
       id,
     },
@@ -30,4 +31,8 @@ export const upsertSiteSetting = async ({
       lastModifiedAt: new Date(),
     },
   });
+
+  clearSiteSettingsCache();
+
+  return result;
 };
