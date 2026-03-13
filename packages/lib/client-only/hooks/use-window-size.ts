@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+
+import { useSharedResize } from './use-shared-resize';
 
 export function useWindowSize() {
   const [size, setSize] = useState({
@@ -6,22 +8,18 @@ export function useWindowSize() {
     height: 0,
   });
 
-  const onResize = () => {
+  const onResize = useCallback(() => {
     setSize({
       width: window.innerWidth,
       height: window.innerHeight,
     });
-  };
+  }, []);
 
   useEffect(() => {
     onResize();
+  }, [onResize]);
 
-    window.addEventListener('resize', onResize, { passive: true });
-
-    return () => {
-      window.removeEventListener('resize', onResize);
-    };
-  }, []);
+  useSharedResize(onResize);
 
   return size;
 }

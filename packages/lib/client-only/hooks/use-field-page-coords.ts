@@ -8,6 +8,8 @@ import {
   PDF_VIEWER_PAGE_SELECTOR,
 } from '@documenso/lib/constants/pdf-viewer';
 
+import { useSharedResize } from './use-shared-resize';
+
 export const useFieldPageCoords = (
   field: Pick<Field, 'positionX' | 'positionY' | 'width' | 'height' | 'page'>,
 ) => {
@@ -48,17 +50,7 @@ export const useFieldPageCoords = (
     calculateCoords();
   }, [calculateCoords]);
 
-  useEffect(() => {
-    const onResize = () => {
-      calculateCoords();
-    };
-
-    window.addEventListener('resize', onResize, { passive: true });
-
-    return () => {
-      window.removeEventListener('resize', onResize);
-    };
-  }, [calculateCoords]);
+  useSharedResize(calculateCoords);
 
   // Watch for the page element to appear in the DOM (e.g. after a virtual list
   // scroll) and recalculate coords. Also attach a ResizeObserver once the page

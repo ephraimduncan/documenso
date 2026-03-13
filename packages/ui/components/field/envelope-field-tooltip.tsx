@@ -6,6 +6,7 @@ import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 
 import { getBoundingClientRect } from '@documenso/lib/client-only/get-bounding-client-rect';
+import { useSharedResize } from '@documenso/lib/client-only/hooks/use-shared-resize';
 import { PDF_VIEWER_PAGE_SELECTOR } from '@documenso/lib/constants/pdf-viewer';
 
 import { cn } from '../../lib/utils';
@@ -77,17 +78,7 @@ export function EnvelopeFieldToolTip({
     calculateCoords();
   }, [calculateCoords]);
 
-  useEffect(() => {
-    const onResize = () => {
-      calculateCoords();
-    };
-
-    window.addEventListener('resize', onResize, { passive: true });
-
-    return () => {
-      window.removeEventListener('resize', onResize);
-    };
-  }, [calculateCoords]);
+  useSharedResize(calculateCoords);
 
   useEffect(() => {
     const $page = document.querySelector<HTMLElement>(

@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { getBoundingClientRect } from '@documenso/lib/client-only/get-bounding-client-rect';
 
+import { useSharedResize } from './use-shared-resize';
+
 export const useElementBounds = (elementOrSelector: HTMLElement | string, withScroll = false) => {
   const [bounds, setBounds] = useState({
     top: 0,
@@ -38,17 +40,11 @@ export const useElementBounds = (elementOrSelector: HTMLElement | string, withSc
     setBounds(calculateBounds());
   }, [calculateBounds]);
 
-  useEffect(() => {
-    const onResize = () => {
-      setBounds(calculateBounds());
-    };
-
-    window.addEventListener('resize', onResize, { passive: true });
-
-    return () => {
-      window.removeEventListener('resize', onResize);
-    };
+  const onResizeBounds = useCallback(() => {
+    setBounds(calculateBounds());
   }, [calculateBounds]);
+
+  useSharedResize(onResizeBounds);
 
   useEffect(() => {
     const $el =

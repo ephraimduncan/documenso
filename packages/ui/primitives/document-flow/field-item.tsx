@@ -11,6 +11,7 @@ import { useSearchParams } from 'react-router';
 
 import { useElementBounds } from '@documenso/lib/client-only/hooks/use-element-bounds';
 import { useIsPageInDom } from '@documenso/lib/client-only/hooks/use-is-page-in-dom';
+import { useSharedResize } from '@documenso/lib/client-only/hooks/use-shared-resize';
 import { PDF_VIEWER_PAGE_SELECTOR } from '@documenso/lib/constants/pdf-viewer';
 import type { TFieldMetaSchema } from '@documenso/lib/types/field-meta';
 import { ZCheckboxFieldMeta, ZRadioFieldMeta } from '@documenso/lib/types/field-meta';
@@ -149,17 +150,7 @@ const FieldItemInner = ({
     calculateCoords();
   }, [calculateCoords]);
 
-  useEffect(() => {
-    const onResize = () => {
-      calculateCoords();
-    };
-
-    window.addEventListener('resize', onResize, { passive: true });
-
-    return () => {
-      window.removeEventListener('resize', onResize);
-    };
-  }, [calculateCoords]);
+  useSharedResize(calculateCoords);
 
   useEffect(() => {
     const onClickOutsideOfField = (event: MouseEvent) => {
