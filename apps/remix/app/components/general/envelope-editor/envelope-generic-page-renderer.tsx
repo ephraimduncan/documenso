@@ -40,6 +40,8 @@ export const EnvelopeGenericPageRenderer = ({ pageData }: { pageData: PageRender
 
   const { scale, pageNumber } = pageData;
 
+  const recipientsById = useMemo(() => new Map(recipients.map((r) => [r.id, r])), [recipients]);
+
   const localPageFields = useMemo((): GenericLocalField[] => {
     if (envelopeStatus === DocumentStatus.COMPLETED) {
       return [];
@@ -50,7 +52,7 @@ export const EnvelopeGenericPageRenderer = ({ pageData }: { pageData: PageRender
         (field) => field.page === pageNumber && field.envelopeItemId === currentEnvelopeItem?.id,
       )
       .map((field) => {
-        const recipient = recipients.find((recipient) => recipient.id === field.recipientId);
+        const recipient = recipientsById.get(field.recipientId);
 
         if (!recipient) {
           throw new Error(`Recipient not found for field ${field.id}`);
@@ -70,7 +72,7 @@ export const EnvelopeGenericPageRenderer = ({ pageData }: { pageData: PageRender
           (recipient.signingStatus === SigningStatus.SIGNED ? inserted : true) ||
           fieldMeta?.readOnly,
       );
-  }, [fields, pageNumber, currentEnvelopeItem?.id, recipients, envelopeStatus]);
+  }, [fields, pageNumber, currentEnvelopeItem?.id, recipientsById, envelopeStatus]);
 
   const unsafeRenderFieldOnLayer = (field: GenericLocalField) => {
     if (!pageLayer.current) {

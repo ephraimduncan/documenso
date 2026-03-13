@@ -57,38 +57,58 @@ export const generateCertificatePdf = async (options: GenerateCertificatePdfOpti
     messages,
   });
 
+  // Pre-build Maps for O(1) lookups inside recipients.map loop.
+  const signatureFieldByRecipientId = new Map(
+    fields
+      .filter((field) => field.type === FieldType.SIGNATURE)
+      .map((field) => [field.recipientId, field]),
+  );
+
+  const emailSentByRecipientId = new Map(
+    auditLogs['EMAIL_SENT']
+      .filter((log) => log.type === 'EMAIL_SENT')
+      .map((log) => [log.data.recipientId, log]),
+  );
+
+  const documentSentLog = auditLogs['DOCUMENT_SENT'].find((log) => log.type === 'DOCUMENT_SENT');
+
+  const documentOpenedByRecipientId = new Map(
+    auditLogs['DOCUMENT_OPENED']
+      .filter((log) => log.type === 'DOCUMENT_OPENED')
+      .map((log) => [log.data.recipientId, log]),
+  );
+
+  const documentCompletedByRecipientId = new Map(
+    auditLogs['DOCUMENT_RECIPIENT_COMPLETED']
+      .filter((log) => log.type === 'DOCUMENT_RECIPIENT_COMPLETED')
+      .map((log) => [log.data.recipientId, log]),
+  );
+
+  const documentRejectedByRecipientId = new Map(
+    auditLogs['DOCUMENT_RECIPIENT_REJECTED']
+      .filter((log) => log.type === 'DOCUMENT_RECIPIENT_REJECTED')
+      .map((log) => [log.data.recipientId, log]),
+  );
+
   const payload = {
     recipients: recipients.map((recipient) => {
       const recipientId = recipient.id;
 
-      const signatureField = fields.find(
-        (field) => field.recipientId === recipient.id && field.type === FieldType.SIGNATURE,
-      );
+      const signatureField = signatureFieldByRecipientId.get(recipientId);
 
-      const emailSent: TDocumentAuditLogBaseSchema | undefined = auditLogs['EMAIL_SENT'].find(
-        (log) => log.type === 'EMAIL_SENT' && log.data.recipientId === recipientId,
-      );
+      const emailSent: TDocumentAuditLogBaseSchema | undefined =
+        emailSentByRecipientId.get(recipientId);
 
-      const documentSent: TDocumentAuditLogBaseSchema | undefined = auditLogs['DOCUMENT_SENT'].find(
-        (log) => log.type === 'DOCUMENT_SENT',
-      );
+      const documentSent: TDocumentAuditLogBaseSchema | undefined = documentSentLog;
 
-      const documentOpened: TDocumentAuditLogBaseSchema | undefined = auditLogs[
-        'DOCUMENT_OPENED'
-      ].find((log) => log.type === 'DOCUMENT_OPENED' && log.data.recipientId === recipientId);
+      const documentOpened: TDocumentAuditLogBaseSchema | undefined =
+        documentOpenedByRecipientId.get(recipientId);
 
-      const documentRecipientCompleted: TDocumentAuditLogBaseSchema | undefined = auditLogs[
-        'DOCUMENT_RECIPIENT_COMPLETED'
-      ].find(
-        (log) =>
-          log.type === 'DOCUMENT_RECIPIENT_COMPLETED' && log.data.recipientId === recipientId,
-      );
+      const documentRecipientCompleted: TDocumentAuditLogBaseSchema | undefined =
+        documentCompletedByRecipientId.get(recipientId);
 
-      const documentRecipientRejected: TDocumentAuditLogBaseSchema | undefined = auditLogs[
-        'DOCUMENT_RECIPIENT_REJECTED'
-      ].find(
-        (log) => log.type === 'DOCUMENT_RECIPIENT_REJECTED' && log.data.recipientId === recipientId,
-      );
+      const documentRecipientRejected: TDocumentAuditLogBaseSchema | undefined =
+        documentRejectedByRecipientId.get(recipientId);
 
       const extractedAuthMethods = extractDocumentAuthMethods({
         documentAuth: envelope.authOptions,

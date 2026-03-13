@@ -70,8 +70,11 @@ export const updateEnvelopeFields = async ({
     });
   }
 
+  const existingFieldsById = new Map(envelope.fields.map((f) => [f.id, f]));
+  const recipientsById = new Map(envelope.recipients.map((r) => [r.id, r]));
+
   const fieldsToUpdate = fields.map((field) => {
-    const originalField = envelope.fields.find((existingField) => existingField.id === field.id);
+    const originalField = existingFieldsById.get(field.id);
 
     if (!originalField) {
       throw new AppError(AppErrorCode.NOT_FOUND, {
@@ -79,9 +82,7 @@ export const updateEnvelopeFields = async ({
       });
     }
 
-    const recipient = envelope.recipients.find(
-      (recipient) => recipient.id === originalField.recipientId,
-    );
+    const recipient = recipientsById.get(originalField.recipientId ?? -1);
 
     // Each field MUST have a recipient associated with it.
     if (!recipient) {

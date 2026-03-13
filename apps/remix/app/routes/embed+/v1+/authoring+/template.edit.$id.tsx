@@ -143,23 +143,26 @@ export default function EmbeddingAuthoringTemplateEditPage() {
     })),
   }));
 
-  const [fields, setFields] = useState<TConfigureFieldsFormSchema | null>(() => ({
-    fields: template.fields.map((field) => ({
-      nativeId: field.id,
-      formId: nanoid(8),
-      type: field.type,
-      signerEmail:
-        template.recipients.find((recipient) => recipient.id === field.recipientId)?.email ?? '',
-      inserted: field.inserted,
-      recipientId: field.recipientId,
-      pageNumber: field.page,
-      pageX: field.positionX,
-      pageY: field.positionY,
-      pageWidth: field.width,
-      pageHeight: field.height,
-      fieldMeta: field.fieldMeta ?? undefined,
-    })),
-  }));
+  const [fields, setFields] = useState<TConfigureFieldsFormSchema | null>(() => {
+    const recipientsById = new Map(template.recipients.map((r) => [r.id, r]));
+
+    return {
+      fields: template.fields.map((field) => ({
+        nativeId: field.id,
+        formId: nanoid(8),
+        type: field.type,
+        signerEmail: recipientsById.get(field.recipientId)?.email ?? '',
+        inserted: field.inserted,
+        recipientId: field.recipientId,
+        pageNumber: field.page,
+        pageX: field.positionX,
+        pageY: field.positionY,
+        pageWidth: field.width,
+        pageHeight: field.height,
+        fieldMeta: field.fieldMeta ?? undefined,
+      })),
+    };
+  });
 
   const [features, setFeatures] = useState<TBaseEmbedAuthoringSchema['features'] | null>(null);
   const [externalId, setExternalId] = useState<string | null>(null);

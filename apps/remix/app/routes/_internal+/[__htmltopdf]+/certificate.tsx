@@ -137,8 +137,10 @@ export default function SigningCertificate({ loaderData }: Route.ComponentProps)
     return `${result.os.name} - ${result.browser.name} ${result.browser.version}`;
   };
 
+  const recipientsById = new Map(document.recipients.map((r) => [r.id, r]));
+
   const getAuthenticationLevel = (recipientId: number) => {
-    const recipient = document.recipients.find((recipient) => recipient.id === recipientId);
+    const recipient = recipientsById.get(recipientId);
 
     if (!recipient) {
       return 'Unknown';
@@ -214,8 +216,8 @@ export default function SigningCertificate({ loaderData }: Route.ComponentProps)
   };
 
   const getRecipientSignatureField = (recipientId: number) => {
-    return document.recipients
-      .find((recipient) => recipient.id === recipientId)
+    return recipientsById
+      .get(recipientId)
       ?.fields.find(
         (field) => field.type === FieldType.SIGNATURE || field.type === FieldType.FREE_SIGNATURE,
       );

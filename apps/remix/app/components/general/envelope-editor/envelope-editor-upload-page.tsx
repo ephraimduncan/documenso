@@ -79,9 +79,8 @@ export const EnvelopeEditorUploadPage = () => {
   const { mutateAsync: createEnvelopeItems, isPending: isCreatingEnvelopeItems } =
     trpc.envelope.item.createMany.useMutation({
       onSuccess: ({ data }) => {
-        const createdEnvelopes = data.filter(
-          (item) => !envelope.envelopeItems.find((envelopeItem) => envelopeItem.id === item.id),
-        );
+        const existingItemIds = new Set(envelope.envelopeItems.map((item) => item.id));
+        const createdEnvelopes = data.filter((item) => !existingItemIds.has(item.id));
 
         setLocalEnvelope({
           envelopeItems: [...envelope.envelopeItems, ...createdEnvelopes],
@@ -91,9 +90,11 @@ export const EnvelopeEditorUploadPage = () => {
 
   const { mutateAsync: updateEnvelopeItems } = trpc.envelope.item.updateMany.useMutation({
     onSuccess: ({ data }) => {
+      const updatedItemsById = new Map(data.map((item) => [item.id, item]));
+
       setLocalEnvelope({
         envelopeItems: envelope.envelopeItems.map((originalItem) => {
-          const updatedItem = data.find((item) => item.id === originalItem.id);
+          const updatedItem = updatedItemsById.get(originalItem.id);
 
           if (updatedItem) {
             return {
@@ -174,9 +175,11 @@ export const EnvelopeEditorUploadPage = () => {
       console.error(error);
 
       // Set error state on files in batch upload.
+      const newUploadingFileIds = new Set(newUploadingFiles.map((file) => file.id));
+
       setLocalFiles((prev) =>
         prev.map((uploadingFile) =>
-          uploadingFile.id === newUploadingFiles.find((file) => file.id === uploadingFile.id)?.id
+          newUploadingFileIds.has(uploadingFile.id)
             ? { ...uploadingFile, isError: true, isUploading: false }
             : uploadingFile,
         ),
@@ -186,9 +189,10 @@ export const EnvelopeEditorUploadPage = () => {
     });
 
     setLocalFiles((prev) => {
+      const newUploadingFileIdsForFilter = new Set(newUploadingFiles.map((file) => file.id));
+
       const filteredFiles = prev.filter(
-        (uploadingFile) =>
-          uploadingFile.id !== newUploadingFiles.find((file) => file.id === uploadingFile.id)?.id,
+        (uploadingFile) => !newUploadingFileIdsForFilter.has(uploadingFile.id),
       );
 
       return filteredFiles.concat(
@@ -244,12 +248,12 @@ export const EnvelopeEditorUploadPage = () => {
     useEnvelopeAutosave(
       async (files: LocalFile[]) => {
         if (isEmbedded) {
+          const envelopeItemsById = new Map(envelope.envelopeItems.map((item) => [item.id, item]));
+
           const nextEnvelopeItems = files
             .filter((item) => item.envelopeItemId)
             .map((item, index) => {
-              const originalEnvelopeItem = envelope.envelopeItems.find(
-                (envelopeItem) => envelopeItem.id === item.envelopeItemId,
-              );
+              const originalEnvelopeItem = envelopeItemsById.get(item.envelopeItemId!);
 
               return {
                 id: item.envelopeItemId || '',

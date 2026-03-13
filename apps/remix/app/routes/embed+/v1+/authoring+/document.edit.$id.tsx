@@ -143,23 +143,26 @@ export default function EmbeddingAuthoringDocumentEditPage() {
     })),
   }));
 
-  const [fields, setFields] = useState<TConfigureFieldsFormSchema | null>(() => ({
-    fields: document.fields.map((field) => ({
-      nativeId: field.id,
-      formId: nanoid(8),
-      type: field.type,
-      signerEmail:
-        document.recipients.find((recipient) => recipient.id === field.recipientId)?.email ?? '',
-      inserted: field.inserted,
-      recipientId: field.recipientId,
-      pageNumber: field.page,
-      pageX: field.positionX,
-      pageY: field.positionY,
-      pageWidth: field.width,
-      pageHeight: field.height,
-      fieldMeta: field.fieldMeta ?? undefined,
-    })),
-  }));
+  const [fields, setFields] = useState<TConfigureFieldsFormSchema | null>(() => {
+    const recipientsById = new Map(document.recipients.map((r) => [r.id, r]));
+
+    return {
+      fields: document.fields.map((field) => ({
+        nativeId: field.id,
+        formId: nanoid(8),
+        type: field.type,
+        signerEmail: recipientsById.get(field.recipientId)?.email ?? '',
+        inserted: field.inserted,
+        recipientId: field.recipientId,
+        pageNumber: field.page,
+        pageX: field.positionX,
+        pageY: field.positionY,
+        pageWidth: field.width,
+        pageHeight: field.height,
+        fieldMeta: field.fieldMeta ?? undefined,
+      })),
+    };
+  });
 
   const [features, setFeatures] = useState<TBaseEmbedAuthoringSchema['features'] | null>(null);
   const [externalId, setExternalId] = useState<string | null>(null);

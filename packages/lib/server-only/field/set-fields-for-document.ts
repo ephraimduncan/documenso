@@ -83,19 +83,22 @@ export const setFieldsForDocument = async ({
 
   const existingFields = envelope.fields;
 
+  const fieldIdsSet = new Set(fields.map((field) => field.id));
+  const existingFieldsById = new Map(existingFields.map((f) => [f.id, f]));
+  const recipientsById = new Map(envelope.recipients.map((r) => [r.id, r]));
+  const envelopeItemsById = new Map(envelope.envelopeItems.map((item) => [item.id, item]));
+
   const removedFields = existingFields.filter(
-    (existingField) => !fields.find((field) => field.id === existingField.id),
+    (existingField) => !fieldIdsSet.has(existingField.id),
   );
 
   const linkedFields = fields.map((field) => {
-    const existing = existingFields.find((existingField) => existingField.id === field.id);
+    const existing = existingFieldsById.get(field.id ?? -1);
 
-    const recipient = envelope.recipients.find((recipient) => recipient.id === field.recipientId);
+    const recipient = recipientsById.get(field.recipientId);
 
     // Check whether the field is being attached to an allowed envelope item.
-    const foundEnvelopeItem = envelope.envelopeItems.find(
-      (envelopeItem) => envelopeItem.id === field.envelopeItemId,
-    );
+    const foundEnvelopeItem = envelopeItemsById.get(field.envelopeItemId);
 
     if (!foundEnvelopeItem) {
       throw new AppError(AppErrorCode.INVALID_REQUEST, {
@@ -344,12 +347,12 @@ export const setFieldsForDocument = async ({
   }
 
   // Filter out fields that have been removed or have been updated.
+  const removedFieldIds = new Set(removedFields.map((f) => f.id));
+  const persistedFieldIds = new Set(persistedFields.map((f) => f.id));
+
   const mappedFilteredFields = existingFields
     .filter((field) => {
-      const isRemoved = removedFields.find((removedField) => removedField.id === field.id);
-      const isUpdated = persistedFields.find((persistedField) => persistedField.id === field.id);
-
-      return !isRemoved && !isUpdated;
+      return !removedFieldIds.has(field.id) && !persistedFieldIds.has(field.id);
     })
     .map((field) => ({
       ...mapFieldToLegacyField(field, envelope),

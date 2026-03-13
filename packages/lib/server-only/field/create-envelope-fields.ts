@@ -133,15 +133,15 @@ export const createEnvelopeFields = async ({
   */
   const placeholderWhiteouts = new Map<string, Array<{ pageIndex: number; bbox: BoundingBox }>>();
 
+  const recipientsById = new Map(envelope.recipients.map((r) => [r.id, r]));
+  const envelopeItemsById = new Map(envelope.envelopeItems.map((item) => [item.id, item]));
+
   // Field validation and placeholder resolution.
   const validatedFields = fields.flatMap((field) => {
-    const recipient = envelope.recipients.find((recipient) => recipient.id === field.recipientId);
+    const recipient = recipientsById.get(field.recipientId);
 
     // The item to attach the fields to MUST belong to the document.
-    if (
-      field.envelopeItemId &&
-      !envelope.envelopeItems.find((envelopeItem) => envelopeItem.id === field.envelopeItemId)
-    ) {
+    if (field.envelopeItemId && !envelopeItemsById.has(field.envelopeItemId)) {
       throw new AppError(AppErrorCode.INVALID_REQUEST, {
         message: 'Item to attach fields to must belong to the document',
       });
@@ -263,11 +263,11 @@ export const createEnvelopeFields = async ({
 
     // Handle field created audit log.
     if (envelope.type === EnvelopeType.DOCUMENT) {
+      const validatedFieldsByRecipientId = new Map(validatedFields.map((f) => [f.recipientId, f]));
+
       await tx.documentAuditLog.createMany({
         data: newlyCreatedFields.map((createdField) => {
-          const recipient = validatedFields.find(
-            (field) => field.recipientId === createdField.recipientId,
-          );
+          const recipient = validatedFieldsByRecipientId.get(createdField.recipientId);
 
           return createDocumentAuditLogData({
             type: DOCUMENT_AUDIT_LOG_TYPE.FIELD_CREATED,
@@ -302,7 +302,7 @@ export const createEnvelopeFields = async ({
 
     const modifiedPdfBytes = await pdfDoc.save();
 
-    const envelopeItem = envelope.envelopeItems.find((item) => item.id === envelopeItemId);
+    const envelopeItem = envelopeItemsById.get(envelopeItemId);
 
     if (!envelopeItem) {
       continue;
