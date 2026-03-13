@@ -1,0 +1,21 @@
+{
+  "featureId": "rerender-hoisted-defaults",
+  "reviewedAt": "2026-03-13T05:31:33Z",
+  "commitId": "9c5ee6a587344cdd196a17d62b49dddd4cd23346",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Pass. The implementation satisfies VAL-RERENDER-002. The commit updates 17 non-primitive useState initializers across 12 files: 16 truly static defaults were hoisted to module-level constants, and the one prop-dependent default in packages/ui/primitives/document-flow/field-item.tsx was correctly converted to a lazy initializer. Repository-wide searches for useState({, useState([, and useState(new returned no matches after the refactor, so no inline non-primitive useState defaults were missed by the implemented pattern.",
+    "issues": []
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "The feature description example shows hoisted defaults with `as const`, but the worker correctly omitted `as const` for useState defaults because these state values are intentionally mutable. Future feature descriptions or guidance should clarify that `as const` is optional and should only be used when a readonly/narrow literal type is actually desired.",
+      "evidence": "/Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807/features.json:803 shows the example `const DEFAULT_STATE = { key: 'value' } as const;`. The reviewed diff hoists 16 static defaults without `as const`, which matches the mutable useState usage in the changed files."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Reviewed the feature handoff, transcript skeleton, worker skill, and commit 9c5ee6a587344cdd196a17d62b49dddd4cd23346. The code correctly hoists every static non-primitive useState default touched by this feature and uses a lazy initializer for the only prop-dependent case, with no missed inline defaults or unsafe hoists found."
+}

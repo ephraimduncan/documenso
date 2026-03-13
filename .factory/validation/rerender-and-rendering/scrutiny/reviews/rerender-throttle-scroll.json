@@ -1,0 +1,15 @@
+{
+  "featureId": "rerender-throttle-scroll",
+  "reviewedAt": "2026-03-13T05:31:10Z",
+  "commitId": "99d967850eb68cf84812cfb75251f12b65a04cc5",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Pass. Both targeted scroll handlers now use the same requestAnimationFrame throttling pattern: each raw scroll event cancels any pending frame, schedules a single RAF callback to read window.scrollY and call setScrollY, and removes the listener plus cancels the pending RAF on cleanup. This satisfies VAL-RERENDER-003 and preserves the existing scrollY-driven header border behavior while avoiding direct state updates on every raw scroll event.",
+    "issues": []
+  },
+  "sharedStateObservations": [],
+  "addressesFailureFrom": null,
+  "summary": "Reviewed the rerender-throttle-scroll feature diff, handoff, transcript skeleton, and shared-state docs. The implementation correctly throttles both specified scroll handlers, cleans up safely, and introduces no reviewable regressions, so the feature passes."
+}

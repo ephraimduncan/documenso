@@ -1,0 +1,21 @@
+{
+  "featureId": "rerender-derived-state",
+  "reviewedAt": "2026-03-13T05:34:01Z",
+  "commitId": "bb0e23f68d6f7dcc9002fcbe38175bb8275cb300",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Pass. The reviewed commit removes the targeted prop-sync `useEffect(() => { setState(prop) }, [prop])` pattern across the 9 touched files and replaces it with render-time derivation that preserves prior semantics. The replacements use previous-prop comparison during render in the local-state cases (`multiselect.tsx`, `multiselect-role-combobox.tsx`, `settings.public-profile.tsx`, `field-item-advanced-settings.tsx`, checkbox/radio/dropdown advanced settings, and `add-template-fields.tsx`), while `documents._index.tsx` correctly switches to a `useRef`-backed last-known-stats fallback so counts do not regress to zeros when query data is temporarily absent. A targeted ripgrep check across the reviewed files finds no remaining matches for the removed prop-sync effect pattern, and I did not find any behavior mismatches or missed confirmed locations in this feature's scope.",
+    "issues": []
+  },
+  "sharedStateObservations": [
+    {
+      "area": "knowledge",
+      "observation": "The feature metadata for `rerender-derived-state` contains stale file paths, which forced the worker to search for the real locations before editing. Keeping mission feature descriptions aligned with the current repo structure would reduce avoidable discovery work for future workers and reviewers.",
+      "evidence": "/Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807/features.json:777 lists `packages/ui/components/multiselect.tsx` and `apps/remix/app/components/general/public-profile.tsx`, but the reviewed commit and current repo use `/Users/duncan/dev/documenso-wt-main-wt/packages/ui/primitives/multiselect.tsx` and `/Users/duncan/dev/documenso-wt-main-wt/apps/remix/app/routes/_authenticated+/t.$teamUrl+/settings.public-profile.tsx`."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Reviewed the handoff, transcript skeleton, perf-refactor-worker guidance, and commit bb0e23f68d6f7dcc9002fcbe38175bb8275cb300 for `rerender-derived-state`. The implementation satisfies VAL-RERENDER-001: the targeted prop-sync effects are gone, the `documents._index.tsx` stats handling uses an equivalent render-time/stale-data pattern, and no feature-scope regressions or missed confirmed locations were found."
+}

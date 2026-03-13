@@ -1,0 +1,46 @@
+{
+  "featureId": "rendering-content-visibility",
+  "reviewedAt": "2026-03-13T05:31:17Z",
+  "commitId": "424f45f989d12b9065048f449507912f00eab556",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The worker applied content-visibility: auto with per-container contain-intrinsic-size estimates to 14 scrollable containers across the app. The selection is well-targeted toward impactful long-scroll areas, and the risky drag-and-drop/PDF viewer containers using scrollableContainerRef were correctly left untouched. The chosen intrinsic sizes (400-800px) are reasonable for the affected UI surfaces. Build and lint were reported clean in the handoff. A few unrelated formatting-style edits and one harmless sync-to-async onClick change increased diff noise, but they do not block the feature and VAL-RENDERING-001 is satisfied.",
+    "issues": [
+      {
+        "file": "apps/remix/app/components/general/envelope-editor/envelope-editor.tsx",
+        "line": 566,
+        "severity": "non_blocking",
+        "description": "content-visibility: auto was added to the main content wrapper that fills the viewport. Because that container itself is typically on-screen, the optimization likely yields little benefit compared with the inner long-scroll containers it hosts."
+      },
+      {
+        "file": "apps/remix/app/components/general/webhook-logs-sheet.tsx",
+        "line": 86,
+        "severity": "non_blocking",
+        "description": "The onClick handler changed from a synchronous arrow function to an async arrow function. React ignores the return value, so this is functionally harmless, but it is outside the stated scope of the feature."
+      },
+      {
+        "file": "apps/remix/app/components/general/webhook-logs-sheet.tsx",
+        "line": 78,
+        "severity": "non_blocking",
+        "description": "This file includes substantial unrelated Tailwind class reordering alongside the content-visibility change. The extra churn is not harmful but makes the review diff noisier than necessary."
+      },
+      {
+        "file": "apps/remix/app/components/dialogs/organisation-member-invite-dialog.tsx",
+        "line": 329,
+        "severity": "non_blocking",
+        "description": "The diff includes unrelated Tailwind class reordering in addition to the new content-visibility classes, indicating formatter noise beyond the feature's core change."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "Mission and repo guidance do not say whether workers should avoid formatter-driven class reordering when making focused performance changes. This feature's diff picked up unrelated Tailwind class ordering edits in several touched files, creating avoidable review noise.",
+      "evidence": "apps/remix/app/components/general/webhook-logs-sheet.tsx shows widespread class reordering beyond the new content-visibility classes; similar unrelated ordering changes appear in organisation-member-invite-dialog.tsx, public-profile-template-manage-dialog.tsx, and team-group-create-dialog.tsx."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "PASS. Appropriate long scrollable containers were updated with content-visibility: auto and sensible intrinsic sizes, while risky measurement/drag-related viewer containers were avoided. The only findings are minor diff-scope issues and one low-value application on the envelope editor main wrapper."
+}

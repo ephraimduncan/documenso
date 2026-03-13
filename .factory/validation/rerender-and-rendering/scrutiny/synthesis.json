@@ -1,0 +1,66 @@
+{
+  "milestone": "rerender-and-rendering",
+  "round": 1,
+  "status": "pass",
+  "validatorsRun": {
+    "test": {
+      "passed": true,
+      "command": "not-configured",
+      "exitCode": 0,
+      "notes": "No test command is defined in .factory/services.yaml, and this refactoring mission's AGENTS.md defines validation as build plus lint rather than a separate test suite."
+    },
+    "typecheck": {
+      "passed": true,
+      "command": "npm run build",
+      "exitCode": 0,
+      "notes": "Per the mission AGENTS.md, root type checking is validated through the build pipeline instead of a standalone tsc command. `turbo run build` completed successfully for the scoped packages in this validation run."
+    },
+    "lint": {
+      "passed": true,
+      "command": "npm run lint",
+      "exitCode": 0,
+      "notes": "Lint exited 0 with warnings only: 17 in @documenso/ui, 7 in @documenso/trpc, and 37 in @documenso/lib. No lint errors blocked this milestone."
+    }
+  },
+  "reviewsSummary": {
+    "total": 5,
+    "passed": 5,
+    "failed": 0,
+    "failedFeatures": []
+  },
+  "blockingIssues": [],
+  "appliedUpdates": [],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "Mission feature generation",
+      "suggestion": "Keep mission feature descriptions aligned with current repo paths, or prefer semantic location descriptions over hard-coded stale paths when enumerating expected edit sites.",
+      "evidence": "The rerender-derived-state review found stale paths in /Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807/features.json: it referenced packages/ui/components/multiselect.tsx and apps/remix/app/components/general/public-profile.tsx, while the actual edited files live at packages/ui/primitives/multiselect.tsx and apps/remix/app/routes/_authenticated+/t.$teamUrl+/settings.public-profile.tsx.",
+      "isSystemic": false
+    },
+    {
+      "target": "Mission AGENTS.md",
+      "suggestion": "Reinforce that narrowly scoped performance refactors should avoid incidental formatter-only or Tailwind class-order churn, or split that noise into a separate change before completion.",
+      "evidence": "The rendering-content-visibility review found unrelated Tailwind class reordering in apps/remix/app/components/general/webhook-logs-sheet.tsx, organisation-member-invite-dialog.tsx, public-profile-template-manage-dialog.tsx, and team-group-create-dialog.tsx alongside the real optimization changes. A similar review-noise issue was already reported in the client-side-data-fetching scrutiny synthesis, which makes this a recurring pattern across milestones.",
+      "isSystemic": true
+    },
+    {
+      "target": "validation-contract.md",
+      "suggestion": "Clarify SVG precision-reduction assertions so they explicitly name the full set of SVG attributes that are in scope for rounding and whether related gradient/filter geometry attributes should be treated the same as coordinate attributes.",
+      "evidence": "The rendering-svg-precision review noted that the feature wording listed d/points/cx/cy/x/y/width/height but the accepted implementation also rounded related geometry attributes such as x1/y1/x2 and dx/dy/stdDeviation. That ambiguity created avoidable uncertainty even though the final change was correct.",
+      "isSystemic": false
+    },
+    {
+      "target": "perf-refactor-worker skill",
+      "suggestion": "When a refactor involves scripted SVG or markup precision edits, explicitly tell workers to inspect the diff immediately after each scripted pass and revert if a regex replacement touches surrounding delimiters or markup structure.",
+      "evidence": "The rendering-svg-precision review recorded that the worker's first script pass broke SVG quoting, the issue was caught via git diff, and the worker then reverted and rewrote the script before completing the feature safely.",
+      "isSystemic": false
+    }
+  ],
+  "rejectedObservations": [
+    {
+      "observation": "Clarify the rerender-hoisted-defaults example so it does not show `as const` on hoisted mutable useState defaults.",
+      "reason": "ambiguous"
+    }
+  ],
+  "previousRound": null
+}
