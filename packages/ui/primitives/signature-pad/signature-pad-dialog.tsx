@@ -88,7 +88,7 @@ export const SignaturePadDialog = ({
             }}
           >
             <motion.path
-              d="M1.5 11H14.5M1.5 14C1.5 14 8.72 2 4.86938 2H4.875C2.01 2 1.97437 14.0694 8 6.51188V6.5C8 6.5 9 11.3631 11.5 7.52375V7.5C11.5 7.5 11.5 9 14.5 9"
+              d="M1.5 11H14.5M1.5 14C1.5 14 8.72 2 4.87 2H4.875C2.01 2 1.97 14.0694 8 6.51V6.5C8 6.5 9 11.3631 11.5 7.52V7.5C11.5 7.5 11.5 9 14.5 9"
               stroke="currentColor"
               strokeWidth="1.1"
               strokeLinecap="round"
