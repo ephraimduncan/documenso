@@ -1,65 +1,47 @@
 {
   "milestone": "rerender-and-rendering",
-  "round": 1,
-  "status": "fail",
+  "round": 2,
+  "status": "pass",
   "testingSurface": "terminal-validation",
   "assertionsSummary": {
-    "total": 5,
-    "passed": 4,
-    "failed": 1,
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
     "blocked": 0
   },
   "passedAssertions": [
-    "VAL-RERENDER-001",
-    "VAL-RERENDER-002",
-    "VAL-RERENDER-003",
-    "VAL-RENDERING-001"
+    "VAL-RENDERING-002"
   ],
-  "failedAssertions": [
-    {
-      "id": "VAL-RENDERING-002",
-      "reason": "Remaining 3+ decimal SVG coordinate values were found in the targeted changed assets, so the current repository state does not satisfy the contract's <=2-decimal SVG precision requirement."
-    }
-  ],
+  "failedAssertions": [],
   "blockedAssertions": [],
   "flowReports": [
     {
-      "groupId": "rerender-core",
-      "path": ".factory/validation/rerender-and-rendering/user-testing/flows/rerender-core.json"
-    },
-    {
-      "groupId": "rendering-assets",
-      "path": ".factory/validation/rerender-and-rendering/user-testing/flows/rendering-assets.json"
+      "groupId": "rendering-assets-rerun",
+      "path": ".factory/validation/rerender-and-rendering/user-testing/flows/rendering-assets-rerun.json"
     }
   ],
   "sharedChecks": {
     "serviceHealth": [
       {
         "service": "postgres",
-        "command": "pg_isready -h localhost -p 5432",
+        "command": "echo \"Postgres already running externally\" && pg_isready -h localhost -p 5432",
         "exitCode": 0,
-        "observation": "postgres responded `localhost:5432 - accepting connections`, confirming the externally managed dependency was available during validation setup."
+        "observation": "The externally managed Postgres dependency remained available; the setup command echoed the expected note and `pg_isready` returned `localhost:5432 - accepting connections`."
       }
     ],
     "commands": [
       {
         "command": "npm --prefix /Users/duncan/dev/documenso-wt-main-wt run build",
         "exitCode": 0,
-        "observation": "`turbo run build` completed successfully across the monorepo; Prisma generate ran, the docs/remix/openpage-api builds succeeded, and Turbo reported 5 successful tasks with no build errors."
+        "observation": "`turbo run build` completed successfully across the monorepo on the rerun. Prisma generate ran, the docs/remix/openpage-api builds succeeded, and Turbo reported 5 successful tasks with no build errors."
       },
       {
         "command": "npm --prefix /Users/duncan/dev/documenso-wt-main-wt run lint",
         "exitCode": 0,
-        "observation": "`turbo run lint` exited 0 with warnings only: 7 in `@documenso/trpc`, 17 in `@documenso/ui`, and 37 in `@documenso/lib`; no lint errors were introduced."
+        "observation": "`turbo run lint` exited 0 with warnings only: 17 in `@documenso/ui`, 7 in `@documenso/trpc`, and 37 in `@documenso/lib`; no lint errors blocked the rerun."
       }
     ]
   },
-  "appliedUpdates": [
-    {
-      "target": "user-testing.md",
-      "description": "Added rerender-and-rendering terminal-validation notes, including the current SVG precision interpretation and the file-pattern checks for rerender assertions.",
-      "source": "flow-report"
-    }
-  ],
-  "previousRound": null
+  "appliedUpdates": [],
+  "previousRound": ".factory/validation/rerender-and-rendering/user-testing/synthesis.round-1.json"
 }

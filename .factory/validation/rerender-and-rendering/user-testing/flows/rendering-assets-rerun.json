@@ -1,0 +1,76 @@
+{
+  "milestone": "rerender-and-rendering",
+  "groupId": "rendering-assets-rerun",
+  "surface": "terminal-validation",
+  "testedAt": "2026-03-13T06:01:11Z",
+  "isolation": {
+    "mode": "read-only repository inspection",
+    "repoRoot": "/Users/duncan/dev/documenso-wt-main-wt",
+    "missionDir": "/Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807",
+    "restrictions": [
+      "Inspected only the assigned target assets and minimal supporting guidance files",
+      "Did not run build or lint because the parent validator owns shared heavy checks",
+      "Created only the assigned flow report and evidence note"
+    ]
+  },
+  "toolsUsed": [
+    "LS",
+    "Read",
+    "Grep",
+    "Execute"
+  ],
+  "findings": [
+    {
+      "type": "coordinate-precision-scan",
+      "result": "pass",
+      "summary": "No coordinate/path/gradient/filter position values above 2 decimal places were found in the 5 targeted assets."
+    },
+    {
+      "type": "ignored-non-coordinate-precision",
+      "result": "not-applicable",
+      "summary": "Remaining 3+ decimal numbers were limited to feColorMatrix coefficients and a Framer Motion restDelta config value, both explicitly excluded by the milestone guidance.",
+      "fileLines": [
+        "apps/remix/public/static/early-supporter-badge.svg:15",
+        "packages/ui/primitives/signature-pad/signature-pad-dialog.tsx:85"
+      ]
+    }
+  ],
+  "assertions": [
+    {
+      "id": "VAL-RENDERING-002",
+      "title": "SVGs have reduced coordinate precision",
+      "status": "pass",
+      "reason": "All targeted coordinate/path/gradient/filter position values in the assigned assets are at most 2 decimal places. The only remaining 3+ decimal numbers are out-of-scope feColorMatrix coefficients and a Framer Motion restDelta value.",
+      "evidence": {
+        "fileLines": [
+          "apps/remix/public/static/early-supporter-badge.svg:3",
+          "apps/remix/public/static/early-supporter-badge.svg:5",
+          "apps/remix/public/static/early-supporter-badge.svg:9",
+          "apps/remix/public/static/early-supporter-badge.svg:25",
+          "apps/remix/public/static/early-supporter-badge.svg:15",
+          "apps/remix/public/static/premium-user-badge.svg:2",
+          "apps/remix/public/static/premium-user-badge.svg:4",
+          "packages/ui/icons/signature.tsx:21",
+          "packages/ui/icons/verified.tsx:22",
+          "packages/ui/primitives/signature-pad/signature-pad-dialog.tsx:85",
+          "packages/ui/primitives/signature-pad/signature-pad-dialog.tsx:91"
+        ],
+        "details": [
+          "Automated regex inspection found no path d attributes or SVG position attributes with 3+ decimal places in the targeted files.",
+          "early-supporter-badge.svg line 9 uses filter position values x=\"5.34\" y=\"5.42\" width=\"10.66\" height=\"9.91\", and line 25 uses gradient positions x1=\"12.56\" x2=\"6.25\" y2=\"19.96\"; all are within the <=2 decimal requirement.",
+          "The path data on early-supporter-badge.svg:3, early-supporter-badge.svg:5, premium-user-badge.svg:2, signature.tsx:21, verified.tsx:22, and signature-pad-dialog.tsx:91 contains only integers or decimals with at most 2 digits after the decimal point.",
+          "early-supporter-badge.svg:15 retains feColorMatrix coefficients 0.414307, 0.24341, and 0.0856598; per .factory/library/user-testing.md these non-coordinate coefficients do not count against VAL-RENDERING-002.",
+          "signature-pad-dialog.tsx:85 retains restDelta: 0.001; per .factory/library/user-testing.md motion config numbers do not count against VAL-RENDERING-002."
+        ],
+        "evidenceFiles": [
+          "rerender-and-rendering/rendering-assets-rerun/VAL-RENDERING-002-precision-rerun.txt"
+        ],
+        "sharedChecks": "Per .factory/library/user-testing.md, build and lint validation for this milestone are centralized in the parent validator and were not rerun in this flow validation."
+      },
+      "issues": []
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Re-ran VAL-RENDERING-002 against the current repo state after fix-svg-precision-remaining. The assertion now passes because all targeted coordinate/path/gradient/filter position values are at most 2 decimal places, with only explicitly ignored non-coordinate precision remaining."
+}
