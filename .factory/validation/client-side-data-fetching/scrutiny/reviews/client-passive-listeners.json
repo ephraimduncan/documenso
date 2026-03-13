@@ -1,0 +1,34 @@
+{
+  "featureId": "client-passive-listeners",
+  "reviewedAt": "2026-03-13T04:14:09Z",
+  "commitId": "beff112d6ac22843ad82192390535c7abecef9c5",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The feature correctly adds { passive: true } to the identified scroll, resize, and touch listeners that do not call preventDefault(), and it adds .catch() handlers to both fire-and-forget PostHog import chains in use-analytics.ts. The worker also correctly excluded listeners that already had passive: true or rely on preventDefault().",
+    "issues": [
+      {
+        "file": "packages/ui/primitives/multiselect.tsx",
+        "line": 408,
+        "severity": "non_blocking",
+        "description": "The commit includes several unrelated Tailwind class-ordering changes in this file in addition to the touchend passive-listener update. They appear cosmetic only, but they are out of scope for this feature review."
+      },
+      {
+        "file": "packages/ui/components/document/envelope-recipient-field-tooltip.tsx",
+        "line": 194,
+        "severity": "non_blocking",
+        "description": "The commit includes an unrelated Tailwind class-ordering change on this line alongside the resize passive-listener update. Cosmetic only, but outside the requested feature scope."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "The worker's commit bundled cosmetic Tailwind class-ordering diffs with the requested passive-listener changes. Mission guidance does not currently say whether formatter-only noise should be avoided or accepted when delivering narrowly scoped refactors.",
+      "evidence": "git show beff112d6ac22843ad82192390535c7abecef9c5 shows unrelated class-ordering hunks in packages/ui/primitives/multiselect.tsx and packages/ui/components/document/envelope-recipient-field-tooltip.tsx"
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "PASS. The passive-listener and PostHog .catch() requirements are implemented correctly. I found two non-blocking scope issues: unrelated cosmetic Tailwind class-ordering changes were included in multiselect.tsx and envelope-recipient-field-tooltip.tsx."
+}

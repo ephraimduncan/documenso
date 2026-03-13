@@ -1,0 +1,69 @@
+{
+  "milestone": "client-side-data-fetching",
+  "round": 1,
+  "status": "fail",
+  "validatorsRun": {
+    "test": {
+      "passed": true,
+      "command": "not-configured",
+      "exitCode": 0,
+      "notes": "No test command is defined in .factory/services.yaml or the root package.json, and the mission guidance for this refactoring milestone says no E2E tests are needed."
+    },
+    "typecheck": {
+      "passed": true,
+      "command": "npm run build",
+      "exitCode": 0,
+      "notes": "Per mission AGENTS.md, root type checking is validated through the build pipeline rather than a separate tsc command; this validation run completed successfully."
+    },
+    "lint": {
+      "passed": true,
+      "command": "npm run lint",
+      "exitCode": 0,
+      "notes": "Lint exited 0 with warnings only across @documenso/trpc, @documenso/ui, and @documenso/lib; no errors blocked the milestone validators in this run."
+    }
+  },
+  "reviewsSummary": {
+    "total": 3,
+    "passed": 2,
+    "failed": 1,
+    "failedFeatures": [
+      "client-localstorage-schema"
+    ]
+  },
+  "blockingIssues": [
+    {
+      "featureId": "client-localstorage-schema",
+      "severity": "blocking",
+      "description": "packages/ui/primitives/document-flow/field-item-advanced-settings.tsx deletes the legacy field_* localStorage key without first reading and migrating it, so existing unsaved advanced-settings drafts are lost on first load after deployment instead of being handled gracefully."
+    }
+  ],
+  "appliedUpdates": [
+    {
+      "target": "library",
+      "description": "Added .factory/library/client-side-data-fetching.md documenting versioned localStorage migration expectations, the concrete field-meta schema pair for persisted field-meta objects, and the shared resize-listener singleton hook pattern plus remaining intentionally separate resize listeners.",
+      "sourceFeature": "client-localstorage-schema"
+    }
+  ],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "Mission AGENTS.md",
+      "suggestion": "Add a client-storage persistence guideline: when versioning localStorage keys, read and validate the new key first, then explicitly migrate or honor legacy unversioned values before deleting them.",
+      "evidence": "The client-localstorage-schema review found that apps/remix/app/components/general/verify-email-banner.tsx:69-91 and packages/ui/primitives/document-flow/field-item-advanced-settings.tsx:172-199 both introduced versioned keys, but the advanced-settings path dropped existing legacy drafts instead of migrating them. The mission AGENTS.md currently contains no browser-storage guidance.",
+      "isSystemic": true
+    },
+    {
+      "target": "validation-contract.md",
+      "suggestion": "Expand VAL-CLIENT-002 so it explicitly requires preserving or migrating valid legacy localStorage values during schema versioning, not just adding a versioned key and validation.",
+      "evidence": "VAL-CLIENT-002 currently says the two localStorage usages should include a version key and validation, while the feature description also required graceful handling of old data. That gap allowed client-localstorage-schema to pass the contract wording while still regressing stored drafts and dialog cooldown timestamps.",
+      "isSystemic": false
+    },
+    {
+      "target": "Mission AGENTS.md",
+      "suggestion": "Reinforce that narrowly scoped refactors should avoid incidental formatter-only or Tailwind class-order churn, or split that noise into a separate change before finishing the feature.",
+      "evidence": "The client-passive-listeners review found unrelated class-ordering hunks in packages/ui/primitives/multiselect.tsx and packages/ui/components/document/envelope-recipient-field-tooltip.tsx bundled into commit beff112d6ac22843ad82192390535c7abecef9c5 alongside the real passive-listener changes.",
+      "isSystemic": true
+    }
+  ],
+  "rejectedObservations": [],
+  "previousRound": null
+}

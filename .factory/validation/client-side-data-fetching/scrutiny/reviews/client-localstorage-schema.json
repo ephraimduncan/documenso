@@ -1,0 +1,39 @@
+{
+  "featureId": "client-localstorage-schema",
+  "reviewedAt": "2026-03-13T04:14:41Z",
+  "commitId": "742280083a1804b68f102be9a4e2450a00293814",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "The implementation does add versioned localStorage keys, read-time validation, and the related cleanup-loop updates in the four touched files. However, it does not actually migrate or honor existing legacy localStorage values. Both targeted readers ignore the old unversioned key and immediately fall back to defaults or a fresh timestamp, so previously stored client state is discarded on first load after deployment instead of being handled gracefully.",
+    "issues": [
+      {
+        "file": "packages/ui/primitives/document-flow/field-item-advanced-settings.tsx",
+        "line": 191,
+        "severity": "blocking",
+        "description": "When the new `v1:field_*` key is absent, the component deletes the legacy `field_*` key without reading or validating it first. Any existing unsaved advanced-settings draft stored under the old key is silently lost on first load after deploy, which misses the requirement to handle old data gracefully."
+      },
+      {
+        "file": "apps/remix/app/components/general/verify-email-banner.tsx",
+        "line": 83,
+        "severity": "non_blocking",
+        "description": "The legacy `emailVerificationDialogLastShown` value is always removed instead of being read once and copied forward to the versioned key. Existing users who recently saw the dialog under the old key will see it again immediately after deployment even though the stored timestamp is still valid."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "The codebase now has multiple localStorage sites that need the same pattern: versioned key prefix, guarded read/write, validation on read, and explicit legacy-key migration behavior. That convention is not documented in the mission AGENTS.md or .factory/library yet.",
+      "evidence": "apps/remix/app/components/general/verify-email-banner.tsx:69-91 and packages/ui/primitives/document-flow/field-item-advanced-settings.tsx:172-199 implement partial versions of the same pattern, while /Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807/AGENTS.md contains no localStorage guidance."
+    },
+    {
+      "area": "knowledge",
+      "observation": "Persisted field-meta readers should use the concrete `ZFieldMetaNotOptionalSchema`/`TFieldMetaNotOptionalSchema` pair when they expect an actual field-meta object. The broader optional schema also admits `{}` and `undefined`, which caused avoidable implementation/debugging friction here and is not documented anywhere in shared state.",
+      "evidence": "packages/lib/types/field-meta.ts:163-176 defines the concrete discriminated union, while :220-231 wraps it in an optional/empty-object union. The worker transcript skeleton shows the implementation detouring through a failed build before switching to `ZFieldMetaNotOptionalSchema`."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "FAIL. The versioned keys and validation checks are present, but the old unversioned localStorage values are not actually migrated or honored. The advanced-settings path drops existing `field_*` drafts on first load after deployment, which is a blocking miss against the requirement to handle old data gracefully; the email-banner path has the same issue with lower user impact."
+}

@@ -1,0 +1,33 @@
+{
+  "featureId": "client-shared-resize-listener",
+  "reviewedAt": "2026-03-13T04:14:11Z",
+  "commitId": "5d1830e979a9dd96da580fe37de7debfe8ec9355",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The implementation fully satisfies the feature description and VAL-CLIENT-003. The new useSharedResize hook centralizes window resize handling behind a module-level Set of subscribers so only one global resize listener exists regardless of field count. It lazily attaches the listener on first subscription, removes it after the last unsubscription, preserves the passive flag, and is safe in this client-only usage because window access only occurs inside useEffect. The six targeted per-instance resize listeners were correctly replaced in field-item.tsx, both tooltip components, use-field-page-coords.ts, use-element-bounds.ts, and use-window-size.ts. Remaining resize listeners elsewhere in the codebase were correctly left untouched because they are outside the feature scope and have different lifecycles or responsibilities.",
+    "issues": [
+      {
+        "file": "packages/lib/client-only/hooks/use-element-bounds.ts",
+        "line": 42,
+        "severity": "non_blocking",
+        "description": "Minor redundancy: the new onResizeBounds callback just repeats the same setBounds(calculateBounds()) work already used for the initial synchronization effect. This is harmless and not a regression, but it adds a small layer of indirection in this hook."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "This feature introduces a valid client-only singleton-hook pattern using module-level mutable state (a Set of subscribers plus an isListening flag), but that pattern is not documented in the mission AGENTS guidance. If more shared browser-listener hooks are expected, documenting this pattern would make future refactors easier to evaluate consistently.",
+      "evidence": "packages/lib/client-only/hooks/use-shared-resize.ts:5-7 defines module-level shared state via `const subscribers = new Set<ResizeCallback>()` and `let isListening = false`; /Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807/AGENTS.md does not discuss shared singleton client hooks"
+    },
+    {
+      "area": "knowledge",
+      "observation": "Three other direct resize listeners remain in the codebase and were correctly left out of this feature because they serve different concerns than field and tooltip coordinate updates. Recording that scoping decision in shared state would help future workers avoid re-investigating the same listeners.",
+      "evidence": "apps/remix/app/components/general/virtual-list/use-virtual-list.ts:99 updates viewport height for virtual scrolling; apps/remix/app/components/embed/authoring/configure-fields-view.tsx:80 handles mobile breakpoint state; packages/ui/primitives/signature-pad/canvas.ts:39 is a class-based signature pad resize handler"
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Pass. Reviewed the feature definition, worker handoff, transcript skeleton, skill instructions, and commit 5d1830e979a9dd96da580fe37de7debfe8ec9355. The shared resize hook correctly consolidates the targeted per-instance listeners into one global listener, preserves resize responsiveness, and introduced no blocking issues. One minor non-blocking redundancy was noted in use-element-bounds.ts."
+}
