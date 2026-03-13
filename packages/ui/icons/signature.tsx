@@ -18,7 +18,7 @@ export const SignatureIcon: LucideIcon = forwardRef(
         {...props}
       >
         <path
-          d="M1.5 11H14.5M1.5 14C1.5 14 8.72 2 4.87 2H4.875C2.01 2 1.97 14.0694 8 6.51V6.5C8 6.5 9 11.3631 11.5 7.52V7.5C11.5 7.5 11.5 9 14.5 9"
+          d="M1.5 11H14.5M1.5 14C1.5 14 8.72 2 4.87 2H4.88C2.01 2 1.97 14.07 8 6.51V6.5C8 6.5 9 11.36 11.5 7.52V7.5C11.5 7.5 11.5 9 14.5 9"
           stroke={color}
           strokeWidth={
             absoluteStrokeWidth ? (Number(strokeWidth) * 24) / Number(size) : strokeWidth
