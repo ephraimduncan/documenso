@@ -1,3 +1,5 @@
+import { Suspense, lazy } from 'react';
+
 import { msg } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react';
 import { Trans } from '@lingui/react/macro';
@@ -27,13 +29,28 @@ import { LicenseClient } from '@documenso/lib/server-only/license/license-client
 import { getSignerConversionMonthly } from '@documenso/lib/server-only/user/get-signer-conversion';
 
 import { AdminLicenseCard } from '~/components/general/admin-license-card';
-import { MonthlyActiveUsersChart } from '~/components/general/admin-monthly-active-user-charts';
-import { AdminStatsSignerConversionChart } from '~/components/general/admin-stats-signer-conversion-chart';
-import { AdminStatsUsersWithDocumentsChart } from '~/components/general/admin-stats-users-with-documents';
 import { CardMetric } from '~/components/general/metric-card';
 
 import { version } from '../../../../package.json';
 import type { Route } from './+types/stats';
+
+const MonthlyActiveUsersChart = lazy(async () =>
+  import('~/components/general/admin-monthly-active-user-charts').then((mod) => ({
+    default: mod.MonthlyActiveUsersChart,
+  })),
+);
+
+const AdminStatsSignerConversionChart = lazy(async () =>
+  import('~/components/general/admin-stats-signer-conversion-chart').then((mod) => ({
+    default: mod.AdminStatsSignerConversionChart,
+  })),
+);
+
+const AdminStatsUsersWithDocumentsChart = lazy(async () =>
+  import('~/components/general/admin-stats-users-with-documents').then((mod) => ({
+    default: mod.AdminStatsUsersWithDocumentsChart,
+  })),
+);
 
 export async function loader() {
   const [
@@ -159,32 +176,44 @@ export default function AdminStatsPage({ loaderData }: Route.ComponentProps) {
         <h3 className="text-3xl font-semibold">
           <Trans>Charts</Trans>
         </h3>
-        <div className="mt-5 grid grid-cols-2 gap-8">
-          <MonthlyActiveUsersChart title={_(msg`MAU (signed in)`)} data={monthlyActiveUsers} />
+        <Suspense
+          fallback={
+            <div className="mt-5 grid grid-cols-2 gap-8">
+              <div className="h-80 animate-pulse rounded-lg bg-muted/50" />
+              <div className="h-80 animate-pulse rounded-lg bg-muted/50" />
+              <div className="h-80 animate-pulse rounded-lg bg-muted/50" />
+              <div className="h-80 animate-pulse rounded-lg bg-muted/50" />
+              <div className="h-80 animate-pulse rounded-lg bg-muted/50" />
+            </div>
+          }
+        >
+          <div className="mt-5 grid grid-cols-2 gap-8">
+            <MonthlyActiveUsersChart title={_(msg`MAU (signed in)`)} data={monthlyActiveUsers} />
 
-          <AdminStatsUsersWithDocumentsChart
-            data={monthlyUsersWithDocuments}
-            title={_(msg`MAU (created document)`)}
-            tooltip={_(msg`Monthly Active Users: Users that created at least one Document`)}
-          />
-          <AdminStatsUsersWithDocumentsChart
-            data={monthlyUsersWithDocuments}
-            completed
-            title={_(msg`MAU (had document completed)`)}
-            tooltip={_(
-              msg`Monthly Active Users: Users that had at least one of their documents completed`,
-            )}
-          />
-          <AdminStatsSignerConversionChart
-            title="Signers that Signed Up"
-            data={signerConversionMonthly}
-          />
-          <AdminStatsSignerConversionChart
-            title={_(msg`Total Signers that Signed Up`)}
-            data={signerConversionMonthly}
-            cummulative
-          />
-        </div>
+            <AdminStatsUsersWithDocumentsChart
+              data={monthlyUsersWithDocuments}
+              title={_(msg`MAU (created document)`)}
+              tooltip={_(msg`Monthly Active Users: Users that created at least one Document`)}
+            />
+            <AdminStatsUsersWithDocumentsChart
+              data={monthlyUsersWithDocuments}
+              completed
+              title={_(msg`MAU (had document completed)`)}
+              tooltip={_(
+                msg`Monthly Active Users: Users that had at least one of their documents completed`,
+              )}
+            />
+            <AdminStatsSignerConversionChart
+              title="Signers that Signed Up"
+              data={signerConversionMonthly}
+            />
+            <AdminStatsSignerConversionChart
+              title={_(msg`Total Signers that Signed Up`)}
+              data={signerConversionMonthly}
+              cummulative
+            />
+          </div>
+        </Suspense>
       </div>
     </div>
   );
