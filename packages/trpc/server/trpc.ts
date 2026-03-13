@@ -11,6 +11,37 @@ import { isAdmin } from '@documenso/lib/utils/is-admin';
 import { dataTransformer } from '../utils/data-transformer';
 import type { TrpcContext } from './context';
 
+/**
+ * Request-level cache for API token validation.
+ *
+ * Batched tRPC requests share the same `Request` object, so we use a WeakMap
+ * keyed on the request to deduplicate `getApiTokenByToken` calls within a batch.
+ * The inner Map is keyed by the raw token string and stores the in-flight Promise
+ * so concurrent middleware invocations await the same validation.
+ */
+const apiTokenCache = new WeakMap<Request, Map<string, ReturnType<typeof getApiTokenByToken>>>();
+
+const getCachedApiToken = async (req: Request, token: string) => {
+  let requestCache = apiTokenCache.get(req);
+
+  if (!requestCache) {
+    requestCache = new Map();
+    apiTokenCache.set(req, requestCache);
+  }
+
+  const cached = requestCache.get(token);
+
+  if (cached) {
+    return cached;
+  }
+
+  const promise = getApiTokenByToken({ token });
+
+  requestCache.set(token, promise);
+
+  return promise;
+};
+
 // Can't import type from trpc-to-openapi because it breaks build, not sure why.
 export type TrpcRouteMeta = {
   openapi?: {
@@ -93,7 +124,7 @@ export const authenticatedMiddleware = t.middleware(async ({ ctx, next, path }) 
       throw new Error('Token was not provided for authenticated middleware');
     }
 
-    const apiToken = await getApiTokenByToken({ token });
+    const apiToken = await getCachedApiToken(ctx.req, token);
 
     ctx.logger.info({
       ...infoToLog,
@@ -189,7 +220,7 @@ export const maybeAuthenticatedMiddleware = t.middleware(async ({ ctx, next, pat
       throw new Error('Token was not provided for authenticated middleware');
     }
 
-    const apiToken = await getApiTokenByToken({ token });
+    const apiToken = await getCachedApiToken(ctx.req, token);
 
     ctx.logger.info({
       ...infoToLog,
