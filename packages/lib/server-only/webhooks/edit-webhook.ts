@@ -4,6 +4,7 @@ import { prisma } from '@documenso/prisma';
 
 import { TEAM_MEMBER_ROLE_PERMISSIONS_MAP } from '../../constants/teams';
 import { buildTeamWhereQuery } from '../../utils/teams';
+import { clearWebhookCache } from './get-all-webhooks-by-event-trigger';
 
 export type EditWebhookOptions = {
   id: string;
@@ -13,7 +14,7 @@ export type EditWebhookOptions = {
 };
 
 export const editWebhook = async ({ id, data, userId, teamId }: EditWebhookOptions) => {
-  return await prisma.webhook.update({
+  const webhook = await prisma.webhook.update({
     where: {
       id,
       team: buildTeamWhereQuery({
@@ -26,4 +27,8 @@ export const editWebhook = async ({ id, data, userId, teamId }: EditWebhookOptio
       ...data,
     },
   });
+
+  clearWebhookCache();
+
+  return webhook;
 };

@@ -4,6 +4,7 @@ import { OrganisationType } from '@prisma/client';
 import { ORGANISATION_MEMBER_ROLE_PERMISSIONS_MAP } from '@documenso/lib/constants/organisations';
 import { TEAM_MEMBER_ROLE_PERMISSIONS_MAP } from '@documenso/lib/constants/teams';
 import { AppError, AppErrorCode } from '@documenso/lib/errors/app-error';
+import { clearTeamSettingsCache } from '@documenso/lib/server-only/team/get-team-settings';
 import { buildOrganisationWhereQuery } from '@documenso/lib/utils/organisations';
 import { buildTeamWhereQuery } from '@documenso/lib/utils/teams';
 import { prisma } from '@documenso/prisma';
@@ -178,4 +179,6 @@ export const updateTeamSettingsRoute = authenticatedProcedure
         },
       },
     });
+
+    clearTeamSettingsCache(teamId);
   });

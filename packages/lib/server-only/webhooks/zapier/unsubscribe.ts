@@ -1,5 +1,6 @@
 import { prisma } from '@documenso/prisma';
 
+import { clearWebhookCache } from '../get-all-webhooks-by-event-trigger';
 import { validateApiToken } from './validateApiToken';
 
 export const unsubscribeHandler = async (req: Request) => {
@@ -21,6 +22,8 @@ export const unsubscribeHandler = async (req: Request) => {
         teamId: result.teamId ?? undefined,
       },
     });
+
+    clearWebhookCache();
 
     return Response.json(deletedWebhook);
   } catch (err) {
