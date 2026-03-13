@@ -1,0 +1,21 @@
+{
+  "featureId": "server-cache-site-settings",
+  "reviewedAt": "2026-03-13T03:16:58Z",
+  "commitId": "31ebe23c3974ea1341d6e1949966bb06fbd9b2ac",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The implementation fully satisfies the feature description and VAL-SERVER-001. getSiteSettings() now uses a module-level TTL cache with a 60-second expiration, returns cached data on hits, reparses fresh data after expiry, and exports clearSiteSettingsCache(). The cache is invalidated from upsertSiteSetting(), which is the only siteSettings mutation path in the repository. The change is small, behavior-preserving, and consistent with the mission's documented Map-based cache pattern.",
+    "issues": []
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "The mission AGENTS.md cache example and the existing getTeamSettings/getAllWebhooksByEventTrigger caches use 30-second TTLs, while this feature intentionally uses 60 seconds. That choice is correct per the feature spec, but the rationale for varying TTLs by data volatility is not documented in shared state.",
+      "evidence": "packages/lib/server-only/site-settings/get-site-settings.ts:6 uses TTL_MS = 60_000; packages/lib/server-only/team/get-team-settings.ts:13 and packages/lib/server-only/webhooks/get-all-webhooks-by-event-trigger.ts:13 use TTL_MS = 30_000; /Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807/AGENTS.md:41 shows the 30_000 example"
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Pass. Reviewed the feature definition, worker handoff, transcript skeleton, and commit 31ebe23c3974ea1341d6e1949966bb06fbd9b2ac. The cache implementation is correct, clearSiteSettingsCache() is exported and wired into the sole mutation path, and no blocking or non-blocking code issues were found."
+}

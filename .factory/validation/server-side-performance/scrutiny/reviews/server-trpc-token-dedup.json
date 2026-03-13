@@ -1,0 +1,15 @@
+{
+  "featureId": "server-trpc-token-dedup",
+  "reviewedAt": "2026-03-13T03:17:57Z",
+  "commitId": "7057a17ca",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The implementation satisfies VAL-SERVER-006. packages/trpc/server/trpc.ts now uses a module-level WeakMap<Request, Map<string, Promise>> to memoize getApiTokenByToken per request and per token, and both authenticatedMiddleware and maybeAuthenticatedMiddleware read through that helper. createTrpcContext stores the raw Hono Request on ctx.req, so batched procedures share the Request key, while the inner token map preserves independent validation for different tokens.",
+    "issues": []
+  },
+  "sharedStateObservations": [],
+  "addressesFailureFrom": null,
+  "summary": "Pass. The reviewed diff correctly deduplicates tRPC API token validation within a request batch by caching the in-flight validation promise per Request and token, preserves existing auth behavior, and introduces no correctness issues in the reviewed code or transcript evidence. No shared-state gaps were identified."
+}

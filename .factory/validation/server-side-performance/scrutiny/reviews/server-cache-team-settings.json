@@ -1,0 +1,39 @@
+{
+  "featureId": "server-cache-team-settings",
+  "reviewedAt": "2026-03-13T03:16:47Z",
+  "commitId": "8f8e429f66fba07bdd5178d155286d045e8f6ab9",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The feature correctly adds a 30-second TTL in-memory cache to getTeamSettings() and exports clearTeamSettingsCache(teamId?) for invalidation. The worker used a composite teamId:userId cache key to preserve the function's authorization semantics when userId is provided. Build and lint were reported as passing in the handoff. I found two non-blocking follow-ups around invalidation wiring and lazy expiry.",
+    "issues": [
+      {
+        "file": "packages/trpc/server/team-router/update-team-settings.ts",
+        "line": 139,
+        "severity": "non_blocking",
+        "description": "The team settings mutation does not call clearTeamSettingsCache(teamId) after prisma.team.update(). Cached settings can therefore remain stale for up to 30 seconds after an update. This does not block the feature because the requested invalidation function was exported, but the cache is not yet wired into the obvious mutation path."
+      },
+      {
+        "file": "packages/lib/server-only/team/get-team-settings.ts",
+        "line": 15,
+        "severity": "non_blocking",
+        "description": "Expired entries are only ignored on read; they are never proactively removed from the Map. In a long-running process serving many distinct teamId:userId combinations, expired entries can accumulate in memory until clearTeamSettingsCache() is called or the same key is read again. This matches the existing site-settings cache pattern, so it is a shared pattern concern rather than a feature-specific regression."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "The mission AGENTS.md documents the TTL cache structure but not the expected invalidation wiring at mutation sites. The existing site-settings implementation does clear its cache from the corresponding write path, and team settings likely need the same convention documented.",
+      "evidence": "Mission AGENTS.md shows a generic Map+TTL pattern only. packages/lib/server-only/site-settings/upsert-site-setting.ts:3 and :35 import and call clearSiteSettingsCache(), while packages/trpc/server/team-router/update-team-settings.ts has no clearTeamSettingsCache import or call."
+    },
+    {
+      "area": "conventions",
+      "observation": "The feature description and VAL-SERVER-002 say the cache is keyed by teamId, but the reviewed implementation correctly uses a composite teamId:userId key to avoid bypassing the function's userId-based access check. The shared guidance should clarify this nuance so future cache work does not trade correctness for broader cache reuse.",
+      "evidence": "packages/lib/server-only/team/get-team-settings.ts:37 computes `${teamId}:${userId ?? ''}`. The feature description and validation contract both describe the cache as keyed by teamId only."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "PASS. The feature adds the requested TTL cache and exported invalidation helper to getTeamSettings(), and the worker's composite cache key is a justified correctness improvement because getTeamSettings() optionally enforces access via userId. Non-blocking follow-ups: the cache is not yet cleared by update-team-settings, and expired entries are only lazily discarded."
+}

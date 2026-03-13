@@ -1,0 +1,26 @@
+{
+  "featureId": "server-session-memoization",
+  "reviewedAt": "2026-03-13T03:17:19Z",
+  "commitId": "245dec2c8c1c037a2ee16ceaf2969381e54f064d",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The feature satisfies VAL-SERVER-005. Request-level memoization is implemented with a WeakMap keyed by the raw Request object, and it caches the in-flight Promise so repeated or concurrent calls for the same request reuse the same session lookup work. extractRequest correctly normalizes both Request and Hono Context inputs, and resolveSession preserves the original cookie/session validation flow.",
+    "issues": []
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "The request-level memoization guidance in mission AGENTS.md mentions using a WeakMap keyed on Request, but it does not document the important pattern of caching the Promise itself so concurrent in-flight calls deduplicate correctly.",
+      "evidence": "Mission AGENTS.md says 'use a WeakMap keyed on the Request object or a Map on a per-request context.' In packages/auth/server/lib/utils/get-session.ts:21 and :59-63, the implementation stores Promise<SessionValidationResult> in the WeakMap and returns the same in-flight promise."
+    },
+    {
+      "area": "conventions",
+      "observation": "The wrapper-to-context behavior is now centralized inside resolveSession, which is correct but subtle. A future contributor calling getOptionalSession may not realize mapRequestToContextForCookie is intentionally applied only inside resolveSession.",
+      "evidence": "packages/auth/server/lib/utils/get-session.ts:35 now calls getOptionalSession(c) directly, while resolveSession at :66-68 still applies mapRequestToContextForCookie(c) before reading the cookie."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "PASS. Reviewed the feature handoff, transcript skeleton, diff, skill file, mission guidance, and current get-session implementation. The code correctly adds per-request session memoization without changing session resolution behavior, and no blocking or non-blocking code defects were identified."
+}

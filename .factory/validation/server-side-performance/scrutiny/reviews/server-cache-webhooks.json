@@ -1,0 +1,28 @@
+{
+  "featureId": "server-cache-webhooks",
+  "reviewedAt": "2026-03-13T03:17:42Z",
+  "commitId": "7ed2d19022b935e8938c5e8969b26842ef07a0bd",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The feature meets VAL-SERVER-003. The commit adds a 30-second in-memory TTL cache to getAllWebhooksByEventTrigger() using the required composite event:userId:teamId key, returns cached results on unexpired hits, and exports clearWebhookCache() for explicit invalidation. The implementation matches the repo's existing Map+TTL cache pattern and the worker evidence shows build and lint passed.",
+    "issues": [
+      {
+        "file": "packages/lib/server-only/webhooks/create-webhook.ts",
+        "line": 40,
+        "severity": "non_blocking",
+        "description": "Webhook mutations do not call clearWebhookCache(), so cached webhook lookups can remain stale until the 30-second TTL expires after create/update/delete operations. This does not block the feature because clearWebhookCache() is exported as required and the validation contract only requires the TTL cache plus available invalidation, but wiring invalidation into create/edit/delete would reduce bounded staleness. Related mutation entry points: create-webhook.ts:40, edit-webhook.ts:16, delete-webhook-by-id.ts:13."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "The codebase does not have a consistent documented convention for whether cache invalidation helpers must be wired into mutations or only exported for callers to use. That ambiguity surfaced here during review.",
+      "evidence": "clearSiteSettingsCache is called from packages/lib/server-only/site-settings/upsert-site-setting.ts:35, but clearTeamSettingsCache is only defined in packages/lib/server-only/team/get-team-settings.ts:20 and clearWebhookCache is only defined in packages/lib/server-only/webhooks/get-all-webhooks-by-event-trigger.ts:21. AGENTS.md documents the generic Map+TTL cache pattern but not the expected invalidation wiring pattern."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "PASS: the webhook lookup now has the requested 30-second TTL cache keyed by event + userId + teamId, and clearWebhookCache() is exported. The only noted issue is non-blocking: webhook write paths do not yet invoke cache invalidation, so stale entries can persist until TTL expiry."
+}

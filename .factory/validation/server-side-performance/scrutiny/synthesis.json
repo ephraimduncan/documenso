@@ -1,0 +1,64 @@
+{
+  "milestone": "server-side-performance",
+  "round": 1,
+  "status": "pass",
+  "validatorsRun": {
+    "test": {
+      "passed": true,
+      "command": "not-configured",
+      "exitCode": 0,
+      "notes": "No test command is defined in .factory/services.yaml, and the mission guidance for this refactoring milestone says no E2E tests are needed."
+    },
+    "typecheck": {
+      "passed": true,
+      "command": "npm run build",
+      "exitCode": 0,
+      "notes": "Per mission AGENTS.md, root type checking is validated through the build pipeline rather than a separate tsc command; the build log includes @documenso/remix running react-router typegen && tsc."
+    },
+    "lint": {
+      "passed": true,
+      "command": "npm run lint",
+      "exitCode": 0,
+      "notes": "Lint exited 0 with warnings only across @documenso/trpc, @documenso/ui, and @documenso/lib; no errors blocked the milestone validators."
+    }
+  },
+  "reviewsSummary": {
+    "total": 6,
+    "passed": 6,
+    "failed": 0,
+    "failedFeatures": []
+  },
+  "blockingIssues": [],
+  "appliedUpdates": [],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "Mission AGENTS.md",
+      "suggestion": "Document that exported TTL cache invalidation helpers should also be wired into the obvious mutation paths when those writes live in the same codebase, not merely exported for future callers.",
+      "evidence": "Reviews for server-cache-team-settings and server-cache-webhooks both found bounded staleness because packages/trpc/server/team-router/update-team-settings.ts does not call clearTeamSettingsCache(teamId), and packages/lib/server-only/webhooks/create-webhook.ts, edit-webhook.ts, and delete-webhook-by-id.ts do not call clearWebhookCache(). By contrast, packages/lib/server-only/site-settings/upsert-site-setting.ts already calls clearSiteSettingsCache().",
+      "isSystemic": true
+    },
+    {
+      "target": "validation-contract.md",
+      "suggestion": "Clarify VAL-SERVER-002 so it describes caching by teamId plus access context (userId when present) rather than teamId alone, preventing future refactors from broadening the key in a way that bypasses user-scoped authorization semantics.",
+      "evidence": "packages/lib/server-only/team/get-team-settings.ts computes the cache key as `${teamId}:${userId ?? ''}` to preserve the function's optional userId access check, while the current feature description and validation contract describe the cache as keyed only by teamId.",
+      "isSystemic": false
+    },
+    {
+      "target": "Mission AGENTS.md",
+      "suggestion": "Expand the request-level memoization guidance to say the per-Request cache should store the in-flight Promise, not only the resolved value, so concurrent calls on the same Request deduplicate correctly.",
+      "evidence": "Both packages/auth/server/lib/utils/get-session.ts and packages/trpc/server/trpc.ts use WeakMap<Request, ...> caches that store Promise values. The current mission guidance only says to use a WeakMap keyed on Request, which omits the concurrency-critical promise-caching detail.",
+      "isSystemic": true
+    }
+  ],
+  "rejectedObservations": [
+    {
+      "observation": "Document why site settings uses a 60-second TTL while team settings and webhook caches use 30-second TTLs.",
+      "reason": "ambiguous"
+    },
+    {
+      "observation": "Document that mapRequestToContextForCookie is now centralized inside resolveSession for getSession/getOptionalSession wrappers.",
+      "reason": "already-documented-by-code"
+    }
+  ],
+  "previousRound": null
+}
