@@ -1,0 +1,28 @@
+{
+  "featureId": "bundle-dynamic-posthog",
+  "reviewedAt": "2026-03-13T02:29:49Z",
+  "commitId": "d7981d084",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The feature correctly converts posthog-js to dynamic imports in both entry.client.tsx and use-analytics.ts. The entry client now lazy-loads the default export only when PostHog config exists, and use-analytics.ts caches a module-level dynamic import promise so capture calls load the library only on demand while preserving the hook API.",
+    "issues": [
+      {
+        "file": "packages/lib/client-only/hooks/use-analytics.ts",
+        "line": 28,
+        "severity": "non_blocking",
+        "description": "The fire-and-forget dynamic import chain has no .catch() handler. If the posthog-js chunk fails to load, this can surface as an unhandled promise rejection. Low impact because analytics is non-critical, but it would be safer to handle rejected imports explicitly in both capture paths."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "The mission AGENTS.md documents adding .catch() for fire-and-forget promises only with triggerWebhook, but the same void promise pattern is now used for lazy analytics imports. The convention could be generalized for all intentionally unawaited promise chains.",
+      "evidence": "/Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807/AGENTS.md 'Fire-and-Forget Pattern' section; packages/lib/client-only/hooks/use-analytics.ts:28-29 and :44-45"
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "PASS. The dynamic posthog refactor matches the feature requirements and preserves behavior while removing static posthog-js imports from the initial client bundle. I found one non-blocking issue: the new fire-and-forget import chains in use-analytics.ts do not catch rejected imports."
+}

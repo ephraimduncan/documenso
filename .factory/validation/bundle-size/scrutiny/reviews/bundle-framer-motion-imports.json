@@ -1,0 +1,21 @@
+{
+  "featureId": "bundle-framer-motion-imports",
+  "reviewedAt": "2026-03-13T02:30:07Z",
+  "commitId": "72790f07eb95bfd6227a5efb9ed61e2f764eb3ce",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The worker correctly followed the feature description's fallback path instead of rewriting imports. The review evidence shows framer-motion v12 subpaths do not expose the React APIs this codebase uses, the package is marked sideEffects: false, build output was checked for tree-shaking, and the final diff cleanly documents those findings in .factory/library/framer-motion-imports.md.",
+    "issues": []
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The perf-refactor-worker skill assumes the job ends in refactoring source files and a perf commit, but this feature was correctly completed by proving the requested import rewrite was not viable and documenting the result. The skill should explicitly allow investigation-only outcomes where the right implementation is to record findings and leave source imports unchanged.",
+      "evidence": "/Users/duncan/dev/documenso-wt-main-wt/.factory/skills/perf-refactor-worker/SKILL.md:12,36-39,63-65 describe the work as applying refactoring changes and committing them, while /Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807/handoffs/2026-03-13T02-06-45-775Z__bundle-framer-motion-imports__bf343bee-de5d-428d-ad39-cff4e0e32e29.json:44-48 records followedProcedure=true and suggests documenting that findings-only outcomes are valid."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "PASS. No blocking or non-blocking code issues found. The feature correctly verified that framer-motion barrel imports already tree-shake and documented why subpath imports are not viable for this codebase; I noted one non-blocking skill-documentation gap about investigation-only outcomes."
+}

@@ -1,0 +1,61 @@
+{
+  "milestone": "bundle-size",
+  "round": 1,
+  "status": "pass",
+  "validatorsRun": {
+    "test": {
+      "passed": true,
+      "command": "not-configured",
+      "exitCode": 0,
+      "notes": "No test command is defined in .factory/services.yaml or the root package.json, and the mission guidance says no E2E tests are needed for this refactoring milestone."
+    },
+    "typecheck": {
+      "passed": true,
+      "command": "npm run build",
+      "exitCode": 0,
+      "notes": "Per mission AGENTS.md, root type checking is validated through the build pipeline rather than a separate tsc command."
+    },
+    "lint": {
+      "passed": true,
+      "command": "npm run lint",
+      "exitCode": 0,
+      "notes": "Lint exited 0 with warnings only; no errors blocked the milestone validators."
+    }
+  },
+  "reviewsSummary": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0,
+    "failedFeatures": []
+  },
+  "blockingIssues": [],
+  "appliedUpdates": [],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "Mission AGENTS.md",
+      "suggestion": "Generalize the fire-and-forget guidance beyond triggerWebhook so intentionally unawaited promise chains, such as lazy analytics imports, are expected to attach .catch() handlers when failures would otherwise become unhandled rejections.",
+      "evidence": "The bundle-dynamic-posthog review flagged packages/lib/client-only/hooks/use-analytics.ts:28-29 and :44-45 for using a void dynamic import chain without .catch(), while /Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807/AGENTS.md only documents the pattern for triggerWebhook.",
+      "isSystemic": true
+    },
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Document when React.lazy() can be used directly under Suspense in streaming SSR routes versus when a client-only guard is required for browser-only modules such as the PDF viewer.",
+      "evidence": "The bundle-lazy-recharts review compared apps/remix/app/routes/_authenticated+/admin+/stats.tsx:37-49,179 with apps/remix/app/components/general/pdf-viewer/pdf-viewer-lazy.tsx:14-29 and noted that the repo uses both valid patterns without shared guidance explaining the distinction.",
+      "isSystemic": true
+    },
+    {
+      "target": ".factory/skills/perf-refactor-worker/SKILL.md",
+      "suggestion": "Explicitly allow investigation-only outcomes when the correct result is to prove a proposed refactor is not viable and document the finding instead of changing source code.",
+      "evidence": "The bundle-framer-motion-imports review confirmed the feature was completed correctly by documenting tree-shaking behavior in .factory/library/framer-motion-imports.md after verifying framer-motion subpaths could not replace the current imports, but the skill text still frames success as source refactoring plus a perf commit.",
+      "isSystemic": true
+    },
+    {
+      "target": "Mission AGENTS.md",
+      "suggestion": "Add scoping guidance for refactor-only workers so incidental formatter or translation churn is either avoided or split into separate commits before finishing a feature.",
+      "evidence": "The bundle-link-prefetch review found unrelated class-order reformatting in apps/remix/app/components/forms/signup.tsx and unrelated translation extraction changes in packages/lib/translations/en/web.po plus locale files, even though the feature itself only targeted Link prefetching.",
+      "isSystemic": true
+    }
+  ],
+  "rejectedObservations": [],
+  "previousRound": null
+}

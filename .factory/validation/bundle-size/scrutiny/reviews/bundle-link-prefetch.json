@@ -1,0 +1,34 @@
+{
+  "featureId": "bundle-link-prefetch",
+  "reviewedAt": "2026-03-13T02:31:19Z",
+  "commitId": "1b7db372b24d7a111983a55200bdd4d8610a0751",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The feature satisfies VAL-BUNDLE-004. Navigation-oriented Remix Links across persistent nav and back-link surfaces now use prefetch=\"intent\" (for example admin/settings navigation, app header/menu surfaces, and route-level home/back links), while heavy repeated list links were intentionally left alone. A good example is dashboard.tsx, where the static Create organisation CTA now prefetches but the links inside organisations.map(...) and teams.map(...) still do not. The repeated breadcrumb case in folder-grid.tsx is also reasonable because breadcrumb depth is bounded and navigation-oriented. I found no blocking functional issues.",
+    "issues": [
+      {
+        "file": "packages/lib/translations/en/web.po",
+        "line": 2599,
+        "severity": "non_blocking",
+        "description": "The commit includes unrelated translation extraction churn (for example \"Collapse sidebar\", \"Completed At\", \"Read Status\", \"Send Status\", and \"View Audit Logs\") that is not connected to link prefetching. This does not break the feature, but it makes the perf-only change set harder to review and couples the feature to unrelated localization output."
+      },
+      {
+        "file": "apps/remix/app/components/forms/signup.tsx",
+        "line": 199,
+        "severity": "non_blocking",
+        "description": "This file only received Tailwind class-order reformatting with no prefetch-related change. The formatting is harmless, but it expands the review surface with unrelated edits."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "Mission guidance says not to change unrelated code, but the worker transcript shows no explicit format/translate step even though the final commit included unrelated class-order churn and 11 translation files. Shared guidance should tell workers how to keep refactor-only commits scoped when formatters or other tooling introduce incidental changes.",
+      "evidence": "worker-transcripts.jsonl entry for session 7a814fc5-131d-4401-a118-718bcee75a3c shows build/lint/commit flow but no explicit npm run format or translate command; commit 1b7db372b24d7a111983a55200bdd4d8610a0751 changes apps/remix/app/components/forms/signup.tsx:199-211 with class-order-only edits and adds unrelated strings in packages/lib/translations/en/web.po:2599-11316 plus corresponding locale files."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "PASS. The feature correctly adds prefetch=\"intent\" to navigation Links while leaving heavy repeated list Links alone, so VAL-BUNDLE-004 is satisfied. I found no functional bugs, only two non-blocking scope issues: unrelated translation-file churn and unrelated Tailwind class reordering in the commit."
+}
