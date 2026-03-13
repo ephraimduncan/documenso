@@ -3823,7 +3823,7 @@ msgid "Document created by <0>{0}</0>"
 msgstr "Documento criado por <0>{0}</0>"
 
 #: packages/email/templates/document-created-from-direct-template.tsx
-#: packages/lib/server-only/template/create-document-from-direct-template.ts
+#: packages/lib/jobs/definitions/emails/send-document-created-from-direct-template-email.handler.ts
 msgid "Document created from direct template"
 msgstr "Documento criado a partir de modelo direto"
 
@@ -11849,8 +11849,8 @@ msgid "Webhook not found"
 msgstr "Webhook não encontrado"
 
 #: apps/remix/app/components/general/webhook-logs-sheet.tsx
-msgid "Webhook successfully sent"
-msgstr "Webhook enviado com sucesso"
+msgid "Webhook queued for resend"
+msgstr ""
 
 #: apps/remix/app/components/dialogs/webhook-edit-dialog.tsx
 msgid "Webhook updated"
