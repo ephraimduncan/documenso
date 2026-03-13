@@ -1,4 +1,4 @@
-import { type HTMLAttributes, useEffect, useState } from 'react';
+import { type HTMLAttributes, useEffect, useRef, useState } from 'react';
 
 import { ReadStatus } from '@prisma/client';
 import { InboxIcon, MenuIcon, SearchIcon } from 'lucide-react';
@@ -39,14 +39,20 @@ export const Header = ({ className, ...props }: HeaderProps) => {
     },
   );
 
+  const rafId = useRef(0);
+
   useEffect(() => {
     const onScroll = () => {
-      setScrollY(window.scrollY);
+      cancelAnimationFrame(rafId.current);
+      rafId.current = requestAnimationFrame(() => setScrollY(window.scrollY));
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
 
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      cancelAnimationFrame(rafId.current);
+    };
   }, []);
 
   return (

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { msg } from '@lingui/core/macro';
 import { Trans } from '@lingui/react/macro';
@@ -27,14 +27,20 @@ export default function PublicProfileLayout() {
 
   const [scrollY, setScrollY] = useState(0);
 
+  const rafId = useRef(0);
+
   useEffect(() => {
     const onScroll = () => {
-      setScrollY(window.scrollY);
+      cancelAnimationFrame(rafId.current);
+      rafId.current = requestAnimationFrame(() => setScrollY(window.scrollY));
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
 
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      cancelAnimationFrame(rafId.current);
+    };
   }, []);
 
   return (
