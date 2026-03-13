@@ -13,10 +13,7 @@ const setupTimestampAuthorities = once(() => {
   const timestampAuthorities = timestampAuthority
     .trim()
     .split(',')
-    .filter(Boolean)
-    .map((url) => {
-      return new HttpTimestampAuthority(url);
-    });
+    .flatMap((url) => (url ? [new HttpTimestampAuthority(url)] : []));
 
   return timestampAuthorities;
 });

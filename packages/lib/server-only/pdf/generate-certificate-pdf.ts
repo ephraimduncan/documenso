@@ -59,35 +59,35 @@ export const generateCertificatePdf = async (options: GenerateCertificatePdfOpti
 
   // Pre-build Maps for O(1) lookups inside recipients.map loop.
   const signatureFieldByRecipientId = new Map(
-    fields
-      .filter((field) => field.type === FieldType.SIGNATURE)
-      .map((field) => [field.recipientId, field]),
+    fields.flatMap((field) =>
+      field.type === FieldType.SIGNATURE ? [[field.recipientId, field] as const] : [],
+    ),
   );
 
   const emailSentByRecipientId = new Map(
-    auditLogs['EMAIL_SENT']
-      .filter((log) => log.type === 'EMAIL_SENT')
-      .map((log) => [log.data.recipientId, log]),
+    auditLogs['EMAIL_SENT'].flatMap((log) =>
+      log.type === 'EMAIL_SENT' ? [[log.data.recipientId, log] as const] : [],
+    ),
   );
 
   const documentSentLog = auditLogs['DOCUMENT_SENT'].find((log) => log.type === 'DOCUMENT_SENT');
 
   const documentOpenedByRecipientId = new Map(
-    auditLogs['DOCUMENT_OPENED']
-      .filter((log) => log.type === 'DOCUMENT_OPENED')
-      .map((log) => [log.data.recipientId, log]),
+    auditLogs['DOCUMENT_OPENED'].flatMap((log) =>
+      log.type === 'DOCUMENT_OPENED' ? [[log.data.recipientId, log] as const] : [],
+    ),
   );
 
   const documentCompletedByRecipientId = new Map(
-    auditLogs['DOCUMENT_RECIPIENT_COMPLETED']
-      .filter((log) => log.type === 'DOCUMENT_RECIPIENT_COMPLETED')
-      .map((log) => [log.data.recipientId, log]),
+    auditLogs['DOCUMENT_RECIPIENT_COMPLETED'].flatMap((log) =>
+      log.type === 'DOCUMENT_RECIPIENT_COMPLETED' ? [[log.data.recipientId, log] as const] : [],
+    ),
   );
 
   const documentRejectedByRecipientId = new Map(
-    auditLogs['DOCUMENT_RECIPIENT_REJECTED']
-      .filter((log) => log.type === 'DOCUMENT_RECIPIENT_REJECTED')
-      .map((log) => [log.data.recipientId, log]),
+    auditLogs['DOCUMENT_RECIPIENT_REJECTED'].flatMap((log) =>
+      log.type === 'DOCUMENT_RECIPIENT_REJECTED' ? [[log.data.recipientId, log] as const] : [],
+    ),
   );
 
   const payload = {

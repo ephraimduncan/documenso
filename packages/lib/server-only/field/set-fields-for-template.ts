@@ -248,14 +248,11 @@ export const setFieldsForTemplate = async ({
   const removedFieldIds = new Set(removedFields.map((f) => f.id));
   const persistedFieldIds = new Set(persistedFields.map((f) => f.id));
 
-  const filteredFields = existingFields.filter((field) => {
-    return !removedFieldIds.has(field.id) && !persistedFieldIds.has(field.id);
-  });
-
-  const mappedFilteredFields = filteredFields.map((field) => ({
-    ...mapFieldToLegacyField(field, envelope),
-    formId: undefined,
-  }));
+  const mappedFilteredFields = existingFields.flatMap((field) =>
+    !removedFieldIds.has(field.id) && !persistedFieldIds.has(field.id)
+      ? [{ ...mapFieldToLegacyField(field, envelope), formId: undefined }]
+      : [],
+  );
 
   const mappedPersistentFields = persistedFields.map((field) => ({
     ...mapFieldToLegacyField(field, envelope),

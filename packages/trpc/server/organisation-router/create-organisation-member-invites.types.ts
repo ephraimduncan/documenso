@@ -23,9 +23,9 @@ export const ZCreateOrganisationMemberInvitesRequestSchema = z.object({
     .min(1)
     .refine(
       (invitations) => {
-        const emails = invitations
-          .filter((invitation) => invitation.email !== undefined)
-          .map((invitation) => invitation.email);
+        const emails = invitations.flatMap((invitation) =>
+          invitation.email !== undefined ? [invitation.email] : [],
+        );
 
         return new Set(emails).size === emails.length;
       },

@@ -226,10 +226,11 @@ export const EnvelopeSigningProvider = ({
    */
   const assistantFields =
     recipient.role === RecipientRole.ASSISTANT
-      ? assistantRecipients
-          .filter((r) => r.signingStatus !== SigningStatus.SIGNED)
-          .map((r) => r.fields.filter((field) => field.type !== FieldType.SIGNATURE))
-          .flat()
+      ? assistantRecipients.flatMap((r) =>
+          r.signingStatus !== SigningStatus.SIGNED
+            ? r.fields.filter((field) => field.type !== FieldType.SIGNATURE)
+            : [],
+        )
       : [];
 
   /**

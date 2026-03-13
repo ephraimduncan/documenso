@@ -35,12 +35,11 @@ export const RecipientActionAuthSelect = ({
       value: '-1',
       label: _(msg`Inherit authentication method`),
     },
-    ...Object.values(RecipientActionAuth)
-      .filter((auth) => auth !== RecipientActionAuth.ACCOUNT)
-      .map((authType) => ({
-        value: authType,
-        label: _(DOCUMENT_AUTH_TYPES[authType].value),
-      })),
+    ...Object.values(RecipientActionAuth).flatMap((authType) =>
+      authType !== RecipientActionAuth.ACCOUNT
+        ? [{ value: authType, label: _(DOCUMENT_AUTH_TYPES[authType].value) }]
+        : [],
+    ),
   ];
 
   // Convert string array to Option array for MultiSelect
@@ -83,7 +82,7 @@ export const RecipientActionAuthSelect = ({
           <InfoIcon className="h-4 w-4" />
         </TooltipTrigger>
 
-        <TooltipContent className="text-foreground max-w-md p-4">
+        <TooltipContent className="max-w-md p-4 text-foreground">
           <h2>
             <strong>
               <Trans>Recipient action authentication</Trans>

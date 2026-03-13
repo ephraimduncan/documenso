@@ -221,11 +221,11 @@ export const EmbedDirectTemplateClientPage = ({
         directRecipientName: fullName,
         directRecipientEmail: email,
         templateUpdatedAt: updatedAt,
-        signedFieldValues: localFields
-          .filter((field) => {
-            return field.signedValue && (isRequiredField(field) || field.inserted);
-          })
-          .map((field) => field.signedValue!),
+        signedFieldValues: localFields.flatMap((field) =>
+          field.signedValue && (isRequiredField(field) || field.inserted)
+            ? [field.signedValue!]
+            : [],
+        ),
       });
 
       if (window.parent) {

@@ -43,7 +43,7 @@ export const handleCheckboxFieldClick = async (
     };
   });
 
-  let checkedValues: number[] | null = newValues.filter((v) => v.isChecked).map((v) => v.index);
+  let checkedValues: number[] | null = newValues.flatMap((v) => (v.isChecked ? [v.index] : []));
 
   if (checkedValues.length === 0) {
     return {

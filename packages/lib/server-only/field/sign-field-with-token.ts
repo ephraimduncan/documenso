@@ -223,7 +223,7 @@ export const signFieldWithToken = async ({
       .with({ type: 'checkbox' }, (meta) =>
         isDeepEqual(
           fromCheckboxValue(customText ?? ''),
-          meta.values?.filter((v) => v.checked).map((v) => v.value) ?? [],
+          meta.values?.flatMap((v) => (v.checked ? [v.value] : [])) ?? [],
         ),
       )
       .with({ type: 'radio' }, (meta) => customText === meta.values?.find((v) => v.checked)?.value)

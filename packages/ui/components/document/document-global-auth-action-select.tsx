@@ -31,12 +31,11 @@ export const DocumentGlobalAuthActionSelect = ({
       value: '-1',
       label: _(msg`No restrictions`),
     },
-    ...Object.values(DocumentActionAuth)
-      .filter((auth) => auth !== DocumentAuth.ACCOUNT)
-      .map((authType) => ({
-        value: authType,
-        label: _(DOCUMENT_AUTH_TYPES[authType].value),
-      })),
+    ...Object.values(DocumentActionAuth).flatMap((authType) =>
+      authType !== DocumentAuth.ACCOUNT
+        ? [{ value: authType, label: _(DOCUMENT_AUTH_TYPES[authType].value) }]
+        : [],
+    ),
   ];
 
   // Convert string array to Option array for MultiSelect
@@ -79,7 +78,7 @@ export const DocumentGlobalAuthActionTooltip = () => (
       <InfoIcon className="mx-2 h-4 w-4" />
     </TooltipTrigger>
 
-    <TooltipContent className="text-foreground max-w-md space-y-2 p-4">
+    <TooltipContent className="max-w-md space-y-2 p-4 text-foreground">
       <h2>
         <Trans>Global recipient action authentication</Trans>
       </h2>

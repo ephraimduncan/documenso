@@ -97,7 +97,7 @@ export const bulkDeleteEnvelopesRoute = authenticatedProcedure
     );
 
     const deletedCount = results.filter((r) => r.success).length;
-    const failedIds = results.filter((r) => !r.success).map((r) => r.envelopeId);
+    const failedIds = results.flatMap((r) => (r.success ? [] : [r.envelopeId]));
 
     // Include envelope IDs that were not attempted (unauthorized/not found)
     const attemptedIds = new Set(envelopes.map((e) => e.id));

@@ -145,9 +145,9 @@ export const updateEmbeddingEnvelopeRoute = procedure
     });
 
     // Delete envelope items that have been removed from the payload.
-    const envelopeItemIdsToDelete = envelope.envelopeItems
-      .filter((item) => !data.envelopeItems.some((i) => i.id === item.id))
-      .map((item) => item.id);
+    const envelopeItemIdsToDelete = envelope.envelopeItems.flatMap((item) =>
+      data.envelopeItems.some((i) => i.id === item.id) ? [] : [item.id],
+    );
 
     const willEnvelopeItemsBeModified =
       envelopeItemIdsToDelete.length > 0 ||
