@@ -1,0 +1,28 @@
+{
+  "featureId": "fix-localstorage-migration",
+  "reviewedAt": "2026-03-13T04:33:56Z",
+  "commitId": "3dc370df47fcb2c27a29faedcc2b9be11cca68c0",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The fix adequately resolves the prior failure. In field-item-advanced-settings.tsx, the legacy field_* key is now read, JSON-parsed, validated with ZFieldMetaNotOptionalSchema.safeParse(), migrated to the versioned key when valid, and only then removed, so existing drafts are no longer dropped on first load. In verify-email-banner.tsx, the legacy emailVerificationDialogLastShown timestamp is now read, parsed, range-validated, migrated to the versioned key when valid, and honored before deletion, so recent cooldown timestamps are preserved instead of being ignored.",
+    "issues": [
+      {
+        "file": "apps/remix/app/components/general/verify-email-banner.tsx",
+        "line": 90,
+        "severity": "non_blocking",
+        "description": "When the migrated legacy timestamp is valid but already older than 24 hours, the code writes legacyRaw to the versioned key and then immediately overwrites it with Date.now().toString() after opening the dialog. This is functionally correct but makes the first write redundant work."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "The localStorage migration convention that prevented the original failure is now captured in .factory/library/client-side-data-fetching.md, but mission AGENTS.md still does not mention browser-storage migration expectations. Workers following only mission AGENTS.md could still miss the read-validate-migrate-delete pattern on similar refactors.",
+      "evidence": "/Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807/AGENTS.md has no localStorage guidance, while /Users/duncan/dev/documenso-wt-main-wt/.factory/library/client-side-data-fetching.md explicitly documents versioned localStorage reads should migrate legacy keys."
+    }
+  ],
+  "addressesFailureFrom": "client-localstorage-schema",
+  "summary": "PASS. The fix resolves both the blocking draft-loss bug in field-item-advanced-settings.tsx and the non-blocking verify-email-banner migration miss from client-localstorage-schema: valid legacy localStorage values are now migrated or honored before deletion in both targeted files. One minor non-blocking inefficiency remains in verify-email-banner.tsx where a stale migrated timestamp is written just before being replaced with the new timestamp."
+}
