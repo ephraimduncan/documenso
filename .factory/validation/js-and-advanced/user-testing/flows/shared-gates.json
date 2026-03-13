@@ -1,0 +1,87 @@
+{
+  "milestone": "js-and-advanced",
+  "groupId": "shared-gates",
+  "surface": "terminal-validation",
+  "testedAt": "2026-03-13T06:40:09Z",
+  "isolation": {
+    "mode": "read-only repository inspection with shared gate reuse",
+    "repoRoot": "/Users/duncan/dev/documenso-wt-main-wt",
+    "missionDir": "/Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807",
+    "assignedAssertions": [
+      "VAL-CROSS-001",
+      "VAL-CROSS-002"
+    ],
+    "sharedChecks": "Parent validator already ran the monorepo build and lint commands for this round; this flow validator reused those results and did not rerun heavy checks."
+  },
+  "toolsUsed": [
+    "Read",
+    "Grep",
+    "Execute",
+    "ApplyPatch"
+  ],
+  "assertions": [
+    {
+      "id": "VAL-CROSS-001",
+      "title": "Full build passes after all changes",
+      "status": "pass",
+      "reason": "The parent-shared build check completed with exit code 0 and no monorepo build errors, which matches the contract and the terminal-validation guidance to reuse centralized build evidence rather than rerun it locally.",
+      "evidence": {
+        "fileLines": [
+          "/Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807/validation-contract.md:113-114",
+          ".factory/library/user-testing.md:13-17",
+          ".factory/library/user-testing.md:46",
+          ".factory/validation/js-and-advanced/scrutiny/synthesis.json:14-16",
+          ".factory/validation/js-and-advanced/scrutiny/reviews/cross-area-build-lint-check.json:7-10"
+        ],
+        "sharedChecks": {
+          "command": "npm --prefix /Users/duncan/dev/documenso-wt-main-wt run build",
+          "exitCode": 0,
+          "result": "turbo run build completed successfully across the monorepo with no build errors"
+        },
+        "details": [
+          "synthesis.json records the build/typecheck validator as passed with exitCode 0 and notes that turbo run build completed successfully.",
+          "cross-area-build-lint-check.json marks the feature review as pass and states that the worker ran npm run build successfully."
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-CROSS-002",
+      "title": "Lint passes after all changes",
+      "status": "pass",
+      "reason": "The parent-shared lint check completed with exit code 0 and warnings only (37 in @documenso/lib, 17 in @documenso/ui, 7 in @documenso/trpc), so no new lint errors were introduced. Although the contract still references an older baseline of 4 pre-existing errors, the current result is stricter because lint now finishes with zero errors.",
+      "evidence": {
+        "fileLines": [
+          "/Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807/AGENTS.md:15-16",
+          "/Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807/validation-contract.md:117-119",
+          ".factory/library/user-testing.md:13-17",
+          ".factory/library/user-testing.md:46",
+          ".factory/validation/js-and-advanced/scrutiny/synthesis.json:20-22",
+          ".factory/validation/js-and-advanced/scrutiny/reviews/cross-area-build-lint-check.json:9-16"
+        ],
+        "sharedChecks": {
+          "command": "npm --prefix /Users/duncan/dev/documenso-wt-main-wt run lint",
+          "exitCode": 0,
+          "result": "turbo run lint completed with warnings only and zero errors: 37 warnings in @documenso/lib, 17 in @documenso/ui, and 7 in @documenso/trpc"
+        },
+        "details": [
+          "synthesis.json records lint as passed with exitCode 0 and explicitly notes warnings only with zero blocking lint errors.",
+          "cross-area-build-lint-check.json confirms VAL-CROSS-002 is satisfied and separately documents the outdated 4-errors wording as a shared-state observation rather than a failing condition."
+        ]
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [
+    {
+      "description": "Mission guidance and the validation contract still describe the lint baseline as 4 pre-existing errors in @documenso/lib, but the actual shared lint run for this round reported zero errors and warnings only.",
+      "resolved": true,
+      "resolution": "Treated the newer zero-error result as satisfying VAL-CROSS-002 because it is stricter than the older wording. Recorded this as a non-blocking observation already corroborated by the scrutiny review.",
+      "affectedAssertions": [
+        "VAL-CROSS-002"
+      ]
+    }
+  ],
+  "blockers": [],
+  "summary": "Tested 2 assertions through terminal-validation artifact inspection: VAL-CROSS-001 passed from the shared build exit code 0 result, and VAL-CROSS-002 passed from the shared lint exit code 0 result with warnings only and no new errors."
+}

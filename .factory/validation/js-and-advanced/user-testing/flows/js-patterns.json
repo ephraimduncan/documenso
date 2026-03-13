@@ -1,0 +1,99 @@
+{
+  "milestone": "js-and-advanced",
+  "groupId": "js-patterns",
+  "surface": "terminal-validation",
+  "testedAt": "2026-03-13T06:42:34Z",
+  "isolation": {
+    "mode": "read-only repository inspection",
+    "repoRoot": "/Users/duncan/dev/documenso-wt-main-wt",
+    "missionDir": "/Users/duncan/.factory/missions/8cede67d-8162-4f99-883a-7f13a937d807",
+    "assignedAssertions": [
+      "VAL-JS-001",
+      "VAL-JS-002"
+    ],
+    "sharedChecks": "Parent validator already owns the shared build/lint checks for the js-and-advanced milestone, so they were reused here instead of being rerun in this flow validator."
+  },
+  "toolsUsed": [
+    "Read",
+    "Grep",
+    "Execute"
+  ],
+  "assertions": [
+    {
+      "id": "VAL-JS-001",
+      "title": "Loop lookups use Map instead of find",
+      "status": "pass",
+      "reason": "The targeted loop-nested `.find()` patterns were replaced with pre-built `Map`/`Set` lookups that are constructed once before iteration and consumed with `.get()` inside the loop bodies.",
+      "steps": [
+        {
+          "action": "Inspect the files called out by the feature metadata and scrutiny review for pre-built lookup structures",
+          "expected": "Targeted `.find()` calls inside `.map()` / `.filter()` loops should be replaced by `Map` or equivalent O(1) lookup patterns.",
+          "observed": "The touched field helpers, PDF generation code, and envelope editor/embed files build lookup maps before the loop and read them with `.get()` during iteration."
+        },
+        {
+          "action": "Search the targeted server-only scope for remaining loop-nested `.find()` patterns",
+          "expected": "No remaining `.find()` inside `.map()` / `.filter()` callbacks in the targeted refactor scope.",
+          "observed": "Searches in `packages/lib/server-only/field`, `packages/lib/server-only/envelope`, and `packages/lib/server-only/pdf` returned no remaining matches for `.find()` inside targeted loop callbacks."
+        }
+      ],
+      "evidence": {
+        "fileLines": [
+          "packages/lib/server-only/field/set-fields-for-template.ts:83-84,90-101",
+          "packages/lib/server-only/field/set-fields-for-document.ts:87-89,95-101",
+          "packages/lib/server-only/field/update-envelope-fields.ts:73-77,85",
+          "packages/lib/server-only/field/create-envelope-fields.ts:136-141,173,266-270,305",
+          "packages/lib/server-only/pdf/generate-certificate-pdf.ts:61-89,97-111",
+          "apps/remix/app/components/general/envelope-editor/envelope-editor-upload-page.tsx:93,251",
+          "apps/remix/app/components/general/envelope-editor/envelope-generic-page-renderer.tsx:43",
+          "apps/remix/app/routes/_internal+/[__htmltopdf]+/certificate.tsx:140,143,220",
+          "apps/remix/app/routes/embed+/v1+/authoring+/document.edit.$id.tsx:147,154",
+          "apps/remix/app/routes/embed+/v1+/authoring+/template.edit.$id.tsx:147,154"
+        ],
+        "notesFile": "js-and-advanced/js-patterns/evidence-notes.md",
+        "sharedChecks": "Parent validator already owns the shared build/lint checks for the js-and-advanced milestone, so they were reused here instead of being rerun in this flow validator."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-JS-002",
+      "title": "Chained filter/map combined into single iterations",
+      "status": "pass",
+      "reason": "The touched data-transformation paths now use single-pass `.flatMap()` iterations instead of chained `.filter().map()` calls, and the inspected touched files no longer contain the prior chained pattern.",
+      "steps": [
+        {
+          "action": "Inspect the files listed by the feature commit and scrutiny review for single-pass iteration replacements",
+          "expected": "Eligible chained `.filter().map()` transformations should be consolidated into `.flatMap()` or equivalent single-iteration logic.",
+          "observed": "The touched server, signing, UI, and tRPC files use `.flatMap()` for the previously chained transformations, including field mapping, audit-log tuple creation, checkbox value extraction, and option list generation."
+        },
+        {
+          "action": "Check the touched files for remaining chained `.filter().map()` transformations",
+          "expected": "The touched files should not retain the targeted chained transformation pattern.",
+          "observed": "The touched files still contain some standalone `.filter()` calls for non-targeted cases, but no remaining chained `.filter().map()` transformations were found in the inspected refactor scope."
+        }
+      ],
+      "evidence": {
+        "fileLines": [
+          "packages/lib/server-only/field/set-fields-for-document.ts:353-356",
+          "packages/lib/server-only/field/set-fields-for-template.ts:251-254",
+          "packages/lib/server-only/pdf/generate-certificate-pdf.ts:62-64,68-70,76-89",
+          "packages/lib/server-only/field/create-envelope-fields.ts:140",
+          "packages/signing/helpers/tsa.ts:13-16",
+          "apps/remix/app/utils/field-signing/checkbox-field.ts:46",
+          "apps/remix/app/components/general/document/document-recipient-link-copy-dialog.tsx:52-55",
+          "packages/lib/server-only/field/sign-field-with-token.ts:226",
+          "packages/trpc/server/organisation-router/create-organisation-member-invites.types.ts:26-27",
+          "packages/trpc/server/embedding-router/update-embedding-envelope.ts:148-150",
+          "packages/trpc/server/envelope-router/bulk-delete-envelopes.ts:100",
+          "packages/ui/components/document/document-global-auth-action-select.tsx:34-36",
+          "packages/ui/components/recipient/recipient-action-auth-select.tsx:38-40"
+        ],
+        "notesFile": "js-and-advanced/js-patterns/evidence-notes.md",
+        "sharedChecks": "Parent validator already owns the shared build/lint checks for the js-and-advanced milestone, so they were reused here instead of being rerun in this flow validator."
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Validated 2 js-and-advanced assertions by read-only terminal inspection. VAL-JS-001 passed because the targeted loop-nested `.find()` patterns were replaced with pre-built Map/Set lookups, and VAL-JS-002 passed because the touched `.filter().map()` transformations were consolidated into single-pass `.flatMap()` iterations."
+}

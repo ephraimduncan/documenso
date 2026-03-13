@@ -1,0 +1,54 @@
+{
+  "milestone": "js-and-advanced",
+  "round": 1,
+  "status": "pass",
+  "testingSurface": "terminal-validation",
+  "assertionsSummary": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0,
+    "blocked": 0
+  },
+  "passedAssertions": [
+    "VAL-JS-001",
+    "VAL-JS-002",
+    "VAL-CROSS-001",
+    "VAL-CROSS-002"
+  ],
+  "failedAssertions": [],
+  "blockedAssertions": [],
+  "flowReports": [
+    {
+      "groupId": "js-patterns",
+      "path": ".factory/validation/js-and-advanced/user-testing/flows/js-patterns.json"
+    },
+    {
+      "groupId": "shared-gates",
+      "path": ".factory/validation/js-and-advanced/user-testing/flows/shared-gates.json"
+    }
+  ],
+  "sharedChecks": {
+    "serviceHealth": [
+      {
+        "service": "postgres",
+        "command": "echo \"Postgres already running externally\" && pg_isready -h localhost -p 5432",
+        "exitCode": 0,
+        "observation": "The externally managed Postgres dependency remained available; the setup command echoed the expected note and `pg_isready` returned `localhost:5432 - accepting connections`."
+      }
+    ],
+    "commands": [
+      {
+        "command": "npm --prefix /Users/duncan/dev/documenso-wt-main-wt run build",
+        "exitCode": 0,
+        "observation": "`turbo run build` completed successfully across the monorepo with no build errors; Prisma generate ran and the docs, remix, and openpage-api builds finished successfully."
+      },
+      {
+        "command": "npm --prefix /Users/duncan/dev/documenso-wt-main-wt run lint",
+        "exitCode": 0,
+        "observation": "`turbo run lint` exited 0 with warnings only: 37 in `@documenso/lib`, 17 in `@documenso/ui`, and 7 in `@documenso/trpc`; no lint errors blocked the milestone."
+      }
+    ]
+  },
+  "appliedUpdates": [],
+  "previousRound": null
+}
