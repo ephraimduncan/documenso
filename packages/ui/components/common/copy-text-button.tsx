@@ -44,7 +44,7 @@ export const CopyTextButton = ({
     <Button
       type="button"
       variant="none"
-      className="ml-2 h-7 rounded border bg-neutral-50 px-0.5 font-normal dark:border dark:border-neutral-500 dark:bg-neutral-600"
+      className="ml-2 h-7 rounded border bg-muted px-0.5 font-normal dark:bg-secondary"
       onClick={async () => onCopy()}
     >
       <AnimatePresence mode="wait" initial={false}>

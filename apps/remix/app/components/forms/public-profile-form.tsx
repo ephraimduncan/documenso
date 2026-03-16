@@ -171,7 +171,7 @@ export const PublicProfileForm = ({
                           <Button
                             type="button"
                             variant="none"
-                            className="h-7 rounded bg-neutral-50 pl-2 pr-0.5 font-normal dark:border dark:border-neutral-500 dark:bg-neutral-600"
+                            className="h-7 rounded bg-muted pl-2 pr-0.5 font-normal dark:bg-secondary"
                             onClick={async () => onCopy()}
                           >
                             <p>
