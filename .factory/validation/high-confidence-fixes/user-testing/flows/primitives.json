@@ -1,0 +1,47 @@
+{
+  "groupId": "primitives",
+  "surface": "code-inspection-shell",
+  "testedAt": "2026-03-16T10:23:32Z",
+  "assertions": [
+    {
+      "id": "VAL-PRIM-001",
+      "status": "pass",
+      "reason": "packages/ui/primitives/select.tsx uses the semantic muted foreground token for the loading spinner and no longer contains the replaced gray token.",
+      "evidence": [
+        "Read/Grep: packages/ui/primitives/select.tsx:35 contains `Loader className=\"h-5 w-5 animate-spin text-muted-foreground\"`.",
+        "Grep: `text-gray-500` has no matches in packages/ui/primitives/select.tsx."
+      ]
+    },
+    {
+      "id": "VAL-PRIM-002",
+      "status": "pass",
+      "reason": "packages/ui/primitives/multi-select-combobox.tsx uses semantic muted tokens for both the loading spinner and the remove button, with the raw gray and neutral classes removed.",
+      "evidence": [
+        "Read/Grep: packages/ui/primitives/multi-select-combobox.tsx:123 contains `text-muted-foreground` on the spinner.",
+        "Read/Grep: packages/ui/primitives/multi-select-combobox.tsx:146 contains `bg-muted-foreground/30` on the remove button.",
+        "Grep: `text-gray-500`, `bg-gray-300`, and `dark:bg-neutral-700` have no matches in packages/ui/primitives/multi-select-combobox.tsx."
+      ]
+    },
+    {
+      "id": "VAL-PRIM-003",
+      "status": "pass",
+      "reason": "packages/ui/primitives/alert.tsx defines the neutral alert variant with semantic muted tokens instead of raw gray and neutral background classes.",
+      "evidence": [
+        "Read/Grep: packages/ui/primitives/alert.tsx:16 contains `bg-muted dark:bg-muted/20 text-muted-foreground` for the neutral variant.",
+        "Grep: `bg-gray-50` and `bg-neutral-900` have no matches in packages/ui/primitives/alert.tsx."
+      ]
+    },
+    {
+      "id": "VAL-PRIM-004",
+      "status": "pass",
+      "reason": "packages/ui/primitives/signature-pad/signature-pad.tsx uses semantic muted backgrounds for all three signature pad panels and no longer contains the replaced neutral background token.",
+      "evidence": [
+        "Read/Grep: packages/ui/primitives/signature-pad/signature-pad.tsx:173,184,196 each use `bg-muted` with `dark:bg-background`.",
+        "Grep: `bg-neutral-50` has no matches in packages/ui/primitives/signature-pad/signature-pad.tsx."
+      ]
+    }
+  ],
+  "toolsUsed": ["Read", "Grep", "Execute"],
+  "frictions": [],
+  "blockers": []
+}

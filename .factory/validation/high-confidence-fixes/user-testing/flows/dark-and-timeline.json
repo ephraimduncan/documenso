@@ -1,0 +1,49 @@
+{
+  "groupId": "dark-and-timeline",
+  "surface": "code-inspection-shell",
+  "testedAt": "2026-03-16T10:24:17Z",
+  "assertions": [
+    {
+      "id": "VAL-DARK-001",
+      "status": "pass",
+      "reason": "apps/remix/app/components/general/app-nav-desktop.tsx keeps inactive nav links on semantic muted tokens without the removed dark-mode opacity hack.",
+      "evidence": [
+        "Read/Grep: apps/remix/app/components/general/app-nav-desktop.tsx:89 contains `text-muted-foreground` on the nav link class list.",
+        "Grep: `dark:text-muted-foreground/60` has no matches in apps/remix/app/components/general/app-nav-desktop.tsx."
+      ]
+    },
+    {
+      "id": "VAL-DARK-002",
+      "status": "pass",
+      "reason": "The document and template recent-activity views use semantic muted text for activity descriptions and timestamps without the removed dark-mode opacity hack.",
+      "evidence": [
+        "Read: apps/remix/app/components/general/document/document-page-view-recent-activity.tsx:149 and :155 use `text-muted-foreground` for the description and timestamp.",
+        "Read: apps/remix/app/components/general/template/template-page-view-recent-activity.tsx:117 and :133 use `text-muted-foreground` for the description and timestamp.",
+        "Grep: `dark:text-muted-foreground/70` has no matches in either recent-activity file."
+      ]
+    },
+    {
+      "id": "VAL-DARK-003",
+      "status": "pass",
+      "reason": "Both signing page v1 chevron controls use `dark:text-foreground`, so the icons are no longer hidden by `dark:text-background` in dark mode.",
+      "evidence": [
+        "Read/Grep: apps/remix/app/components/general/document-signing/document-signing-page-view-v1.tsx:345 and :354 use `dark:text-foreground` on `LucideChevronDown` and `LucideChevronUp`.",
+        "Read/Grep: apps/remix/app/components/embed/embed-document-signing-page-v1.tsx:336 and :344 use `dark:text-foreground` on `LucideChevronDown` and `LucideChevronUp`.",
+        "Grep: `dark:text-background` has no matches in either signing page v1 file."
+      ]
+    },
+    {
+      "id": "VAL-TIMELINE-001",
+      "status": "pass",
+      "reason": "The recent-activity timeline dots and bordered timeline elements use semantic `border-border` and `ring-border` tokens instead of raw gray and neutral border classes.",
+      "evidence": [
+        "Read/Grep: apps/remix/app/components/general/document/document-page-view-recent-activity.tsx:90 and :124/:129/:134/:139/:144 use `ring-border` or `border-border`.",
+        "Read/Grep: apps/remix/app/components/general/template/template-page-view-recent-activity.tsx:75 and :112 use `ring-border`, and :36 uses `border-border`.",
+        "Grep: `border-gray-300`, `ring-gray-300`, `dark:border-neutral-600`, and `dark:ring-neutral-600` have no matches in either recent-activity file."
+      ]
+    }
+  ],
+  "toolsUsed": ["Read", "Grep", "Execute"],
+  "frictions": [],
+  "blockers": []
+}

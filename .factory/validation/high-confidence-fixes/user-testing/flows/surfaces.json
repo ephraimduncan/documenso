@@ -1,0 +1,52 @@
+{
+  "groupId": "surfaces",
+  "surface": "code-inspection-shell",
+  "testedAt": "2026-03-16T10:24:17Z",
+  "assertions": [
+    {
+      "id": "VAL-SURFACE-001",
+      "status": "pass",
+      "reason": "All 8 targeted loading-overlay files use bg-background/50, and none of those files contain bg-white/50.",
+      "evidence": [
+        "bg-background/50 present at: apps/remix/app/routes/_authenticated+/t.$teamUrl+/settings.webhooks._index.tsx:118; apps/remix/app/routes/_authenticated+/admin+/documents._index.tsx:161; apps/remix/app/routes/_authenticated+/admin+/unsealed-documents._index.tsx:179; apps/remix/app/routes/_authenticated+/admin+/email-domains._index.tsx:199; apps/remix/app/components/tables/organisation-insights-table.tsx:260; apps/remix/app/components/tables/admin-dashboard-users-table.tsx:140; apps/remix/app/components/tables/admin-organisation-overview-table.tsx:218; apps/remix/app/components/tables/templates-table.tsx:305.",
+        "bg-white/50 search returned no matches in each targeted file.",
+        "Repo-wide bg-white/50 matches are limited to out-of-scope files: apps/remix/app/components/dialogs/template-direct-link-dialog.tsx:283, apps/remix/app/components/general/skeletons/document-edit-skeleton.tsx:24, apps/remix/app/components/general/pdf-viewer/pdf-viewer-states.tsx:15."
+      ]
+    },
+    {
+      "id": "VAL-SURFACE-002",
+      "status": "pass",
+      "reason": "The targeted sign-in and sign-up card containers use bg-muted, and none of the targeted files contain bg-neutral-100.",
+      "evidence": [
+        "bg-muted present at: apps/remix/app/routes/_unauthenticated+/signin.tsx:81; apps/remix/app/components/forms/signup.tsx:227; apps/remix/app/routes/_unauthenticated+/o.$orgUrl.signin.tsx:159.",
+        "bg-neutral-100 search returned no matches in each targeted file.",
+        "Repo-wide bg-neutral-100 matches are limited to out-of-scope files: apps/remix/app/components/general/user-profile-skeleton.tsx:24 and apps/remix/app/components/general/user-profile-timur.tsx:21."
+      ]
+    },
+    {
+      "id": "VAL-SURFACE-003",
+      "status": "pass",
+      "reason": "The public profile templates table uses divide-border and border-border, with no remaining legacy neutral-border classes in the file.",
+      "evidence": [
+        "divide-border and border-border present at apps/remix/app/components/tables/settings-public-profile-templates-table.tsx:77.",
+        "Search for divide-neutral-200|border-neutral-200|dark:divide-foreground/30|dark:border-foreground/30 returned no matches in apps/remix/app/components/tables/settings-public-profile-templates-table.tsx."
+      ]
+    }
+  ],
+  "toolsUsed": [
+    "Read",
+    "Grep",
+    "Execute"
+  ],
+  "frictions": [
+    {
+      "description": "The validation contract's illustrative list of remaining bg-white/50 files was not exhaustive/current: the actual repo-wide out-of-scope match was pdf-viewer-states.tsx rather than document-dropzone.tsx.",
+      "resolved": true,
+      "resolution": "Used repo-wide grep results to distinguish targeted files from out-of-scope files before marking VAL-SURFACE-001 as pass.",
+      "affectedAssertions": [
+        "VAL-SURFACE-001"
+      ]
+    }
+  ],
+  "blockers": []
+}
