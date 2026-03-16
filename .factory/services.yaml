@@ -1,0 +1,7 @@
+commands:
+  install: npm install
+  lint: npx turbo run lint
+  typecheck: npx tsc --noEmit -p packages/ui/tsconfig.json
+  test: echo "No functional tests for CSS class changes"
+
+services: {}
