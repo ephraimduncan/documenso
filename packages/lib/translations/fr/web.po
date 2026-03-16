@@ -9001,8 +9001,8 @@ msgid "Signing window expired for {0}"
 msgstr "La fenêtre de signature a expiré pour {0}"
 
 #: apps/remix/app/components/forms/signup.tsx
-msgid "Signups are disabled."
-msgstr "Les inscriptions sont désactivées."
+msgid "Signup is currently disabled or not available for your email domain."
+msgstr ""
 
 #. placeholder {0}: DateTime.fromJSDate(publicProfile.badge.since).toFormat('LLL ‘yy')
 #: apps/remix/app/routes/_profile+/p.$url.tsx
@@ -13026,4 +13026,3 @@ msgstr "Votre code de vérification :"
 #: apps/remix/app/routes/_authenticated+/o.$orgUrl.settings.sso.tsx
 msgid "your-domain.com another-domain.com"
 msgstr "your-domain.com another-domain.com"
-

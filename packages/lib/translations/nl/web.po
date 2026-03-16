@@ -9001,8 +9001,8 @@ msgid "Signing window expired for {0}"
 msgstr "Ondertekenvenster verlopen voor {0}"
 
 #: apps/remix/app/components/forms/signup.tsx
-msgid "Signups are disabled."
-msgstr "Aanmeldingen zijn uitgeschakeld."
+msgid "Signup is currently disabled or not available for your email domain."
+msgstr ""
 
 #. placeholder {0}: DateTime.fromJSDate(publicProfile.badge.since).toFormat('LLL ‘yy')
 #: apps/remix/app/routes/_profile+/p.$url.tsx
@@ -13026,4 +13026,3 @@ msgstr "Uw verificatiecode:"
 #: apps/remix/app/routes/_authenticated+/o.$orgUrl.settings.sso.tsx
 msgid "your-domain.com another-domain.com"
 msgstr "your-domain.com another-domain.com"
-
