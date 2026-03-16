@@ -146,13 +146,13 @@ export const DocumentPageViewRecentActivity = ({
                 </div>
 
                 <p
-                  className="flex-auto truncate py-0.5 text-xs leading-5 text-muted-foreground dark:text-muted-foreground/70"
+                  className="flex-auto truncate py-0.5 text-xs leading-5 text-muted-foreground"
                   title={formatDocumentAuditLogAction(i18n, auditLog, userId).description}
                 >
                   {formatDocumentAuditLogAction(i18n, auditLog, userId).description}
                 </p>
 
-                <time className="flex-none py-0.5 text-xs leading-5 text-muted-foreground dark:text-muted-foreground/70">
+                <time className="flex-none py-0.5 text-xs leading-5 text-muted-foreground">
                   {DateTime.fromJSDate(auditLog.createdAt).toRelative({ style: 'short' })}
                 </time>
               </li>
