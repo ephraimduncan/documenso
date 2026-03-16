@@ -333,7 +333,7 @@ export const EmbedSignDocumentV1ClientPage = ({
                       className="h-8 w-8 bg-background p-0 md:hidden dark:bg-foreground"
                       onClick={() => setIsExpanded(false)}
                     >
-                      <LucideChevronDown className="h-5 w-5 text-muted-foreground dark:text-background" />
+                      <LucideChevronDown className="h-5 w-5 text-muted-foreground dark:text-foreground" />
                     </Button>
                   ) : pendingFields.length > 0 ? (
                     <Button
@@ -341,7 +341,7 @@ export const EmbedSignDocumentV1ClientPage = ({
                       className="h-8 w-8 bg-background p-0 md:hidden dark:bg-foreground"
                       onClick={() => setIsExpanded(true)}
                     >
-                      <LucideChevronUp className="h-5 w-5 text-muted-foreground dark:text-background" />
+                      <LucideChevronUp className="h-5 w-5 text-muted-foreground dark:text-foreground" />
                     </Button>
                   ) : (
                     <Button

@@ -1,0 +1,49 @@
+{
+  "groupId": "brand",
+  "surface": "code-inspection-shell",
+  "assertions": [
+    {
+      "id": "VAL-BRAND-001",
+      "status": "pass",
+      "reason": "The 8 targeted back-navigation links now use `text-primary`, and the remaining `text-documenso-700` matches are all outside the asserted back-nav scope.",
+      "evidence": [
+        "rg -n \"text-primary\" on the 8 targeted files found current matches at document-edit-skeleton.tsx:10, documents.$id._index.tsx:106, documents.$id.legacy_editor.tsx:87, documents.$id.logs.tsx:137, templates.$id._index.tsx:117, templates.$id.legacy_editor.tsx:64, sign.$token+/_index.tsx:376/385/476/485, and sign.$token+/complete.tsx:182.",
+        "rg -n \"text-documenso-700\" across the repo found matches only in packages/email/templates/reset-password.tsx:75, packages/email/template-components/template-document-self-signed.tsx:52, apps/remix/app/routes/_unauthenticated+/signin.tsx:111, apps/remix/app/components/dialogs/team-member-create-dialog.tsx:200 and :329, apps/remix/app/components/general/document-signing/document-signing-disclosure.tsx:26, and apps/remix/app/components/forms/signup.tsx:385/:408/:416.",
+        "git show --stat --oneline 62d0fd15a lists the 8 back-nav files in the brand-token replacement commit."
+      ]
+    },
+    {
+      "id": "VAL-BRAND-002",
+      "status": "pass",
+      "reason": "The sign-in submit button no longer applies any `dark:bg-documenso dark:hover:opacity-90` override and therefore relies on the semantic primary styling.",
+      "evidence": [
+        "rg -n \"dark:bg-documenso\" apps/remix/app/components/forms/signin.tsx returned no matches.",
+        "git diff main --unified=0 -- apps/remix/app/components/forms/signin.tsx shows removal of `className=\"dark:bg-documenso dark:hover:opacity-90\"`."
+      ]
+    },
+    {
+      "id": "VAL-BRAND-003",
+      "status": "pass",
+      "reason": "Both inserted-field states now use `bg-primary/20`, and `bg-documenso-200` remains only in the preserved stack-avatar file outside this assertion's scope.",
+      "evidence": [
+        "packages/ui/primitives/document-flow/field-item.tsx:285 contains `'border border-primary bg-primary/20': fieldHasCheckedValues`.",
+        "apps/remix/app/components/general/document-signing/document-signing-field-container.tsx:183 contains `'border border-primary bg-primary/20': field.inserted`.",
+        "rg -n \"bg-documenso-200\" across the repo found only apps/remix/app/components/general/stack-avatar.tsx:39, and direct Grep checks in both scoped files returned no matches.",
+        "git diff main --unified=0 on the two scoped files shows `bg-documenso-200` replaced with `bg-primary/20`."
+      ]
+    }
+  ],
+  "toolsUsed": [
+    "Read",
+    "Grep",
+    "Execute"
+  ],
+  "frictions": [
+    {
+      "description": "Route file paths containing `$teamUrl`, `$id`, and `$token` needed shell quoting during targeted `rg` inspection.",
+      "resolved": true,
+      "resolution": "Re-ran the search with single-quoted absolute paths so the shell would not expand route-parameter segments."
+    }
+  ],
+  "blockers": []
+}

@@ -180,7 +180,7 @@ export const DocumentSigningFieldContainer = ({
                 'border border-border bg-foreground/5': !field.inserted,
               },
               {
-                'border border-primary bg-documenso-200': field.inserted,
+                'border border-primary bg-primary/20': field.inserted,
               },
             )}
           >

@@ -1,0 +1,6 @@
+{
+  "milestone": "high-confidence-fixes",
+  "overrideJustification": "Scrutiny validator failed due to pre-existing typecheck and lint errors unrelated to this mission's CSS class changes. Typecheck fails because Prisma client/generated schema artifacts are not present in this worktree (missing @prisma/client exports, generated zod schemas). Lint fails due to 4 pre-existing @typescript-eslint/require-await errors in packages/lib/server-only/ files that were not modified by this mission. All 4 implementation workers verified their changes via rg checks and git diff inspection — only the specified CSS class strings were modified. No preserved files were changed.",
+  "appliedUpdates": [],
+  "suggestedGuidanceUpdates": []
+}

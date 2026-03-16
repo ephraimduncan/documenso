@@ -282,7 +282,7 @@ const FieldItemInner = ({
               'absolute -top-16 left-0 right-0 rounded-md p-2 text-center text-xs text-gray-700',
               {
                 'border border-primary bg-foreground/5': !fieldHasCheckedValues,
-                'border border-primary bg-documenso-200': fieldHasCheckedValues,
+                'border border-primary bg-primary/20': fieldHasCheckedValues,
               },
             )}
           >

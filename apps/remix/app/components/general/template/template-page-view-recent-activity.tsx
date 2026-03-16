@@ -72,7 +72,7 @@ export const TemplatePageViewRecentActivity = ({
                 </div>
 
                 <div className="bg-widget relative flex h-6 w-6 flex-none items-center justify-center">
-                  <div className="bg-widget h-1.5 w-1.5 rounded-full ring-1 ring-gray-300 dark:ring-neutral-600" />
+                  <div className="bg-widget h-1.5 w-1.5 rounded-full ring-1 ring-border" />
                 </div>
 
                 <button
@@ -109,12 +109,12 @@ export const TemplatePageViewRecentActivity = ({
                 </div>
 
                 <div className="bg-widget text-foreground/40 relative flex h-6 w-6 flex-none items-center justify-center">
-                  <div className="bg-widget h-1.5 w-1.5 rounded-full ring-1 ring-gray-300 dark:ring-neutral-600" />
+                  <div className="bg-widget h-1.5 w-1.5 rounded-full ring-1 ring-border" />
                 </div>
 
                 <Link
                   to={`${documentRootPath}/${document.envelopeId}`}
-                  className="text-muted-foreground dark:text-muted-foreground/70 flex-auto truncate py-0.5 text-xs leading-5"
+                  className="text-muted-foreground flex-auto truncate py-0.5 text-xs leading-5"
                 >
                   {match(document.source)
                     .with(DocumentSource.DOCUMENT, DocumentSource.TEMPLATE, () => (
@@ -130,7 +130,7 @@ export const TemplatePageViewRecentActivity = ({
                     .exhaustive()}
                 </Link>
 
-                <time className="text-muted-foreground dark:text-muted-foreground/70 flex-none py-0.5 text-xs leading-5">
+                <time className="text-muted-foreground flex-none py-0.5 text-xs leading-5">
                   {DateTime.fromJSDate(document.createdAt).toRelative({ style: 'short' })}
                 </time>
               </li>

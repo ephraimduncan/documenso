@@ -1,0 +1,236 @@
+{
+  "groupId": "code-inspection-shell",
+  "testedAt": "2026-03-16T10:43:27Z",
+  "milestone": "medium-confidence-fixes",
+  "isolation": {
+    "surface": "code-inspection-shell",
+    "repoRoot": "/Users/duncan/dev/.worktrees/documenso/documenso-tailwind-colors-main",
+    "missionDir": "/Users/duncan/.factory/missions/ec581438-7f90-4627-b6c4-523e968f1bc3",
+    "baseline": "origin/main...HEAD"
+  },
+  "toolsUsed": [
+    "Read",
+    "Grep",
+    "Execute"
+  ],
+  "assertions": [
+    {
+      "id": "VAL-PILL-001",
+      "title": "Copy-text-button and public-profile-form pills use semantic tokens",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Read copy-text-button.tsx and public-profile-form.tsx",
+          "expected": "Pill class strings use bg-muted and dark:bg-secondary",
+          "observed": "Both files use bg-muted with dark:bg-secondary in the pill button class strings."
+        },
+        {
+          "action": "Inspect branch diff against origin/main for both files",
+          "expected": "Old bg-neutral-50 / dark:border-neutral-500 / dark:bg-neutral-600 tokens were replaced",
+          "observed": "Diff shows both files changed from bg-neutral-50 + dark:border-neutral-500 + dark:bg-neutral-600 to bg-muted + dark:bg-secondary."
+        },
+        {
+          "action": "Run exact boundary token search for removed pill classes",
+          "expected": "No remaining exact matches for bg-neutral-50, dark:border-neutral-500, or dark:bg-neutral-600 in either file",
+          "observed": "No exact matches remained."
+        }
+      ],
+      "evidence": {
+        "notes": [
+          "medium-confidence-fixes/code-inspection-shell/assertion-evidence.md"
+        ],
+        "codeInspection": "copy-text-button.tsx:47 and public-profile-form.tsx:174 currently use bg-muted ... dark:bg-secondary.",
+        "diffInspection": "Branch diff shows the old neutral pill classes replaced with semantic tokens in both files.",
+        "searchChecks": "Exact boundary rg searches found no remaining bg-neutral-50, dark:border-neutral-500, or dark:bg-neutral-600 tokens in either file."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PILL-002",
+      "title": "Template direct-link badge uses semantic tokens",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Read template-direct-link-badge.tsx and templates-table.tsx",
+          "expected": "Badge class strings use border-border bg-muted and dark:bg-secondary",
+          "observed": "Both badge render sites use rounded border border-border bg-muted ... dark:bg-secondary."
+        },
+        {
+          "action": "Inspect branch diff against origin/main for both files",
+          "expected": "Old border-neutral-300 / bg-neutral-200 / dark:border-neutral-500 / dark:bg-neutral-600 tokens were replaced",
+          "observed": "Diff shows both files changed from border-neutral-300 + bg-neutral-200 + dark:border-neutral-500 + dark:bg-neutral-600 to border-border + bg-muted + dark:bg-secondary."
+        },
+        {
+          "action": "Run exact boundary token search for removed badge classes",
+          "expected": "No remaining exact matches for border-neutral-300, bg-neutral-200, dark:border-neutral-500, or dark:bg-neutral-600 in either file",
+          "observed": "No exact matches remained."
+        }
+      ],
+      "evidence": {
+        "notes": [
+          "medium-confidence-fixes/code-inspection-shell/assertion-evidence.md"
+        ],
+        "codeInspection": "template-direct-link-badge.tsx:39 and templates-table.tsx:139 use border-border bg-muted ... dark:bg-secondary.",
+        "diffInspection": "Branch diff shows both direct-link badge sites replaced raw neutral tokens with semantic tokens.",
+        "searchChecks": "Exact boundary rg searches found no remaining border-neutral-300, bg-neutral-200, dark:border-neutral-500, or dark:bg-neutral-600 tokens in either file."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-NORM-001",
+      "title": "Badge neutral variant uses semantic tokens",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Read packages/ui/primitives/badge.tsx",
+          "expected": "Neutral variant uses bg-muted text-muted-foreground ring-border/50",
+          "observed": "badge.tsx neutral variant is bg-muted text-muted-foreground ring-border/50."
+        },
+        {
+          "action": "Inspect branch diff against origin/main for badge.tsx",
+          "expected": "Old gray neutral badge tokens were replaced",
+          "observed": "Diff shows the neutral variant changed from gray palette classes to bg-muted text-muted-foreground ring-border/50."
+        },
+        {
+          "action": "Run exact boundary token search for removed gray badge classes",
+          "expected": "No remaining exact matches for bg-gray-50, text-gray-600, ring-gray-500/10, dark:bg-gray-400/10, dark:text-gray-400, or dark:ring-gray-400/20",
+          "observed": "No exact matches remained."
+        }
+      ],
+      "evidence": {
+        "notes": [
+          "medium-confidence-fixes/code-inspection-shell/assertion-evidence.md"
+        ],
+        "codeInspection": "badge.tsx:13 sets neutral to bg-muted text-muted-foreground ring-border/50.",
+        "diffInspection": "Branch diff shows the neutral variant replaced all old gray palette classes.",
+        "searchChecks": "Exact boundary rg search found no removed gray neutral badge tokens in badge.tsx."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-NORM-002",
+      "title": "User profile skeletons use consistent semantic tokens",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Read user-profile-skeleton.tsx and user-profile-timur.tsx",
+          "expected": "Targeted locations use bg-muted, divide-border, and border-border",
+          "observed": "Both files now use bg-muted on the card/header and divide-border + border-border on the table wrapper."
+        },
+        {
+          "action": "Inspect branch diff against origin/main for both files",
+          "expected": "Mixed bg-neutral / divide-neutral / border-neutral / dark:divide-foreground / dark:border-foreground tokens were replaced",
+          "observed": "Diff shows the targeted neutral, divider, and border tokens were replaced with semantic tokens in both files."
+        },
+        {
+          "action": "Run exact boundary token search for removed skeleton/profile classes",
+          "expected": "No remaining exact matches for bg-neutral-100, bg-neutral-50, divide-neutral-200, border-neutral-200, dark:divide-foreground/30, or dark:border-foreground/30",
+          "observed": "No exact matches remained in either file."
+        }
+      ],
+      "evidence": {
+        "notes": [
+          "medium-confidence-fixes/code-inspection-shell/assertion-evidence.md"
+        ],
+        "codeInspection": "user-profile-skeleton.tsx and user-profile-timur.tsx both use bg-muted / divide-border / border-border in the targeted locations.",
+        "diffInspection": "Branch diff shows both files replaced the targeted mixed neutral tokens with semantic tokens.",
+        "searchChecks": "Exact boundary rg search found no removed neutral/divider/border tokens in either file."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-NORM-003",
+      "title": "Document signing page v2 uses semantic background",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Read document-signing-page-view-v2.tsx",
+          "expected": "Page background uses bg-muted dark:bg-background",
+          "observed": "The outer page wrapper uses min-h-screen w-screen bg-muted dark:bg-background."
+        },
+        {
+          "action": "Inspect branch diff against origin/main for document-signing-page-view-v2.tsx",
+          "expected": "bg-gray-50 dark:bg-background was replaced",
+          "observed": "Diff shows bg-gray-50 dark:bg-background changed to bg-muted dark:bg-background."
+        },
+        {
+          "action": "Run exact boundary token search for bg-gray-50",
+          "expected": "No remaining exact bg-gray-50 token in the file",
+          "observed": "No exact match remained."
+        }
+      ],
+      "evidence": {
+        "notes": [
+          "medium-confidence-fixes/code-inspection-shell/assertion-evidence.md"
+        ],
+        "codeInspection": "document-signing-page-view-v2.tsx:85 uses bg-muted dark:bg-background.",
+        "diffInspection": "Branch diff shows bg-gray-50 was replaced with bg-muted on the page wrapper.",
+        "searchChecks": "Exact boundary rg search found no bg-gray-50 token in the file."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-CROSS-003",
+      "title": "No unintended changes to preserved files",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Collect preserved/off-limits paths from mission.md and validation-contract.md",
+          "expected": "Use the mission preserve list as the diff allowlist boundary",
+          "observed": "Preserved paths were identified for recipient colors, email, docs, dark-mode-disabled/theme config, document-dropzone, stack-avatar, envelope-editor toolbar, chart files, and tailwind config files."
+        },
+        {
+          "action": "Run git diff --name-only origin/main...HEAD on the preserved path set",
+          "expected": "No preserved paths appear in the branch diff",
+          "observed": "The diff command returned no file paths."
+        },
+        {
+          "action": "Run repo-wide searches for .dark-mode-disabled and hsl(var(--primary)) preserved references",
+          "expected": "If references exist, the containing preserved files should still be absent from the branch diff",
+          "observed": "Searches found only preserved theme/config/chart files, and none appeared in the branch diff."
+        }
+      ],
+      "evidence": {
+        "notes": [
+          "medium-confidence-fixes/code-inspection-shell/assertion-evidence.md",
+          "medium-confidence-fixes/code-inspection-shell/preserved-files-diff-check.txt"
+        ],
+        "diffInspection": "git diff --name-only origin/main...HEAD over the preserved path set returned no output.",
+        "searchChecks": "Repo-wide searches for .dark-mode-disabled and hsl(var(--primary)) only surfaced preserved files, none of which were changed.",
+        "preservedPathsChecked": [
+          "packages/ui/lib/recipient-colors.ts",
+          "packages/email/",
+          "apps/docs/",
+          "packages/ui/primitives/document-dropzone.tsx",
+          "apps/remix/app/components/general/stack-avatar.tsx",
+          "apps/remix/app/components/general/envelope-editor/envelope-editor-fields-page-renderer.tsx",
+          "packages/ui/styles/theme.css",
+          "apps/remix/tailwind.config.ts",
+          "packages/email/tailwind.config.js",
+          "packages/ui/tailwind.config.cjs",
+          "packages/tailwind-config/index.cjs",
+          "apps/remix/app/components/general/admin-stats-signer-conversion-chart.tsx",
+          "apps/remix/app/components/general/admin-stats-users-with-documents.tsx",
+          "apps/remix/app/components/general/admin-monthly-active-user-charts.tsx"
+        ]
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [
+    {
+      "description": "Contract example strings are conceptual rather than exact byte-for-byte class lists; class order and extra non-target tokens (for example an additional border class) made exact full-string greps unreliable, and naive literal searches like bg-neutral-50 can also match longer tokens such as bg-neutral-500.",
+      "resolved": true,
+      "resolution": "Used file reads plus branch diff inspection and exact boundary rg --pcre2 searches for removed tokens instead of depending on single full-string greps.",
+      "affectedAssertions": [
+        "VAL-PILL-001",
+        "VAL-PILL-002",
+        "VAL-NORM-001",
+        "VAL-NORM-002",
+        "VAL-NORM-003"
+      ]
+    }
+  ],
+  "blockers": [],
+  "summary": "Tested 6 assertions via code and diff inspection: 6 passed, 0 failed, 0 blocked."
+}

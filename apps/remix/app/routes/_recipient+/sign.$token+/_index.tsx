@@ -373,7 +373,7 @@ const SigningPageV1 = ({ data }: { data: Awaited<ReturnType<typeof handleV1Loade
           </p>
 
           {user ? (
-            <Link to="/" className="mt-36 text-documenso-700 hover:text-documenso-600">
+            <Link to="/" className="mt-36 text-primary hover:text-primary/80">
               <Trans>Go Back Home</Trans>
             </Link>
           ) : (
@@ -382,7 +382,7 @@ const SigningPageV1 = ({ data }: { data: Awaited<ReturnType<typeof handleV1Loade
                 Want to send slick signing links like this one?{' '}
                 <Link
                   to="https://documenso.com"
-                  className="text-documenso-700 hover:text-documenso-600"
+                  className="text-primary hover:text-primary/80"
                 >
                   Check out Documenso
                 </Link>
@@ -473,7 +473,7 @@ const SigningPageV2 = ({ data }: { data: Awaited<ReturnType<typeof handleV2Loade
           </p>
 
           {user ? (
-            <Link to="/" className="mt-36 text-documenso-700 hover:text-documenso-600">
+            <Link to="/" className="mt-36 text-primary hover:text-primary/80">
               <Trans>Go Back Home</Trans>
             </Link>
           ) : (
@@ -482,7 +482,7 @@ const SigningPageV2 = ({ data }: { data: Awaited<ReturnType<typeof handleV2Loade
                 Want to send slick signing links like this one?{' '}
                 <Link
                   to="https://documenso.com"
-                  className="text-documenso-700 hover:text-documenso-600"
+                  className="text-primary hover:text-primary/80"
                 >
                   Check out Documenso
                 </Link>

@@ -1,0 +1,38 @@
+{
+  "milestone": "medium-confidence-fixes",
+  "round": 1,
+  "status": "fail",
+  "assertionsSummary": {
+    "total": 8,
+    "passed": 6,
+    "failed": 0,
+    "blocked": 2
+  },
+  "passedAssertions": [
+    "VAL-CROSS-003",
+    "VAL-NORM-001",
+    "VAL-NORM-002",
+    "VAL-NORM-003",
+    "VAL-PILL-001",
+    "VAL-PILL-002"
+  ],
+  "failedAssertions": [],
+  "blockedAssertions": [
+    {
+      "id": "VAL-CROSS-001",
+      "blockedBy": "`npx turbo run lint` exits 1 because of four pre-existing `@typescript-eslint/require-await` errors in `packages/lib/server-only/envelope-item/update-envelope-items.ts`, `packages/lib/server-only/team/create-team.ts`, `packages/lib/server-only/user/delete-user.ts`, and `packages/lib/server-only/webhooks/get-all-webhooks-by-event-trigger.ts`. Mission guidance marks these as unrelated baseline repo failures."
+    },
+    {
+      "id": "VAL-CROSS-002",
+      "blockedBy": "`npx tsc --noEmit -p packages/ui/tsconfig.json` exits 2 with pre-existing Prisma/generated-type failures, including missing `@prisma/client` exports and missing `@documenso/prisma/generated/zod` modules. Mission guidance marks these as unrelated baseline repo failures."
+    }
+  ],
+  "appliedUpdates": [
+    {
+      "target": "user-testing.md",
+      "description": "Recorded the current pre-existing lint blockers in packages/lib and the current pre-existing Prisma/generated-type failures affecting `npx tsc --noEmit -p packages/ui/tsconfig.json`, so future user-testing rounds can classify cross-assertions correctly.",
+      "source": "flow-report"
+    }
+  ],
+  "previousRound": null
+}

@@ -170,7 +170,7 @@ export const SignaturePad = ({
 
       <TabsContent
         value="draw"
-        className="relative flex aspect-signature-pad items-center justify-center rounded-md border border-border bg-neutral-50 text-center dark:bg-background"
+        className="relative flex aspect-signature-pad items-center justify-center rounded-md border border-border bg-muted text-center dark:bg-background"
       >
         <SignaturePadDraw
           className="h-full w-full"
@@ -181,7 +181,7 @@ export const SignaturePad = ({
 
       <TabsContent
         value="text"
-        className="relative flex aspect-signature-pad items-center justify-center rounded-md border border-border bg-neutral-50 text-center dark:bg-background"
+        className="relative flex aspect-signature-pad items-center justify-center rounded-md border border-border bg-muted text-center dark:bg-background"
       >
         <SignaturePadType
           value={typedSignature}
@@ -193,7 +193,7 @@ export const SignaturePad = ({
       <TabsContent
         value="image"
         className={cn(
-          'relative aspect-signature-pad rounded-md border border-border bg-neutral-50 dark:bg-background',
+          'relative aspect-signature-pad rounded-md border border-border bg-muted dark:bg-background',
           {
             'bg-white': imageSignature,
           },
