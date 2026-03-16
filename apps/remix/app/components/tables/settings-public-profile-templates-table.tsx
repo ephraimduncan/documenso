@@ -74,7 +74,7 @@ export const SettingsPublicProfileTemplatesTable = () => {
 
   return (
     <div>
-      <div className="dark:divide-foreground/30 dark:border-foreground/30 mt-6 divide-y divide-neutral-200 overflow-hidden rounded-lg border border-neutral-200">
+      <div className="mt-6 divide-y divide-border overflow-hidden rounded-lg border border-border">
         {/* Loading and error handling states. */}
         {publicDirectTemplates.length === 0 && (
           <>
