@@ -48,6 +48,7 @@ import { ClaimLimitFields } from '~/components/general/claim-limit-fields';
 import { GenericErrorLayout } from '~/components/general/generic-error-layout';
 import { OrganisationUsagePanel } from '~/components/general/organisation-usage-panel';
 import { SettingsHeader } from '~/components/general/settings-header';
+import { AdminOrganisationProto } from '~/proto/admin-organisation/harness';
 
 import type { Route } from './+types/organisations.$id';
 
@@ -59,7 +60,28 @@ export async function loader() {
   };
 }
 
-export default function OrganisationGroupSettingsPage({ params, loaderData }: Route.ComponentProps) {
+// PROTO(admin-organisation) start. Dev-only picker that stands in for this page.
+// To remove: delete this block and its import, then put `export default` back on OrganisationGroupSettingsPage.
+export default function AdminOrganisationProtoMount(props: Route.ComponentProps) {
+  const page = <OrganisationGroupSettingsPage {...props} />;
+
+  if (process.env.NODE_ENV !== 'development') {
+    return page;
+  }
+
+  return (
+    <AdminOrganisationProto
+      organisationId={props.params.id}
+      licenseFlags={props.loaderData.licenseFlags}
+      today={page}
+      DetailsForm={GenericOrganisationAdminForm}
+      EntitlementsForm={OrganisationAdminForm}
+    />
+  );
+}
+// PROTO(admin-organisation) end.
+
+function OrganisationGroupSettingsPage({ params, loaderData }: Route.ComponentProps) {
   const { licenseFlags } = loaderData;
 
   const { i18n, t } = useLingui();
